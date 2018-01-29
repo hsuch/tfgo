@@ -1,3 +1,2 @@
-# TFGO
-#### The Fun Game Online
-------------------------
+# TFGO: The Fun Game Online
+-------------------
