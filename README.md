@@ -1,1 +1,3 @@
-# tfgo
+# TFGO
+#### The Fun Game Online
+------------------------
