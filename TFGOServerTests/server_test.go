@@ -81,12 +81,14 @@ var oliver = Player{
 
 var redTeam = Team{
     Name: "Red Team",
+    Base: loc1,
     Points: 5,
     Players: [2]Player{jenny, brad},
 }
 
 var blueTeam = Team{
     Name: "Blue Team",
+    Base: loc3,
     Points: 6,
     Players: [2]Player{anders, oliver},
 }
@@ -124,9 +126,7 @@ var testGame = Game{
     Mode: 0,
     Timer: time.NewTimer(time.hour),
     RedTeam: redTeam,
-    RedBase: loc1,
     BlueTeam: blueTeam,
-    BlueBase: loc3,
     Boundaries: [4]Location{loc1, loc2, loc3, loc4},
     ControlPoints: map[string]ControlPoint{
         "CP1" : cp1,
@@ -134,77 +134,81 @@ var testGame = Game{
     },
 }
 
-func TestLocationSetGet(*testing.T)
+func TestLocationSetGet(t *testing.T)
+{
+    /* The following is an example of a unit test: */
+    // out := Function()
+    // if out != expected_out {
+    //    t.Errorf("Function test failed, got: %d, want: %d.", out, expected_out)
+    // }
+}
+
+func TestUpdateStatus(t *testing.T)
 {
 
 }
 
-func TestUpdateStatus(*testing.T)
+func TestGetTeamLoc(t *testing.T)
 {
 
 }
 
-func TestGetTeamLoc(*testing.T)
+func TestSetupGame(t *testing.T)
 {
 
 }
 
-func TestSetupGame(*testing.T)
+func TestAddPlayer(t *testing.T)
 {
 
 }
 
-func TestAddPlayer(*testing.T)
+func TestSetWinner(t *testing.T)
 {
 
 }
 
-func TestSetWinner(*testing.T)
+func TestTakeDamage(t *testing.T)
 {
 
 }
 
-func TestTakeDamage(*testing.T)
+func TestHeal(t *testing.T)
 {
 
 }
 
-func TestHeal(*testing.T)
+func TestShoot(t *testing.T)
 {
 
 }
 
-func TestShoot(*testing.T)
+func TestCheckInventory(t *testing.T)
 {
 
 }
 
-func TestCheckInventory(*testing.T)
+func TestAddRemoveItem(t *testing.T)
 {
 
 }
 
-func TestAddRemoveItem(*testing.T)
+func TestHandlePlayerLoc(t *testing.T)
 {
 
 }
 
-func TestHandlePlayerLoc(*testing.T)
+func TestCanHit(t *testing.T)
 {
 
 }
 
-func TestCanHit(*testing.T)
+func TestNearestHit(t *testing.T)
 {
 
 }
 
-func TestNearestHit(*testing.T)
-{
-
-}
-
-func TestPickupHandler(*testing.T)
+func TestPickupHandler(t *testing.T)
 {
 
 }
