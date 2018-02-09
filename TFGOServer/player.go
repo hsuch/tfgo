@@ -5,13 +5,20 @@ import (
 	"time"
 )
 
+type PlayerStatus int
+const (
+	NORMAL PlayerStatus = iota
+	OUTOFBOUNDS
+	RESPAWNING
+)
+
 type Player struct {
 	Name string
 	Conn net.Conn
-	Team Team
+	Team *Team
 
-	Status int
-	StatusTimer time.Timer
+	Status PlayerStatus
+	StatusTimer *time.Timer
 
 	Health int
 	Armor int
@@ -20,4 +27,16 @@ type Player struct {
 	Inventory []Pickup
 
 	Location Location
+}
+
+func (p *Player) handleLoc(loc Location) {
+
+}
+
+func (p *Player) fire(dir Direction) {
+
+}
+
+func (p *Player) takeHit(wep Weapon) {
+
 }

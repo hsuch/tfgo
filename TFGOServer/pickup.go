@@ -1,5 +1,5 @@
 package TFGOServer
 
 type Pickup interface {
-	Use(game Game, player Player)
+	use(game *Game, player *Player)
 }

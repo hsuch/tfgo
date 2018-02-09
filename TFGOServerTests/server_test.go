@@ -134,8 +134,7 @@ var testGame = Game{
     },
 }
 
-func TestLocationSetGet(t *testing.T)
-{
+func TestUpdateStatus(t *testing.T) {
     /* The following is an example of a unit test: */
     // out := Function()
     // if out != expected_out {
@@ -143,72 +142,22 @@ func TestLocationSetGet(t *testing.T)
     // }
 }
 
-func TestUpdateStatus(t *testing.T)
-{
+func TestGetPlayerLocs(t *testing.T) {
 
 }
 
-func TestGetTeamLoc(t *testing.T)
-{
+func TestTakeHit(t *testing.T) {
 
 }
 
-func TestSetupGame(t *testing.T)
-{
+func TestFire(t *testing.T) {
 
 }
 
-func TestAddPlayer(t *testing.T)
-{
+func TestHandleLoc(t *testing.T) {
 
 }
 
-func TestSetWinner(t *testing.T)
-{
-
-}
-
-func TestTakeDamage(t *testing.T)
-{
-
-}
-
-func TestHeal(t *testing.T)
-{
-
-}
-
-func TestShoot(t *testing.T)
-{
-
-}
-
-func TestCheckInventory(t *testing.T)
-{
-
-}
-
-func TestAddRemoveItem(t *testing.T)
-{
-
-}
-
-func TestHandlePlayerLoc(t *testing.T)
-{
-
-}
-
-func TestCanHit(t *testing.T)
-{
-
-}
-
-func TestNearestHit(t *testing.T)
-{
-
-}
-
-func TestPickupHandler(t *testing.T)
-{
+func TestCanHit(t *testing.T) {
 
 }

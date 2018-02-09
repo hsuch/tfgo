@@ -13,3 +13,7 @@ type ControlPoint struct {
 	BlueCount int
 	CaptureStatus int
 }
+
+func (cp *ControlPoint) updateStatus() {
+
+}

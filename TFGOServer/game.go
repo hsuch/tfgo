@@ -4,6 +4,20 @@ import (
 	"time"
 )
 
+type GameStatus int
+const (
+	CREATING GameStatus = iota
+	PLAYING
+	GAMEOVER
+)
+
+type Mode int
+const (
+	SINGLECAP Mode = iota
+	MULTICAP
+	PAYLOAD
+)
+
 type Location struct {
 	X float64
 	Y float64
@@ -14,15 +28,13 @@ type Game struct {
 	Name string
 	Password string
 
-	Status int
-	Mode int
-	Timer time.Timer
+	Status GameStatus
+	Mode Mode
+	Timer *time.Timer
 
-	RedTeam Team
-	RedBase Location
-	BlueTeam Team
-	BlueBase Location
+	RedTeam *Team
+	BlueTeam *Team
 
 	Boundaries []Location // ul, ur, lr, ll
-	ControlPoints map[string]ControlPoint
+	ControlPoints map[string]*ControlPoint
 }

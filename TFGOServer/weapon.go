@@ -5,12 +5,17 @@ import (
 	"math"
 )
 
+type Direction struct {
+	X float64
+	Y float64
+}
+
 var SWORD = Weapon{
 	Name: "Sword",
 	Damage: 25,
 	Spread: 2*math.Pi,
-	Range: 10,
-	ClipSize: 42,
+	Range: 1,
+	ClipSize: 500,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
 }
@@ -25,4 +30,8 @@ type Weapon struct {
 	ClipSize int
 	ShotReload time.Duration
 	ClipReload time.Duration
+}
+
+func (w Weapon) canHit(src, dst Location, dir Direction) bool {
+
 }
