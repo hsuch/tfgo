@@ -206,7 +206,96 @@ func TestGetPlayerLocs(t *testing.T) {
     }
 }
 
+/*Anders, for a simple one, why don't you write tests for takeHit? 
+the main things to consider are just checking 
+1) hp/armor decreases
+ by expected amount (make sure to account for cases where armor < damage, 
+ hp + armor < damage, hp < damage, and similar things), 
+ 2) player status changes accordingly (normal -> respawning)
+*/
+
+// var weapon1 = Weapon{
+//     Name: "TestWeapon",
+//     Damage: 25,
+//     Spread: math.Pi/2,
+//     Range: 10,
+//     ClipSize: 42,
+//     ShotReload: time.Second,
+//     ClipReload: time.Second * 5,
+// }
+// var anders = Player{
+//     Name: "Anders",
+//     Team: blueTeam,
+//     Status: 0,
+//     Health: 90,
+//     Armor: 5,
+//     Weapon: SWORD,
+//     Inventory: inventory1,
+//     Location: loc5,
+// }
+
 func TestTakeHit(t *testing.T) {
+
+    /* HP, NO ARMOR, NO DEATH */
+    p1 := jenny // 100 hp, 0 armor
+    expected1 := jenny.health - weapon1.damage 
+    p1.takeHit (weapon1)
+    if p1.health !=  expected1 {
+        t.Errorf("TestTakeHit(jenny) failed, got: (%d), want: (%d).", p1.health, expected1)
+    }
+    if p1.PlayerStatus != NORMAL {
+        t.Errorf("TestTakeHit(jenny) failed, got (Status: %d), want: (Status: %d)", p1.status, NORMAL)
+    }
+
+    /* HP, ARMOR < DMG, NO DEATH*/
+    p2 := oliver // 104 hp, 2 armor
+    oliver.status = NORMAL // temporarily setting this here for testing
+    p2.takeHit (weapon1)
+    expected2_hp := oliver.health + oliver.armor - weapon1.damage - oliver.armor // splash
+    expected2_armor := 0 // should go to 0 when less than damage
+
+    // expect armor to go to 0 when dmg > armor
+    if p2.armor != expected2_armor  { 
+        t.Errorf("TestTakeHit(p2) failed, got (Armor: %d), want: (Armor: %d)", p2.armor, expected2_armor)
+    }
+    if p2.health != expected2_hp {
+        t.Errorf("TestTakeHit(p2) failed, got (HP: %d), want: (HP: %d)", p2.health, expected2_hp)
+    }
+    if p2.PlayerStatus != NORMAL {
+        t.Errorf("TestTakeHit(p2) failed, got (Status: %d), want: (Status: %d)", p2.status, NORMAL)
+    }
+
+    /* HP, ARMOR < DMG, DEATH (Splash damage kills) */
+    p3 := anders // 90 hp, 5 armor
+    p3.health = 20
+    p3.takeHit (weapon1)
+    if p3.PlayerStatus != RESPAWNING {
+        t.Errorf("TestTakeHit(anders) failed, got (Status: %d), want: (Status: %d)", p3.status, RESPAWNING)
+    }
+
+    /* HP, ARMOR > DMG, NO DEATH */
+    p4 := brad // 80 hp, 20 armor
+    p4.armor = 26
+    p4.takeHit (weapon1)
+    expected4_armor = p4.armor - weapon1.damage
+    if !(p4.armor > 0) {
+        t.Errorf("TestTakeHit(p4) failed, got (Armor: %d), want: (Armor: %d)", p4.armor, expected4_armor)
+    }
+
+    /* Make sure a player with 0 health cannot take another hit */
+    p5 := anders
+    p5.health = 0
+    if p5.takeHit (weapon1) != nil {
+        t.Errorf ("TestTakeHit(p5) failed, returned nil (likely a bad call by parent), 
+            cannot hit a player with 0 hp")
+    }
+
+    /* OUT OF BOUNDS */
+    p6 := oliver
+    if p6.takeHit (weapon1) != nil {
+        t.Errorf ("TestTakeHit(oliver) failed, returned nil (likely a bad call by parent), 
+            cannot hit a player out of bounds")
+    }
 
 }
 
