@@ -2,6 +2,8 @@ package TFGOServer
 
 import (
     "testing"
+    "time"
+    "math"
 )
 
 var loc1 = Location{
@@ -104,7 +106,7 @@ var anders = Player{
     Armor: 5,
     Weapon: SWORD,
     Inventory: inventory1,
-    Location: loc5,
+    Location: loc4,
 }
 
 var oliver = Player{
@@ -116,7 +118,7 @@ var oliver = Player{
     Armor: 2,
     Weapon: SWORD,
     Inventory: inventory2,
-    Location: loc6,
+    Location: loc5,
 }
 
 var redTeam = Team{
@@ -142,13 +144,14 @@ var emptyTeam = Team{
 
 var cp1 = ControlPoint{
     ID: "CP1",
-    Location: loc1,
+    Location: loc2,
     Radius: 2,
     PayloadPath: [2]Location{loc1, loc2},
     PayloadLoc: loc1,
     RedCount: 0,
     BlueCount: 0,
-    CaptureStatus: 0,
+    ControllingTeam: nil,
+    CaptureProgress: 0,
 }
 
 var cp2 = ControlPoint{
@@ -159,7 +162,8 @@ var cp2 = ControlPoint{
     PayloadLoc: loc3,
     RedCount: 1,
     BlueCount: 0,
-    CaptureStatus: 1,
+    ControllingTeam: nil,
+    CaptureProgress: 0,
 }
 
 var inventory1 = [1]Pickup{SWORD}
@@ -179,14 +183,6 @@ var testGame = Game{
         "CP1" : cp1,
         "CP2" : cp2,
     },
-}
-
-func TestUpdateStatus(t *testing.T) {
-    /* The following is an example of a unit test: */
-    // out := Function()
-    // if out != expected_out {
-    //    t.Errorf("Function test failed, got: %d, want: %d.", out, expected_out)
-    // }
 }
 
 func TestGetPlayerLocs(t *testing.T) {
@@ -215,7 +211,51 @@ func TestFire(t *testing.T) {
 }
 
 func TestHandleLoc(t *testing.T) {
+    // 1. Testing a player out of bounds
+    (&oliver).handleLoc(loc6)
+    if (oliver.Status != OUTOFBOUNDS) {
+        t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS (%d), got Status %d", OUTOFBOUNDS, oliver.Status)
+        // test if timer is running?
+    }
 
+    // 2. Testing for player count addition to a control point
+    blueCount1 := cp2.BlueCount
+    (&oliver).handleLoc(loc4)
+    if (cp2.BlueCount != blueCount1 + 1) {
+        t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", blueCount1 + 1, cp2.BlueCount)
+    }
+
+    // 3. Testing for player count subtraction from a control point
+    blueCount2 := cp2.BlueCount
+    (&oliver).handleLoc(loc5)
+    if (cp2.BlueCount != blueCount2 - 1) {
+        t.Errorf("TestHandleLoc(3) failed, expected BlueCount %d, got BlueCount %d", blueCount2 - 1, cp2.BlueCount)
+    }
+}
+
+func TestUpdateStatus(t *testing.T) {
+    /* Assumptions:
+     * - handleLoc executes properly
+     * - CaptureProgress is + for Blue Team, - for Red Team
+     */
+
+    // 1. Testing control point contest when 2:1 in favor of Blue Team (Oliver and Anders (blue) vs. Jenny (red) at loc4)
+    captureProg1 := cp2.CaptureProgress
+    (&oliver).handleLoc(loc4)
+    cp2.updateStatus()
+    time.Sleep(time.Second)
+    if (cp2.CaptureProgress != captureProg1 + 1) {
+        t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", captureProg1 + 1, cp2.CaptureProgress)
+    }
+
+    // 2. Testing control point contest when 1:1 (Anders (blue) vs. Jenny (red) at loc4)
+    captureProg2 := cp2.CaptureProgress
+    (&oliver).handleLoc(loc5)
+    cp2.updateStatus()
+    time.Sleep(time.Second)
+    if (cp2.CaptureProgress != captureProg2) {
+        t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", captureProg2, cp2.CaptureProgress)
+    }
 }
 
 func TestCanHit(t *testing.T) {

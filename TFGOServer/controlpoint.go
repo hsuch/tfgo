@@ -11,7 +11,8 @@ type ControlPoint struct {
 
 	RedCount int
 	BlueCount int
-	CaptureStatus int
+	ControllingTeam Team
+	CaptureProgress int
 }
 
 func (cp *ControlPoint) updateStatus() {
