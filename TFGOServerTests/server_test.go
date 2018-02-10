@@ -202,34 +202,6 @@ func TestGetPlayerLocs(t *testing.T) {
     }
 }
 
-/*Anders, for a simple one, why don't you write tests for takeHit? 
-the main things to consider are just checking 
-1) hp/armor decreases
- by expected amount (make sure to account for cases where armor < damage, 
- hp + armor < damage, hp < damage, and similar things), 
- 2) player status changes accordingly (normal -> respawning)
-*/
-
-// var weapon1 = Weapon{
-//     Name: "TestWeapon",
-//     Damage: 25,
-//     Spread: math.Pi/2,
-//     Range: 10,
-//     ClipSize: 42,
-//     ShotReload: time.Second,
-//     ClipReload: time.Second * 5,
-// }
-// var anders = Player{
-//     Name: "Anders",
-//     Team: blueTeam,
-//     Status: 0,
-//     Health: 90,
-//     Armor: 5,
-//     Weapon: SWORD,
-//     Inventory: inventory1,
-//     Location: loc5,
-// }
-
 func TestTakeHit(t *testing.T) {
 
     /* HP, NO ARMOR, NO DEATH */
