@@ -1,4 +1,4 @@
-package TFGOServer
+package main
 
 type Team struct {
 	Name string

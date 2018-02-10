@@ -1,4 +1,4 @@
-package TFGOServer
+package main
 
 import (
 	"net"

@@ -1,11 +1,4 @@
-package TFGOServer
-
-type HeldBy int
-const (
-	RED HeldBy= iota
-	NEUTRAL
-	BLUE
-)
+package main
 
 type ControlPoint struct {
 	ID string
@@ -19,7 +12,7 @@ type ControlPoint struct {
 	RedCount int
 	BlueCount int
 
-	ControllingTeam Team
+	ControllingTeam *Team
 	CaptureProgress int
 }
 
