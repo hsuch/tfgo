@@ -29,6 +29,20 @@ type Player struct {
 	Location Location
 }
 
+func playerStatusString(ps PlayerStatus) string {
+	if ps == NORMAL {
+		return "NORMAL"
+	}
+
+	if ps == OUTOFBOUNDS {
+		return "OUTOFBOUNDS"
+	}
+
+	if ps == RESPAWNING {
+		return "RESPAWNING"
+	}
+}
+
 func (p *Player) handleLoc(loc Location) {
 
 }

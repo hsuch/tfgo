@@ -5,20 +5,20 @@ import "testing"
 func TestHandleLoc(t *testing.T) {
 	p1 := oliver
 
-	// 1. Testing a player out of bounds
+	// player moves out of bounds
 	p1.handleLoc(Location{420, 170})
 	if p1.Status != OUTOFBOUNDS {
-		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS (%d), got Status %d", OUTOFBOUNDS, p1.Status)
+		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusString(p1.Status))
 	}
 
-	// 2. Testing for player count addition to a control point
+	// player enters control point
 	expBlueCount := cp2.BlueCount + 1
 	p1.handleLoc(boundaries[2])
 	if cp2.BlueCount != expBlueCount {
 		t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp2.BlueCount)
 	}
 
-	// 3. Testing for player count subtraction from a control point
+	// player exits control point
 	expBlueCount = cp2.BlueCount - 1
 	p1.handleLoc(boundaries[1])
 	if cp2.BlueCount != expBlueCount {
@@ -27,13 +27,9 @@ func TestHandleLoc(t *testing.T) {
 }
 
 func TestUpdateStatus(t *testing.T) {
-	/* Assumptions:
-	 * - handleLoc executes properly
-	 * - CaptureProgress is + for Blue Team, - for Red Team
-	 */
 	p1 := oliver
 
-	// 1. Testing control point contest when 2:1 in favor of Blue Team (Oliver and Anders (blue) vs. Jenny (red) at loc4)
+	// blue players exceed red by one; check capture progress
 	expCaptureProg := cp2.CaptureProgress + 1
 	p1.handleLoc(boundaries[2])
 	cp2.updateStatus()
@@ -41,7 +37,7 @@ func TestUpdateStatus(t *testing.T) {
 		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
-	// 2. Testing control point contest when 1:1 (Anders (blue) vs. Jenny (red) at loc4)
+	// equal players from each team; check capture progress
 	expCaptureProg = cp2.CaptureProgress
 	p1.handleLoc(boundaries[1])
 	cp2.updateStatus()
@@ -49,7 +45,7 @@ func TestUpdateStatus(t *testing.T) {
 		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
-	// 3. Testing team point increase with no capture points
+	// both control points uncontrolled; check team points
 	cp1.ControllingTeam = nil
 	cp2.ControllingTeam = nil
 	expRedPoints := redTeam.Points
@@ -63,7 +59,7 @@ func TestUpdateStatus(t *testing.T) {
 		t.Errorf("TestUpdateStatus(3) failed, expected Blue Team Points %d, got Blue Team Points %d", expBluePoints, blueTeam.Points)
 	}
 
-	// 4. Testing team point increase with 2 capture points
+	// both control points controlled by blue; check team points
 	cp1.ControllingTeam = &blueTeam
 	cp2.ControllingTeam = &blueTeam
 	expRedPoints = redTeam.Points

@@ -10,7 +10,9 @@ type Direction struct {
 	Y float64
 }
 
-var SWORD = Weapon{
+// each of the available weapons is defined as a globally
+// accessible variable
+var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
 	Spread: 2*math.Pi,

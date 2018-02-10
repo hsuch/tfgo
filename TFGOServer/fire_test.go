@@ -1,76 +1,137 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"math"
+)
 
-var directions = []Direction{
-	{0, 1},
-	{-1, 8},
-	{1, 8},
-	{-5, 0},
-	{5, 0},
-	{1, 12},
+var testWeapon = Weapon{
+	Spread: math.Pi/2,
+	Range: 5,
+}
+
+func TestCanHit(t *testing.T) {
+	// shot is left of target; within spread; within range
+	if !testWeapon.canHit(Location{5, 5}, Location{4, 6}, Direction{-1, 1}) {
+		t.Errorf("TestCanHit(1) failed, expected TRUE, got FALSE.")
+	}
+
+	// shot is right of target; within spread; within range
+	if !testWeapon.canHit(Location{5, 5}, Location{6, 6}, Direction{1, 1}) {
+		t.Errorf("TestCanHit(2) failed, expected TRUE, got FALSE.")
+	}
+
+	// shot is left of target; outside spread; within range
+	if testWeapon.canHit(Location{5, 5}, Location{4, 4}, Direction{-1, 1}) {
+		t.Errorf("TestCanHit(3) failed, expected FALSE, got TRUE.")
+	}
+
+	// shot is right of target; outside spread; within range
+	if testWeapon.canHit(Location{5, 5}, Location{6, 4}, Direction{1, 1}) {
+		t.Errorf("TestCanHit(4) failed, expected FALSE, got TRUE.")
+	}
+
+	// shot is within spread; outside range
+	if SWORD.canHit(Location{5, 5}, Location{10, 10}, Direction{1, 1}) {
+		t.Errorf("TestCanHit(5) failed, expected FALSE, got TRUE.")
+	}
+
+	// shot is outside spread; outside range
+	if testWeapon.canHit(Location{5, 5}, Location{20, 20}, Direction{-1, -1}) {
+		t.Errorf("TestCanHit(6) failed, expected FALSE, got TRUE.")
+	}
 }
 
 func TestGetPlayerLocs(t *testing.T) {
-	// testing with a team with 2 members
-	teamLocs := redTeam.getPlayerLocs()
-	if teamLocs[0] != boundaries[2] {
-		t.Errorf("TestGetTeamLocs(redTeam) failed, got: (%f,%f), want: (100,100).", teamLocs[0].X, teamLocs[0].Y)
+	// red team (two members)
+	playerLocs := redTeam.getPlayerLocs()
+	if playerLocs[0] != boundaries[2] {
+		t.Errorf("TestGetTeamLocs(redTeam) failed, expected (100,100), got (%f,%f).", playerLocs[0].X, playerLocs[0].Y)
 	}
-	if teamLocs[1] != boundaries[3] {
-		t.Errorf("TestGetTeamLocs(redTeam) failed, got: (%f,%f), want: (0,100).", teamLocs[1].X, teamLocs[1].Y)
+	if playerLocs[1] != boundaries[3] {
+		t.Errorf("TestGetTeamLocs(redTeam) failed, expected (0,100), got (%f,%f).", playerLocs[1].X, playerLocs[1].Y)
 	}
 
-	// testing with a team with no members
-	teamLocs = Team{}.getPlayerLocs()
-	if teamLocs != nil {
-		t.Errorf("TestGetTeamLocs(emptyTeam) failed, expected output length 0, got length %d.", len(teamLocs))
+	// empty team (no members)
+	playerLocs = Team{}.getPlayerLocs()
+	if playerLocs != nil {
+		t.Errorf("TestGetTeamLocs(emptyTeam) failed, expected output length 0, got length %d.", len(playerLocs))
+	}
+}
+
+func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status PlayerStatus, fname, pname string) {
+	if player.Health != hp {
+		t.Errorf("%s(%s) failed, expected (Health: %d), got (Health: %d)",
+			fname, pname, hp, player.Health)
+	}
+
+	if player.Armor != armor {
+		t.Errorf("%s(%s) failed, expected (Armor: %d), got (Armor: %d)",
+			fname, pname, armor, player.Armor)
+	}
+
+	if player.Status != status {
+		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
+			fname, pname, playerStatusString(status), playerStatusString(player.Status))
 	}
 }
 
 func TestTakeHit(t *testing.T) {
-	/* HP, NO ARMOR, NO DEATH */
+	// no armor, hp > damage
 	p1 := jenny // 100 hp, 0 armor
-	expected1 := jenny.Health - SWORD.Damage
-	p1.takeHit (SWORD)
-	if p1.Health !=  expected1 {
-		t.Errorf("TestTakeHit(jenny) failed, got: (%d), want: (%d).", p1.Health, expected1)
-	}
-	if p1.Status != NORMAL {
-		t.Errorf("TestTakeHit(jenny) failed, got (Status: %d), want: (Status: %d)", p1.Status, NORMAL)
-	}
+	p1.takeHit(SWORD)
+	checkPlayerVitals(t, p1, jenny.Health - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
 
-	/* HP, ARMOR < DMG, NO DEATH*/
+	// armor < damage, hp + armor > damage
 	p2 := oliver // 104 hp, 2 armor
 	p2.takeHit (SWORD)
-	expected2_hp := oliver.Health + oliver.Armor - SWORD.Damage - oliver.Armor // splash
-	expected2_armor := 0 // should go to 0 when less than damage
+	checkPlayerVitals(t, p2, oliver.Health + oliver.Armor - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
 
-	// expect armor to go to 0 when dmg > armor
-	if p2.Armor != expected2_armor  {
-		t.Errorf("TestTakeHit(p2) failed, got (Armor: %d), want: (Armor: %d)", p2.Armor, expected2_armor)
-	}
-	if p2.Health != expected2_hp {
-		t.Errorf("TestTakeHit(p2) failed, got (HP: %d), want: (HP: %d)", p2.Health, expected2_hp)
-	}
-	if p2.Status != NORMAL {
-		t.Errorf("TestTakeHit(p2) failed, got (Status: %d), want: (Status: %d)", p2.Status, NORMAL)
-	}
+	// hp + armor < damage
+	p3 := anders // 10 hp, 5 armor
+	p3.takeHit(SWORD)
+	checkPlayerVitals(t, p3, 0, 0, RESPAWNING, "TestTakeHit", "anders")
 
-	/* HP, ARMOR < DMG, DEATH (Splash damage kills) */
-	p3 := anders // 90 hp, 5 armor
-	p3.Health = 20
-	p3.takeHit (SWORD)
-	if p3.Status != RESPAWNING {
-		t.Errorf("TestTakeHit(anders) failed, got (Status: %d), want: (Status: %d)", p3.Status, RESPAWNING)
-	}
-
-	/* HP, ARMOR > DMG, NO DEATH */
-	p4 := brad // 80 hp, 20 armor
-	p4.Armor = 26
+	// armor > damage
+	p4 := brad // 80 hp, 30 armor
 	p4.takeHit (SWORD)
-	expected4_armor := p4.Armor - SWORD.Damage
-	if !(p4.Armor > 0) {
-		t.Errorf("TestTakeHit(p4) failed, got (Armor: %d), want: (Armor: %d)", p4.Armor, expected4_armor)
-	}
+	checkPlayerVitals(t, p4, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
+}
+
+func TestFire(t *testing.T) {
+	p1 := jenny
+	p2 := oliver
+	p3 := anders
+	p4 := brad
+
+	// no targets hit
+	p4.fire(Direction{1, 1})
+	checkPlayerVitals(t, p1, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
+	checkPlayerVitals(t, p2, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
+	checkPlayerVitals(t, p3, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
+
+	// single target hit, non-fatal
+	p3.fire(Direction{1, 1})
+	p1check := jenny
+	p1check.takeHit(SWORD)
+	checkPlayerVitals(t, p1, p1check.Health, p1check.Armor, NORMAL, "TestFire", "anders->jenny")
+	checkPlayerVitals(t, p2, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
+	checkPlayerVitals(t, p4, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+
+	// multiple targets available, hits closest
+	p2move := oliver
+	p2move.handleLoc(Location{100, 99})
+	p3.fire(Direction{1, 1})
+	p1check.takeHit(SWORD)
+	checkPlayerVitals(t, p1, p1check.Health, p1check.Armor, NORMAL, "TestFire", "anders->jenny")
+	checkPlayerVitals(t, p2move, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
+	checkPlayerVitals(t, p4, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+
+	// single target hit, fatal
+	p1.fire(Direction{1, 1})
+	p3check := anders
+	p3check.takeHit(SWORD)
+	checkPlayerVitals(t, p2, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
+	checkPlayerVitals(t, p3, p3check.Health, p3check.Armor, RESPAWNING, "TestFire", "jenny->anders")
+	checkPlayerVitals(t, p4, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
 }
