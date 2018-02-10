@@ -1,5 +1,12 @@
 package TFGOServer
 
+type HeldBy int
+const (
+	RED HeldBy= iota
+	NEUTRAL
+	BLUE
+)
+
 type ControlPoint struct {
 	ID string
 
@@ -12,6 +19,7 @@ type ControlPoint struct {
 	RedCount int
 	BlueCount int
 	CaptureStatus int
+	HeldBy HeldBy
 }
 
 func (cp *ControlPoint) updateStatus() {

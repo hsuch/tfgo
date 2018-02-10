@@ -8,5 +8,5 @@ type Team struct {
 }
 
 func (t *Team) getPlayerLocs() []Location {
-
+	return nil
 }

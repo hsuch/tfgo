@@ -33,5 +33,5 @@ type Weapon struct {
 }
 
 func (w Weapon) canHit(src, dst Location, dir Direction) bool {
-
+	return false
 }
