@@ -1,4 +1,4 @@
-package TFGOServer
+package main
 
 import (
 	"time"
@@ -35,6 +35,6 @@ type Game struct {
 	RedTeam *Team
 	BlueTeam *Team
 
-	Boundaries []Location // ul, ur, lr, ll
+	Boundaries [4]Location // ul, ur, lr, ll
 	ControlPoints map[string]*ControlPoint
 }

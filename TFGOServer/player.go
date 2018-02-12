@@ -1,4 +1,4 @@
-package TFGOServer
+package main
 
 import (
 	"net"
@@ -27,6 +27,20 @@ type Player struct {
 	Inventory []Pickup
 
 	Location Location
+}
+
+func playerStatusString(ps PlayerStatus) string {
+	if ps == NORMAL {
+		return "NORMAL"
+	}
+
+	if ps == OUTOFBOUNDS {
+		return "OUTOFBOUNDS"
+	}
+
+	if ps == RESPAWNING {
+		return "RESPAWNING"
+	}
 }
 
 func (p *Player) handleLoc(loc Location) {

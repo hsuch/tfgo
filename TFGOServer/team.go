@@ -1,4 +1,4 @@
-package TFGOServer
+package main
 
 type Team struct {
 	Name string
@@ -8,5 +8,5 @@ type Team struct {
 }
 
 func (t *Team) getPlayerLocs() []Location {
-
+	return nil
 }
