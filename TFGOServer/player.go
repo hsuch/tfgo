@@ -12,10 +12,17 @@ const (
 	RESPAWNING
 )
 
+type Allegiance int
+const (
+	RED Allegiance = iota
+	NEUTRAL
+	BLUE
+)
+
 type Player struct {
 	Name string
 	Conn net.Conn
-	Team *Team
+	Team Allegiance
 
 	Status PlayerStatus
 	StatusTimer *time.Timer
@@ -24,7 +31,7 @@ type Player struct {
 	Armor int
 
 	Weapon Weapon
-	Inventory []Pickup
+	Inventory map[string]Pickup
 
 	Location Location
 }
@@ -43,11 +50,11 @@ func playerStatusString(ps PlayerStatus) string {
 	}
 }
 
-func (p *Player) handleLoc(loc Location) {
+func (p *Player) handleLoc(game *Game, loc Location) {
 
 }
 
-func (p *Player) fire(dir Direction) {
+func (p *Player) fire(game *Game, dir Direction) {
 
 }
 

@@ -2,7 +2,7 @@ package main
 
 type Team struct {
 	Name string
-	Players []*Player
+	Players map[string]*Player
 	Base Location
 	Points int
 }

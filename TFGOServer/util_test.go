@@ -1,93 +1,141 @@
 package main
 
-var boundaries = [4]Location {
-	{0, 0},
-	{100, 0},
-	{100, 100},
-	{0, 100},
+// functions for creating instances of a sample game and its components,
+// used for testing.
+
+func makeJenny() *Player {
+	return &Player {
+		Name: "Jenny",
+		Team: RED,
+		Status: NORMAL,
+		Health: 100,
+		Armor: 0,
+		Weapon: SWORD,
+		Location: Location{49, 75},
+	}
 }
 
-var jenny = Player {
-	Name: "Jenny",
-	Team: &redTeam,
-	Status: NORMAL,
-	Health: 100,
-	Armor: 0,
-	Weapon: SWORD,
-	Location: boundaries[2],
+func makeBrad() *Player {
+	return &Player {
+		Name: "Brad",
+		Team: RED,
+		Status: NORMAL,
+		Health: 80,
+		Armor: 30,
+		Weapon: SWORD,
+		Location: Location{49, 24},
+	}
 }
 
-var brad = Player {
-	Name: "Brad",
-	Team: &redTeam,
-	Status: NORMAL,
-	Health: 80,
-	Armor: 30,
-	Weapon: SWORD,
-	Location: boundaries[3],
+func makeAnders() *Player {
+	return &Player {
+		Name: "Anders",
+		Team: BLUE,
+		Status: NORMAL,
+		Health: 10,
+		Armor: 5,
+		Weapon: SWORD,
+		Location: Location{49.5, 75},
+	}
 }
 
-var anders = Player {
-	Name: "Anders",
-	Team: &blueTeam,
-	Status: NORMAL,
-	Health: 10,
-	Armor: 5,
-	Weapon: SWORD,
-	Location: boundaries[2],
+func makeOliver() *Player {
+	return &Player {
+		Name: "Oliver",
+		Team: BLUE,
+		Status: NORMAL,
+		Health: 95,
+		Armor: 10,
+		Weapon: SWORD,
+		Location: Location{50, 75},
+	}
 }
 
-var oliver = Player {
-	Name: "Oliver",
-	Team: &blueTeam,
-	Status: NORMAL,
-	Health: 104,
-	Armor: 2,
-	Weapon: SWORD,
-	Location: boundaries[1],
+func makeRedTeam() *Team {
+	return &Team {
+		Name: "Red Team",
+		Players: map[string]*Player{
+			"jenny" : makeJenny(),
+			"brad" : makeBrad(),
+		},
+		Base: Location{25, 50},
+		Points: 98,
+	}
 }
 
-var redTeam = Team {
-	Name: "Red Team",
-	Base: boundaries[0],
-	Points: 5,
-	Players: []*Player{&jenny, &brad},
+func makeBlueTeam() *Team {
+	return &Team {
+		Name: "Blue Team",
+		Players: map[string]*Player{
+			"oliver" : makeOliver(),
+			"anders" : makeAnders(),
+		},
+		Base: Location{75, 50},
+		Points: 72,
+	}
 }
 
-var blueTeam = Team {
-	Name: "Blue Team",
-	Base: boundaries[1],
-	Points: 6,
-	Players: []*Player{&anders, &oliver},
+func makeCP1() *ControlPoint {
+	return &ControlPoint {
+		ID: "CP1",
+		Location: Location{50, 25},
+		Radius: 5,
+		RedCount: 1,
+		BlueCount: 0,
+		ControllingTeam: NEUTRAL,
+		CaptureProgress: -6,
+	}
 }
 
-var cp1 = ControlPoint {
-	ID: "CP1",
-	Location: boundaries[3],
-	Radius: 5,
-	RedCount: 1,
-	BlueCount: 0,
+func makeCP2() *ControlPoint {
+	return &ControlPoint {
+		ID: "CP2",
+		Location: Location{50, 75},
+		Radius: 5,
+		RedCount: 1,
+		BlueCount: 2,
+		ControllingTeam: RED,
+		CaptureProgress: -3,
+	}
 }
 
-var cp2 = ControlPoint {
-	ID: "CP2",
-	Location: boundaries[2],
-	Radius: 5,
-	RedCount: 1,
-	BlueCount: 1,
+func makeSampleGame() *Game {
+	return &Game {
+		ID: "G1",
+		Name: "Test Game",
+		Password: "tfgo",
+		Status: PLAYING,
+		Mode: MULTICAP,
+		RedTeam: makeRedTeam(),
+		BlueTeam: makeBlueTeam(),
+		Boundaries: [4]Location{
+			{0, 0},
+			{100, 0},
+			{0, 100},
+			{100, 100},
+		},
+		ControlPoints: map[string]*ControlPoint {
+			"CP1" : makeCP1(),
+			"CP2" : makeCP2(),
+		},
+	}
 }
 
-var testGame = Game {
-	ID: "G1",
-	Name: "Test Game",
-	Password: "tfgo",
-	Status: PLAYING,
-	Mode: SINGLECAP,
-	RedTeam: &redTeam,
-	BlueTeam: &blueTeam,
-	Boundaries: boundaries,
-	ControlPoints: map[string]*ControlPoint {
-		"CP1" : &cp1,
-		"CP2" : &cp2,
-	},
+// functions used to retrieve a specific player from the sample game
+// defined above. used for testing.
+
+func getJenny(game *Game) *Player {
+	return game.RedTeam.Players["jenny"]
+}
+
+func getOliver(game *Game) *Player {
+	return game.BlueTeam.Players["oliver"]
+}
+
+func getAnders(game *Game) *Player {
+	return game.BlueTeam.Players["anders"]
+}
+
+func getBrad(game *Game) *Player {
+	return game.RedTeam.Players["brad"]
 }

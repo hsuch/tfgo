@@ -22,6 +22,16 @@ var SWORD = Weapon {
 	ClipReload: time.Second * 0,
 }
 
+var SHOTGUN = Weapon {
+	Name: "Shotgun",
+	Damage: 25,
+	Spread: math.Pi/2,
+	Range: 3,
+	ClipSize: 2,
+	ShotReload: time.Millisecond * 500,
+	ClipReload: time.Second * 3,
+}
+
 type Weapon struct {
 	Name string
 

@@ -13,7 +13,7 @@ type ControlPoint struct {
 	RedCount int
 	BlueCount int
 
-	ControllingTeam *Team
+	ControllingTeam Allegiance
 	// number in [-7, 7] indicating capture/decapture progress.
 	// hitting -7 or 7 from neutral ownership yields control
 	// control point to red or blue, respectively. hitting 0
@@ -21,6 +21,6 @@ type ControlPoint struct {
 	CaptureProgress int
 }
 
-func (cp *ControlPoint) updateStatus() {
+func (cp *ControlPoint) updateStatus(game *Game) {
 
 }
