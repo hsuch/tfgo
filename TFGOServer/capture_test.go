@@ -13,18 +13,18 @@ func TestHandleLoc(t *testing.T) {
 		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusString(oliver.Status))
 	}
 
-	// player enters control point
-	expBlueCount := cp.BlueCount + 1
-	oliver.handleLoc(g, g.Boundaries[2])
-	if cp.BlueCount != expBlueCount {
-		t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
-	}
-
 	// player exits control point
-	expBlueCount = cp.BlueCount - 1
-	oliver.handleLoc(g, g.Boundaries[1])
+	expBlueCount := cp.BlueCount - 1
+	oliver.handleLoc(g, Location{0, 0})
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestHandleLoc(3) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
+	}
+
+	// player enters control point
+	expBlueCount = cp.BlueCount + 1
+	oliver.handleLoc(g, cp.Location)
+	if cp.BlueCount != expBlueCount {
+		t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
 }
 
@@ -36,20 +36,20 @@ func TestUpdateStatus(t *testing.T) {
 	blueTeam := g.BlueTeam
 	oliver := getOliver(g)
 
-	// blue players exceed red by one; check capture progress
-	expCaptureProg := cp2.CaptureProgress + 1
-	oliver.handleLoc(g, g.Boundaries[2])
-	cp2.updateStatus(g)
-	if cp2.CaptureProgress != expCaptureProg {
-		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
-	}
-
 	// equal players from each team; check capture progress
-	expCaptureProg = cp2.CaptureProgress
-	oliver.handleLoc(g, g.Boundaries[1])
+	expCaptureProg := cp2.CaptureProgress
+	oliver.handleLoc(g, Location{0, 0})
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
+	}
+
+	// blue players exceed red by one; check capture progress
+	expCaptureProg = cp2.CaptureProgress + 1
+	oliver.handleLoc(g, cp2.Location)
+	cp2.updateStatus(g)
+	if cp2.CaptureProgress != expCaptureProg {
+		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
 	// both control points uncontrolled; check team points
