@@ -27,6 +27,11 @@ type Game struct {
 	ID string
 	Name string
 	Password string
+	Description string
+
+	PlayerLimit int
+	PointLimit int
+	TimeLimit time.Duration
 
 	Status GameStatus
 	Mode Mode

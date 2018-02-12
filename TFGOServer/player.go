@@ -21,6 +21,7 @@ const (
 
 type Player struct {
 	Name string
+	Icon string
 	Conn net.Conn
 	Team Allegiance
 
@@ -30,23 +31,21 @@ type Player struct {
 	Health int
 	Armor int
 
-	Weapon Weapon
 	Inventory map[string]Pickup
 
 	Location Location
 }
 
 func playerStatusString(ps PlayerStatus) string {
-	if ps == NORMAL {
+	switch ps {
+	case NORMAL:
 		return "NORMAL"
-	}
-
-	if ps == OUTOFBOUNDS {
+	case OUTOFBOUNDS:
 		return "OUTOFBOUNDS"
-	}
-
-	if ps == RESPAWNING {
+	case RESPAWNING:
 		return "RESPAWNING"
+	default:
+		return ""
 	}
 }
 
@@ -54,7 +53,7 @@ func (p *Player) handleLoc(game *Game, loc Location) {
 
 }
 
-func (p *Player) fire(game *Game, dir Direction) {
+func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 
 }
 
