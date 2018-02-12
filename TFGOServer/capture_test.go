@@ -10,21 +10,21 @@ func TestHandleLoc(t *testing.T) {
 	// player moves out of bounds
 	oliver.handleLoc(g, Location{420, 170})
 	if oliver.Status != OUTOFBOUNDS {
-		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusString(p1.Status))
+		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusString(oliver.Status))
 	}
 
 	// player enters control point
 	expBlueCount := cp.BlueCount + 1
 	oliver.handleLoc(g, g.Boundaries[2])
 	if cp.BlueCount != expBlueCount {
-		t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp2.BlueCount)
+		t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
 
 	// player exits control point
 	expBlueCount = cp.BlueCount - 1
 	oliver.handleLoc(g, g.Boundaries[1])
 	if cp.BlueCount != expBlueCount {
-		t.Errorf("TestHandleLoc(3) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp2.BlueCount)
+		t.Errorf("TestHandleLoc(3) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
 }
 
