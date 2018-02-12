@@ -5,6 +5,13 @@ import (
 	"time"
 )
 
+type Allegiance int
+const (
+	RED Allegiance = iota
+	NEUTRAL
+	BLUE
+)
+
 type PlayerStatus int
 const (
 	NORMAL PlayerStatus = iota
@@ -12,12 +19,11 @@ const (
 	RESPAWNING
 )
 
-type Allegiance int
-const (
-	RED Allegiance = iota
-	NEUTRAL
-	BLUE
-)
+var PlayerStatusMap = map[PlayerStatus]string{
+	NORMAL : "NORMAL",
+	OUTOFBOUNDS : "OUTOFBOUNDS",
+	RESPAWNING : "RESPAWNING",
+}
 
 type Player struct {
 	Name string
@@ -34,19 +40,6 @@ type Player struct {
 	Inventory map[string]Pickup
 
 	Location Location
-}
-
-func playerStatusString(ps PlayerStatus) string {
-	switch ps {
-	case NORMAL:
-		return "NORMAL"
-	case OUTOFBOUNDS:
-		return "OUTOFBOUNDS"
-	case RESPAWNING:
-		return "RESPAWNING"
-	default:
-		return ""
-	}
 }
 
 func (p *Player) handleLoc(game *Game, loc Location) {
