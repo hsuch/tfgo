@@ -12,6 +12,11 @@ const (
 	RESPAWNING
 )
 
+const initStatus = NORMAL
+const initHealth = 100
+const initArmor = 0
+const initPickup = nil
+
 var PlayerStatusMap = map[PlayerStatus]string{
 	NORMAL : "NORMAL",
 	OUTOFBOUNDS : "OUTOFBOUNDS",
@@ -50,6 +55,29 @@ func (p *Player) fire(game *Game, dir Direction) {
 
 }
 
-func (p *Player) takeHit(wep Weapon) {
+/* Input: Weapon dealing damage
+   Output: Void, runs goroutine to
+   place player in respawn queue if killed.
+*/
+func (p *Player) takeHit(wep Weapon) bool {
+	if wep.Damage <= p.armor {
+		p.armor -= wep.Damage
+	}
+	else {
+		splash := wep.Damage - p.armor
+		p.health -= splash
+	}
 
+	if p.health <= 0 {
+		go awaitRespawn ()
+	}
+}
+
+/* Called by awaitRespawn () goroutine after timer reset */
+func (p *player) respawn () {
+	p.status = RESPAWNING
+	p.health = initHealth
+	p.armor = initArmor
+	p.pickup = initPickup
+	p.location = p.Team.Base
 }
