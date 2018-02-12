@@ -75,7 +75,7 @@ func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status Player
 
 	if player.Status != status {
 		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
-			fname, pname, playerStatusString(status), playerStatusString(player.Status))
+			fname, pname, PlayerStatusMap[status], PlayerStatusMap[player.Status])
 	}
 }
 

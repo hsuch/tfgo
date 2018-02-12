@@ -10,7 +10,7 @@ func TestHandleLoc(t *testing.T) {
 	// player moves out of bounds
 	oliver.handleLoc(g, Location{420, 170})
 	if oliver.Status != OUTOFBOUNDS {
-		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusString(oliver.Status))
+		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", PlayerStatusMap[oliver.Status])
 	}
 
 	// player exits control point

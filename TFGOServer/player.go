@@ -12,6 +12,12 @@ const (
 	RESPAWNING
 )
 
+var PlayerStatusMap = map[PlayerStatus]string{
+	NORMAL : "NORMAL",
+	OUTOFBOUNDS : "OUTOFBOUNDS",
+	RESPAWNING : "RESPAWNING",
+}
+
 type Allegiance int
 const (
 	RED Allegiance = iota
@@ -34,20 +40,6 @@ type Player struct {
 	Inventory map[string]Pickup
 
 	Location Location
-}
-
-func playerStatusString(ps PlayerStatus) string {
-	if ps == NORMAL {
-		return "NORMAL"
-	}
-
-	if ps == OUTOFBOUNDS {
-		return "OUTOFBOUNDS"
-	}
-
-	if ps == RESPAWNING {
-		return "RESPAWNING"
-	}
 }
 
 func (p *Player) handleLoc(game *Game, loc Location) {
