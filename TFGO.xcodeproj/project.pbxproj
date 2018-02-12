@@ -17,6 +17,7 @@
 		00DA1D1620210C21001AF71A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00DA1D1420210C21001AF71A /* LaunchScreen.storyboard */; };
 		00DA1D2120210C21001AF71A /* TFGOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2020210C21001AF71A /* TFGOTests.swift */; };
 		00DA1D2C20210C21001AF71A /* TFGOUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2B20210C21001AF71A /* TFGOUITests.swift */; };
+		00FFA870202F67E200C83F74 /* GameLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		00DA1D2720210C21001AF71A /* TFGOUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFGOUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DA1D2B20210C21001AF71A /* TFGOUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFGOUITests.swift; sourceTree = "<group>"; };
 		00DA1D2D20210C21001AF71A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLobbyViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				00DA1D0F20210C21001AF71A /* Main.storyboard */,
 				00A27FDE202E825900D58C3A /* GameViewController.swift */,
 				00A27FE0202E84A900D58C3A /* HostGameViewController.swift */,
+				00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */,
 				00DA1D1220210C21001AF71A /* Assets.xcassets */,
 				00DA1D1420210C21001AF71A /* LaunchScreen.storyboard */,
 				00DA1D1720210C21001AF71A /* Info.plist */,
@@ -269,6 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00DA1D0E20210C21001AF71A /* ViewController.swift in Sources */,
+				00FFA870202F67E200C83F74 /* GameLobbyViewController.swift in Sources */,
 				00A27FE3202E900B00D58C3A /* Game.swift in Sources */,
 				00A27FDF202E825900D58C3A /* GameViewController.swift in Sources */,
 				00A27FE1202E84A900D58C3A /* HostGameViewController.swift in Sources */,

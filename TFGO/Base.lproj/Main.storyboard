@@ -507,7 +507,7 @@
         <!--Game Lobby-->
         <scene sceneID="VJj-qY-x12">
             <objects>
-                <viewController id="mDp-nZ-Q9M" sceneMemberID="viewController">
+                <viewController id="mDp-nZ-Q9M" customClass="GameLobbyViewController" customModule="TFGO" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ktS-gd-gCz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -518,6 +518,9 @@
                                     <segment title="Public"/>
                                     <segment title="Private"/>
                                 </segments>
+                                <connections>
+                                    <action selector="segmentButtonPress:" destination="mDp-nZ-Q9M" eventType="valueChanged" id="grl-ne-6Lw"/>
+                                </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hvb-J6-vfC">
                                 <rect key="frame" x="16" y="152" width="343" height="626"/>
@@ -628,6 +631,9 @@
                         <viewLayoutGuide key="safeArea" id="TYh-lU-GEx"/>
                     </view>
                     <navigationItem key="navigationItem" title="Game Lobby" id="R3e-XL-Grp"/>
+                    <connections>
+                        <outlet property="publicPrivateButton" destination="bcI-As-hxd" id="k2c-9Y-zLv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oRK-Gv-tbz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1195,8 +1201,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="xzX-Iq-bnB"/>
-        <segue reference="Th9-pw-b0x"/>
+        <segue reference="4cG-7q-7tp"/>
+        <segue reference="2n9-BF-tBN"/>
         <segue reference="FNE-Lr-RRh"/>
     </inferredMetricsTieBreakers>
 </document>
