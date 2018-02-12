@@ -42,6 +42,10 @@ type Player struct {
 	Location Location
 }
 
+func inBounds(game *Game, loc Location) {
+	
+}
+
 func (p *Player) handleLoc(game *Game, loc Location) {
 
 }
