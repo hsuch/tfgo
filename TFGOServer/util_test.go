@@ -10,7 +10,6 @@ func makeJenny() *Player {
 		Status: NORMAL,
 		Health: 100,
 		Armor: 0,
-		Weapon: SWORD,
 		Location: Location{49, 75},
 	}
 }
@@ -22,7 +21,6 @@ func makeBrad() *Player {
 		Status: NORMAL,
 		Health: 80,
 		Armor: 30,
-		Weapon: SWORD,
 		Location: Location{49, 24},
 	}
 }
@@ -34,7 +32,6 @@ func makeAnders() *Player {
 		Status: NORMAL,
 		Health: 10,
 		Armor: 5,
-		Weapon: SWORD,
 		Location: Location{49.5, 75},
 	}
 }
@@ -46,7 +43,6 @@ func makeOliver() *Player {
 		Status: NORMAL,
 		Health: 95,
 		Armor: 10,
-		Weapon: SWORD,
 		Location: Location{50, 75},
 	}
 }

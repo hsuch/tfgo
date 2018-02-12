@@ -5,6 +5,13 @@ import (
 	"time"
 )
 
+type Allegiance int
+const (
+	RED Allegiance = iota
+	NEUTRAL
+	BLUE
+)
+
 type PlayerStatus int
 const (
 	NORMAL PlayerStatus = iota
@@ -23,15 +30,9 @@ var PlayerStatusMap = map[PlayerStatus]string{
 	RESPAWNING : "RESPAWNING",
 }
 
-type Allegiance int
-const (
-	RED Allegiance = iota
-	NEUTRAL
-	BLUE
-)
-
 type Player struct {
 	Name string
+	Icon string
 	Conn net.Conn
 	Team Allegiance
 
@@ -41,7 +42,6 @@ type Player struct {
 	Health int
 	Armor int
 
-	Weapon Weapon
 	Inventory map[string]Pickup
 
 	Location Location
@@ -51,7 +51,7 @@ func (p *Player) handleLoc(game *Game, loc Location) {
 
 }
 
-func (p *Player) fire(game *Game, dir Direction) {
+func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 
 }
 
