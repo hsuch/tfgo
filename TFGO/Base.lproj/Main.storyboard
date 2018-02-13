@@ -753,6 +753,9 @@
                         <viewLayoutGuide key="safeArea" id="bzS-3q-HQO"/>
                     </view>
                     <navigationItem key="navigationItem" title="Waiting For Players" id="S8D-BF-2OR"/>
+                    <connections>
+                        <outlet property="table" destination="2Jg-VT-jWz" id="k8G-fk-3WK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rp5-Lu-m87" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

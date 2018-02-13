@@ -8,27 +8,25 @@
 
 import UIKit
 
-class WaitingViewController: UIViewController {
+class WaitingViewController: UIViewController, UITableViewDelegate {
 
     var state: GameState?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if let game = state?.getCurrentGame() {
+            table.numberOfRows(inSection: game.getPlayers().count)
+        }
         // Do any additional setup after loading the view.
     }
-
     
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath)
+        
     }
-    */
+
+    @IBOutlet weak var table: UITableView!
+    
 
 }
