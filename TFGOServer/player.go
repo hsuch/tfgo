@@ -152,10 +152,12 @@ func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 
 	// loop through list of enemies and find nearest hit
 	for _, enemy := range enemies {
-		curr_dist := wep.canHit(p.Location, enemy.Location, dir)
-		if curr_dist < min_dist {
-			closest_p = enemy
-			min_dist = curr_dist
+		if enemy.Status == NORMAL {
+			curr_dist := wep.canHit(p.Location, enemy.Location, dir)
+			if curr_dist < min_dist {
+				closest_p = enemy
+				min_dist = curr_dist
+			}
 		}
 	}
 
