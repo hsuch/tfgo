@@ -867,7 +867,7 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="fireButton:" destination="mhV-e7-hMe" eventType="touchUpInside" id="bvJ-nq-1Xg"/>
+                                    <action selector="fireButton:" destination="mhV-e7-hMe" eventType="touchUpInside" id="TXz-Q1-Chd"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="⎈" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7F-xT-3Uj">
@@ -906,9 +906,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hNm-qJ-cQQ"/>
                     </view>
-                    <connections>
-                        <outlet property="fireButton" destination="oH6-PH-wpb" id="RVj-yb-4DK"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiZ-2V-wmX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1201,7 +1198,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="4cG-7q-7tp"/>
+        <segue reference="xzX-Iq-bnB"/>
         <segue reference="2n9-BF-tBN"/>
         <segue reference="FNE-Lr-RRh"/>
     </inferredMetricsTieBreakers>
