@@ -85,6 +85,16 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         return false
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            if identifier == "Create Game" {
+                if let waitingVC = segue.destination as? WaitingViewController {
+                    waitingVC.state = state
+                }
+            }
+        }
+    }
+    
     
 
     // MARK: - Table view data source
