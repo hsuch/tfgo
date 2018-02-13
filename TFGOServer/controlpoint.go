@@ -24,3 +24,10 @@ type ControlPoint struct {
 func (cp *ControlPoint) updateStatus(game *Game) {
 
 }
+
+func (cp *ControlPoint) inRange(loc Location) bool {
+	if loc.getDistance(cp.Location) <= cp.Radius {
+		return true
+	}
+	return false
+}
