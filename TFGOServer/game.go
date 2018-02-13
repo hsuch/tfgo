@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	"math"
 )
 
 type GameStatus int
@@ -48,4 +49,10 @@ type Game struct {
 
 	Boundaries []Border
 	ControlPoints map[string]*ControlPoint
+}
+
+func (l1 Location) getDistance(l2 Location) float64 {
+	first := math.Pow(float64(l2.X-l1.X), 2)
+	second := math.Pow(float64(l2.Y-l1.Y), 2)
+	return math.Sqrt(first + second)
 }
