@@ -15,7 +15,7 @@ func dot(v, w Direction) float64 {
 }
 
 func (v Direction) magnitude() float64 {
-	return math.sqrt(dot(v, v))
+	return math.Sqrt(dot(v, v))
 }
 
 // each of the available weapons is defined as a globally
@@ -38,6 +38,11 @@ var SHOTGUN = Weapon {
 	ClipSize: 2,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
+}
+
+var weapons = map[string]Weapon {
+	"Sword" : SWORD,
+	"Shotgun" : SHOTGUN,
 }
 
 type Weapon struct {

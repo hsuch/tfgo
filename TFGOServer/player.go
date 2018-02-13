@@ -20,7 +20,7 @@ const (
 	RESPAWNING
 )
 
-var PlayerStatusMap = map[PlayerStatus]string{
+var playerStatusMap = map[PlayerStatus]string {
 	NORMAL : "NORMAL",
 	OUTOFBOUNDS : "OUTOFBOUNDS",
 	RESPAWNING : "RESPAWNING",
@@ -30,6 +30,7 @@ type Player struct {
 	Name string
 	Icon string
 	Conn net.Conn
+	Chan chan []byte
 	Team Allegiance
 	ControlPoint *ControlPoint
 
@@ -138,7 +139,7 @@ func (p *Player) handleLoc(game *Game, loc Location) {
 }
 
 // decides whether the shot hits anyone, and if so, calls takeHit()
-func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
+func (p *Player) fire(game *Game, wep Weapon, dir float64) {
 	min_dist := math.MaxFloat64
 	var closest_p *Player
 	var enemies []Player
