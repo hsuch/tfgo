@@ -8,7 +8,30 @@
 
 import Foundation
 
-class GameController {
+class Network : NSObject {
+    private var servadd: String?
+    private var port: UInt32?
+    private var inputStream: InputStream!
+    private var outputStream: OutputStream!
+    
+    func setupConn() {
+        var readStream: Unmanaged<CFReadStream>?
+        var writeStream: Unmanaged<CFWriteStream>?
+        CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, servadd as CFString?, port!, &readStream, &writeStream)
+        
+        inputStream = readStream!.takeRetainedValue()
+        outputStream = writeStream!.takeRetainedValue()
+        
+        inputStream.schedule(in: .current, forMode: .commonModes)
+        outputStream.schedule(in: .current, forMode: .commonModes)
+        
+        inputStream.open()
+        outputStream.open()
+    }
+    
+}
+
+class GameState {
     
     private var currentGame: Game?
     private var foundGames: [Game] = []

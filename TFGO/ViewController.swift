@@ -15,9 +15,28 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 //        background.image = UIImage(named: "dark-triangles")
         // Do any additional setup after loading the view, typically from a nib.
     }
 
+    var state = GameState()
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            switch identifier {
+            case "Host Game":
+                if let hostVC = segue.destination as? HostGameViewController {
+                    hostVC.state = state
+                }
+            case "Game Lobby":
+                if let lobbyVC = segue.destination as? GameLobbyViewController {
+                    lobbyVC.state = state
+                }
+            default:
+                break;
+            }
+        }
+    }
 }
 
