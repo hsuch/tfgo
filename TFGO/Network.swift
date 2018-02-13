@@ -8,6 +8,12 @@
 
 import Foundation
 
+class Network {
+    private var servadd: String
+    private var port: Int
+    
+}
+
 class GameState {
     
     private var currentGame: Game?
