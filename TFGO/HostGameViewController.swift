@@ -9,10 +9,19 @@
 import UIKit
 
 class HostGameViewController: UITableViewController, UITextFieldDelegate {
-
+    
+    var state: GameState?
+    private let game = Game()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if game.setMaxPlayers(to: 2) {
+            
+        }
+        if game.setMaxPoints(to: 2) {
+            
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -20,7 +29,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
-    private let game = Game()
+    
     
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
@@ -62,6 +71,30 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    @IBOutlet weak var playerLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var pointLabel: UILabel!
+    
+    @IBAction func step(_ sender: UIStepper) {
+        switch sender.maximumValue {
+        case 10000:
+            if game.setMaxPlayers(to: Int(sender.value)) {
+                playerLabel.text = "\(sender.value) Players"
+            }
+        case 525600:
+            if game.setTimeLimit(to: Int(sender.value)) {
+                timeLabel.text = "\(sender.value) Minutes"
+            }
+        case 100000:
+            if game.setMaxPoints(to: Int(sender.value)) {
+                pointLabel.text = "\(sender.value) Points"
+            }
+        default:
+            break;
+        }
+    }
+    
+    
     private var usePassword = false
     
     @IBAction func passwordSwitch(_ sender: UISwitch) {
@@ -73,7 +106,25 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "Create Game" {
+            if state?.setCurrentGame(to: game) ?? false {
+                return true
+            }
+        }
+        //Give incomplete gamestate alert
+        return false
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let identifier = segue.identifier {
+            if identifier == "Create Game" {
+                if let waitingVC = segue.destination as? WaitingViewController {
+                    waitingVC.state = state
+                }
+            }
+        }
+    }
     
     
 

@@ -9,6 +9,8 @@
 import UIKit
 
 class GameLobbyViewController: UITableViewController {
+    
+    var state: GameState?
 
     override func viewDidLoad() {
         super.viewDidLoad()
