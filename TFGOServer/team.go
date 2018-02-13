@@ -8,5 +8,9 @@ type Team struct {
 }
 
 func (t *Team) getPlayerLocs() []Location {
-	return nil
+	var locs []Location
+	for _, p := range t.Players {
+		locs = append(locs, p.Location)
+	}
+	return locs
 }
