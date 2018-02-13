@@ -10,6 +10,14 @@ type Direction struct {
 	Y float64
 }
 
+func dot(v, w Direction) float64 {
+	return v.X * w.X + v.Y * w.Y
+}
+
+func (v Direction) magnitude() float64 {
+	return math.sqrt(dot(v, v))
+}
+
 // each of the available weapons is defined as a globally
 // accessible variable
 var SWORD = Weapon {
@@ -20,6 +28,16 @@ var SWORD = Weapon {
 	ClipSize: 500,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
+}
+
+var SHOTGUN = Weapon {
+	Name: "Shotgun",
+	Damage: 25,
+	Spread: math.Pi/2,
+	Range: 3,
+	ClipSize: 2,
+	ShotReload: time.Millisecond * 500,
+	ClipReload: time.Second * 3,
 }
 
 type Weapon struct {
@@ -34,6 +52,15 @@ type Weapon struct {
 	ClipReload time.Duration
 }
 
-func (w Weapon) canHit(src, dst Location, dir Direction) bool {
-	return false
+// determines whether the weapon fired from src in dir direction can hit a player at dst
+// if it can, returns the distance from src to dst, if not returns MaxFloat64
+func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
+	target := Direction{dst.X - src.X, dst.Y - src.Y}
+	dist := target.magnitude()
+	angle := math.acos(dot(target, dir) / (dist * dir.magnitude()))
+	if angle <= w.Spread && dist <= w.Range {
+		return dist
+	} else {
+		return math.MaxFloat64
+	}
 }

@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-var testWeapon = Weapon{
+var testWeapon = Weapon {
 	Spread: math.Pi/2,
 	Range: 5,
 }
@@ -43,12 +43,15 @@ func TestCanHit(t *testing.T) {
 }
 
 func TestGetPlayerLocs(t *testing.T) {
+	g := makeSampleGame()
+	redTeam := g.RedTeam
+
 	// red team (two members)
 	playerLocs := redTeam.getPlayerLocs()
-	if playerLocs[0] != boundaries[2] {
+	if playerLocs[0] != g.Boundaries[2] {
 		t.Errorf("TestGetTeamLocs(redTeam) failed, expected (100,100), got (%f,%f).", playerLocs[0].X, playerLocs[0].Y)
 	}
-	if playerLocs[1] != boundaries[3] {
+	if playerLocs[1] != g.Boundaries[3] {
 		t.Errorf("TestGetTeamLocs(redTeam) failed, expected (0,100), got (%f,%f).", playerLocs[1].X, playerLocs[1].Y)
 	}
 
@@ -72,66 +75,66 @@ func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status Player
 
 	if player.Status != status {
 		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
-			fname, pname, playerStatusString(status), playerStatusString(player.Status))
+			fname, pname, PlayerStatusMap[status], PlayerStatusMap[player.Status])
 	}
 }
 
 func TestTakeHit(t *testing.T) {
+	g := makeSampleGame()
+	jenny := getJenny(g) // 100 hp, 0 armor
+	oliver := getOliver(g) // 95 hp, 10 armor
+	anders := getAnders(g) // 10 hp, 5 armor
+	brad := getBrad(g) // 80 hp, 30 armor
+
 	// no armor, hp > damage
-	p1 := jenny // 100 hp, 0 armor
-	p1.takeHit(SWORD)
-	checkPlayerVitals(t, p1, jenny.Health - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
+	jenny.takeHit(SWORD)
+	checkPlayerVitals(t, *jenny, jenny.Health - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
 
 	// armor < damage, hp + armor > damage
-	p2 := oliver // 104 hp, 2 armor
-	p2.takeHit (SWORD)
-	checkPlayerVitals(t, p2, oliver.Health + oliver.Armor - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
+	oliver.takeHit (SWORD)
+	checkPlayerVitals(t, *oliver, oliver.Health + oliver.Armor - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
 
 	// hp + armor < damage
-	p3 := anders // 10 hp, 5 armor
-	p3.takeHit(SWORD)
-	checkPlayerVitals(t, p3, 0, 0, RESPAWNING, "TestTakeHit", "anders")
+	anders.takeHit(SWORD)
+	checkPlayerVitals(t, *anders, 0, 0, RESPAWNING, "TestTakeHit", "anders")
 
 	// armor > damage
-	p4 := brad // 80 hp, 30 armor
-	p4.takeHit (SWORD)
-	checkPlayerVitals(t, p4, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
+	brad.takeHit (SWORD)
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
 
 func TestFire(t *testing.T) {
-	p1 := jenny
-	p2 := oliver
-	p3 := anders
-	p4 := brad
+	g := makeSampleGame()
+	jenny := getJenny(g)
+	oliver := getOliver(g)
+	anders := getAnders(g)
+	brad := getBrad(g)
 
 	// no targets hit
-	p4.fire(Direction{1, 1})
-	checkPlayerVitals(t, p1, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
-	checkPlayerVitals(t, p2, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
-	checkPlayerVitals(t, p3, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
+	brad.fire(g, Direction{1, 1})
+	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
+	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
 
 	// single target hit, non-fatal
-	p3.fire(Direction{1, 1})
-	p1check := jenny
-	p1check.takeHit(SWORD)
-	checkPlayerVitals(t, p1, p1check.Health, p1check.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, p2, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, p4, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+	anders.fire(g, Direction{1, 1})
+	jenny.takeHit(SWORD)
+	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
 
 	// multiple targets available, hits closest
-	p2move := oliver
-	p2move.handleLoc(Location{100, 99})
-	p3.fire(Direction{1, 1})
-	p1check.takeHit(SWORD)
-	checkPlayerVitals(t, p1, p1check.Health, p1check.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, p2move, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, p4, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+	oliver.handleLoc(g, Location{100, 99})
+	anders.fire(g, Direction{1, 1})
+	jenny.takeHit(SWORD)
+	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
 
 	// single target hit, fatal
-	p1.fire(Direction{1, 1})
-	p3check := anders
-	p3check.takeHit(SWORD)
-	checkPlayerVitals(t, p2, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
-	checkPlayerVitals(t, p3, p3check.Health, p3check.Armor, RESPAWNING, "TestFire", "jenny->anders")
-	checkPlayerVitals(t, p4, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
+	jenny.fire(g, Direction{1, 1})
+	anders.takeHit(SWORD)
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
+	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, RESPAWNING, "TestFire", "jenny->anders")
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
 }
