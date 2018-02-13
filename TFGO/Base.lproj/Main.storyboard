@@ -526,6 +526,7 @@
                     <connections>
                         <outlet property="descriptionField" destination="FWo-76-LWz" id="Lo2-4a-EGa"/>
                         <outlet property="gamemodeLabel" destination="e5M-cN-Fte" id="KJG-zQ-f4s"/>
+                        <outlet property="host_map" destination="WQC-r9-lL9" id="5uY-Pt-O6S"/>
                         <outlet property="nameField" destination="svy-63-p2w" id="pDO-yX-Lzw"/>
                         <outlet property="passwordField" destination="oBV-ki-SCM" id="cw0-mC-VXW"/>
                         <outlet property="playerLabel" destination="bqb-8n-YJV" id="apG-gJ-qTc"/>
@@ -966,6 +967,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hNm-qJ-cQQ"/>
                     </view>
+                    <connections>
+                        <outlet property="game_map" destination="Ld3-ss-D4K" id="4EY-WD-nZS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiZ-2V-wmX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
