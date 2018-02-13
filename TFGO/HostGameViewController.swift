@@ -16,12 +16,9 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if game.setMaxPlayers(to: 2) {
-            
-        }
-        if game.setMaxPoints(to: 2) {
-            
-        }
+        if game.setMaxPlayers(to: 2) {}
+        if game.setMaxPoints(to: 10) {}
+        if game.setTimeLimit(to: 2) {}
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -35,28 +32,50 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-        if reason == .committed, let text = textField.text {
-            if textField == nameField {
-                if !game.setName(to: text) {
-                    textField.text = ""
-                    //give invalid name message
-                }
-            } else if textField == descriptionField {
-                if !game.setDescription(to: text) {
-                    textField.text = ""
-                    //give invalid description message
-                }
-            } else if textField == passwordField {
-                if usePassword {
-                    if !game.setPassword(to: text) {
-                        textField.text = ""
-                        //give invalid password message
-                    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == nameField {
+            if !game.setName(to: string) {
+                //give invalid name message
+                return false
+            }
+        } else if textField == descriptionField {
+            if !game.setDescription(to: string) {
+                //give invalid description message
+                return false
+            }
+        } else if textField == passwordField {
+            if usePassword {
+                if !game.setPassword(to: string) {
+                    //give invalid password message
+                    return false
                 }
             }
         }
+        return true
     }
+    
+//    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+//        if reason == .committed, let text = textField.text {
+//            if textField == nameField {
+//                if !game.setName(to: text) {
+//                    textField.text = ""
+//                    //give invalid name message
+//                }
+//            } else if textField == descriptionField {
+//                if !game.setDescription(to: text) {
+//                    textField.text = ""
+//                    //give invalid description message
+//                }
+//            } else if textField == passwordField {
+//                if usePassword {
+//                    if !game.setPassword(to: text) {
+//                        textField.text = ""
+//                        //give invalid password message
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     @IBOutlet private var gamemodeButtons: [UIButton]!
     
@@ -76,18 +95,19 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var pointLabel: UILabel!
     
     @IBAction func step(_ sender: UIStepper) {
+        let value = Int(sender.value)
         switch sender.maximumValue {
         case 10000:
-            if game.setMaxPlayers(to: Int(sender.value)) {
-                playerLabel.text = "\(sender.value) Players"
+            if game.setMaxPlayers(to: value) {
+                playerLabel.text = "\(value) Players"
             }
         case 525600:
-            if game.setTimeLimit(to: Int(sender.value)) {
-                timeLabel.text = "\(sender.value) Minutes"
+            if game.setTimeLimit(to: value) {
+                timeLabel.text = "\(value) Minutes"
             }
         case 100000:
-            if game.setMaxPoints(to: Int(sender.value)) {
-                pointLabel.text = "\(sender.value) Points"
+            if game.setMaxPoints(to: value) {
+                pointLabel.text = "\(value) Points"
             }
         default:
             break;
