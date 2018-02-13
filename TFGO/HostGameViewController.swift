@@ -9,6 +9,8 @@
 import UIKit
 
 class HostGameViewController: UITableViewController, UITextFieldDelegate {
+    
+    var state: GameState?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,7 +75,15 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "Create Game" {
+            if state?.setCurrentGame(to: game) ?? false {
+                return true
+            }
+        }
+        //Give incomplete gamestate alert
+        return false
+    }
     
     
 

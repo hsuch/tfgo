@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GameController {
+class GameState {
     
     private var currentGame: Game?
     private var foundGames: [Game] = []

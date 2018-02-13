@@ -35,7 +35,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="ZEs-Lf-FFb" kind="show" id="jkD-TJ-GTL"/>
+                                            <segue destination="ZEs-Lf-FFb" kind="show" identifier="Host Game" id="jkD-TJ-GTL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NWK-K7-SNE">
@@ -45,7 +45,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="mDp-nZ-Q9M" kind="show" id="sNw-Co-70M"/>
+                                            <segue destination="mDp-nZ-Q9M" kind="show" identifier="Game Lobby" id="sNw-Co-70M"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v35-OI-s6J">
@@ -55,7 +55,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="Ibe-RX-1f9" kind="show" id="w0N-5a-D0Z"/>
+                                            <segue destination="Ibe-RX-1f9" kind="show" identifier="Player Info" id="w0N-5a-D0Z"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bgV-rV-ZvH">
@@ -65,7 +65,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <segue destination="6k5-FI-bQK" kind="show" id="2n9-BF-tBN"/>
+                                            <segue destination="6k5-FI-bQK" kind="show" identifier="Settings" id="2n9-BF-tBN"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -477,7 +477,7 @@
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                     <state key="normal" title="Create Game"/>
                                                     <connections>
-                                                        <segue destination="OjP-k2-aXS" kind="show" id="FNE-Lr-RRh"/>
+                                                        <segue destination="OjP-k2-aXS" kind="show" identifier="Create Game" id="FNE-Lr-RRh"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
