@@ -48,9 +48,9 @@ type Player struct {
 /*
  * handleTimer - sets the out-of-bounds timer and kills the player if it fires
  *
- * p: player whose life is at stake (is out of bounds)
+ * p: Player whose life is at stake (is out of bounds)
  *
- * game: the game struct containing all game-related information
+ * game: the Game struct containing all game-related information
  *
  * Returns: Nothing
  */
@@ -63,9 +63,9 @@ func handleOutOfBoundsTimer(game *Game, p *Player) {
 /*
  * inBounds - check if location is within game boundaries
  *
- * game: the game struct containing all game-related information
+ * game: the Game struct containing all game-related information
  *
- * loc: new location to be checked
+ * loc: new Location to be checked
  *
  * Returns: True if loc is within game boundaries, false otherwise
  */
@@ -89,11 +89,11 @@ func inBounds(game *Game, loc Location) bool {
  * handleLoc - sets a player's new location, checking for bounds and updating
  *             control points
  *
- * p: player whose location is being updated
+ * p: Player whose Location is being updated
  *
- * game: the game struct containing all game-related information
+ * game: the Game struct containing all game-related information
  *
- * loc: new location of player p
+ * loc: new Location of Player p
  *
  * Returns: Nothing
  */
@@ -142,20 +142,20 @@ func (p *Player) handleLoc(game *Game, loc Location) {
 func (p *Player) fire(game *Game, wep Weapon, dir float64) {
 	min_dist := math.MaxFloat64
 	var closest_p *Player
-	var enemies []Player
+	var enemies map[string]*Player
 	if p.Team == RED {
-		enemies = game.BlueTeam.GetPlayerLocs()
+		enemies = game.BlueTeam.Players
 	} else if p.Team == BLUE {
-		enemies = game.RedTeam.GetPlayerLocs()
+		enemies = game.RedTeam.Players
 	} else {
 		enemies = nil
 	}
 
 	// loop through list of enemies and find nearest hit
-	for _, val := range enemies {
-		curr_dist := wep.canHit(p.Location, val.Location, dir)
+	for _, enemy := range enemies {
+		curr_dist := wep.canHit(p.Location, enemy.Location, dir)
 		if curr_dist < min_dist {
-			closest_p = val
+			closest_p = enemy
 			min_dist = curr_dist
 		}
 	}
