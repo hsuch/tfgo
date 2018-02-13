@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WMc-iQ-wge">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WMc-iQ-wge">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -254,8 +254,11 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="lJE-tp-4CY">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" wraps="YES" value="2" minimumValue="2" maximumValue="10000" translatesAutoresizingMaskIntoConstraints="NO" id="lJE-tp-4CY">
                                                     <rect key="frame" x="265" y="8" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="step:" destination="ZEs-Lf-FFb" eventType="valueChanged" id="9pr-ez-Ggq"/>
+                                                    </connections>
                                                 </stepper>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Limit" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LBO-hh-GzF">
                                                     <rect key="frame" x="16" y="13" width="79.666666666666671" height="18"/>
@@ -297,8 +300,11 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="B2y-JO-Enw">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" wraps="YES" value="2" minimumValue="2" maximumValue="525600" translatesAutoresizingMaskIntoConstraints="NO" id="B2y-JO-Enw">
                                                     <rect key="frame" x="265" y="8" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="step:" destination="ZEs-Lf-FFb" eventType="valueChanged" id="iLS-SM-7pd"/>
+                                                    </connections>
                                                 </stepper>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="2 Minutes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mxc-4s-mF5">
                                                     <rect key="frame" x="119" y="11" width="138" height="21"/>
@@ -334,8 +340,11 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Yzr-D0-6GJ">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" wraps="YES" value="10" minimumValue="10" maximumValue="100000" stepValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="Yzr-D0-6GJ">
                                                     <rect key="frame" x="265" y="8" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="step:" destination="ZEs-Lf-FFb" eventType="valueChanged" id="7kk-UW-fvF"/>
+                                                    </connections>
                                                 </stepper>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="10 Points" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GRR-pU-umy">
                                                     <rect key="frame" x="119" y="11" width="138" height="21"/>
@@ -487,7 +496,7 @@
                                         <rect key="frame" x="0.0" y="877.66666666666674" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Lv-V4-XYw" id="m2F-u0-ReT">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2B0-5m-xSs">
@@ -519,6 +528,9 @@
                         <outlet property="gamemodeLabel" destination="e5M-cN-Fte" id="KJG-zQ-f4s"/>
                         <outlet property="nameField" destination="svy-63-p2w" id="pDO-yX-Lzw"/>
                         <outlet property="passwordField" destination="oBV-ki-SCM" id="cw0-mC-VXW"/>
+                        <outlet property="playerLabel" destination="bqb-8n-YJV" id="apG-gJ-qTc"/>
+                        <outlet property="pointLabel" destination="GRR-pU-umy" id="TJg-TI-A1A"/>
+                        <outlet property="timeLabel" destination="Mxc-4s-mF5" id="WbP-Nv-3cS"/>
                         <outletCollection property="gamemodeButtons" destination="D7N-bW-7Ro" collectionClass="NSMutableArray" id="HXN-Vb-r7k"/>
                         <outletCollection property="gamemodeButtons" destination="5gH-y5-Ii1" collectionClass="NSMutableArray" id="aPI-0Y-Qb9"/>
                         <outletCollection property="gamemodeButtons" destination="U5g-sZ-AqI" collectionClass="NSMutableArray" id="DP4-L3-0HX"/>
