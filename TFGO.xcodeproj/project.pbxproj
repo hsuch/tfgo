@@ -21,6 +21,7 @@
 		00DA1D2C20210C21001AF71A /* TFGOUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2B20210C21001AF71A /* TFGOUITests.swift */; };
 		00FFA870202F67E200C83F74 /* GameLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */; };
 		18EB71AE20336C05005A677C /* WaitingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB71AD20336C05005A677C /* WaitingViewController.swift */; };
+		7F17E35D2033A5B600F548F3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F17E35C2033A5B600F548F3 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		00DA1D2D20210C21001AF71A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLobbyViewController.swift; sourceTree = "<group>"; };
 		18EB71AD20336C05005A677C /* WaitingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingViewController.swift; sourceTree = "<group>"; };
+		7F17E35C2033A5B600F548F3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F17E35D2033A5B600F548F3 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +98,7 @@
 				00DA1D1F20210C21001AF71A /* TFGOTests */,
 				00DA1D2A20210C21001AF71A /* TFGOUITests */,
 				00DA1D0920210C21001AF71A /* Products */,
+				7F17E35B2033A5B500F548F3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -144,6 +148,14 @@
 				00DA1D2D20210C21001AF71A /* Info.plist */,
 			);
 			path = TFGOUITests;
+			sourceTree = "<group>";
+		};
+		7F17E35B2033A5B500F548F3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7F17E35C2033A5B600F548F3 /* CoreLocation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
