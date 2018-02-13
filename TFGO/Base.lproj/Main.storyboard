@@ -867,7 +867,7 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="fireButton:" destination="mhV-e7-hMe" eventType="touchUpInside" id="bvJ-nq-1Xg"/>
+                                    <action selector="fireButton:" destination="mhV-e7-hMe" eventType="touchUpInside" id="TXz-Q1-Chd"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="⎈" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7F-xT-3Uj">
@@ -906,9 +906,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hNm-qJ-cQQ"/>
                     </view>
-                    <connections>
-                        <outlet property="fireButton" destination="oH6-PH-wpb" id="RVj-yb-4DK"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SiZ-2V-wmX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -968,7 +965,7 @@
         <!--Game Info-->
         <scene sceneID="26e-JF-Icc">
             <objects>
-                <tableViewController id="fl4-6m-JGR" sceneMemberID="viewController">
+                <tableViewController id="fl4-6m-JGR" customClass="GameInfoViewController" customModule="TFGO" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Hqr-sK-nwM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1202,7 +1199,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="4cG-7q-7tp"/>
-        <segue reference="2n9-BF-tBN"/>
-        <segue reference="FNE-Lr-RRh"/>
+        <segue reference="Th9-pw-b0x"/>
+        <segue reference="XJj-c5-6F9"/>
     </inferredMetricsTieBreakers>
 </document>
