@@ -16,7 +16,7 @@
         <!--View Controller-->
         <scene sceneID="QWU-2S-ZFB">
             <objects>
-                <viewController id="148-xb-tAK" sceneMemberID="viewController">
+                <viewController id="148-xb-tAK" customClass="ViewController" customModule="TFGO" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7gV-lG-r0G">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -111,6 +111,9 @@
                         <viewLayoutGuide key="safeArea" id="h6T-vy-hJt"/>
                     </view>
                     <navigationItem key="navigationItem" id="VYG-oF-7tF"/>
+                    <connections>
+                        <outlet property="background" destination="ouk-Mg-hHW" id="ruU-Mr-B8k"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KLj-Sz-G5C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -404,6 +407,9 @@
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Fxf-gG-TEy">
                                                     <rect key="frame" x="316" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="passwordSwitch:" destination="ZEs-Lf-FFb" eventType="valueChanged" id="pFp-YN-W64"/>
+                                                    </connections>
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Require Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8LL-I9-mRr">
                                                     <rect key="frame" x="8" y="11" width="165" height="21"/>
@@ -494,7 +500,7 @@
                         <outlet property="descriptionField" destination="FWo-76-LWz" id="Lo2-4a-EGa"/>
                         <outlet property="gamemodeLabel" destination="e5M-cN-Fte" id="KJG-zQ-f4s"/>
                         <outlet property="nameField" destination="svy-63-p2w" id="pDO-yX-Lzw"/>
-                        <outlet property="passwordField" destination="oBV-ki-SCM" id="Bxz-bo-c9W"/>
+                        <outlet property="passwordField" destination="oBV-ki-SCM" id="cw0-mC-VXW"/>
                         <outletCollection property="gamemodeButtons" destination="D7N-bW-7Ro" collectionClass="NSMutableArray" id="HXN-Vb-r7k"/>
                         <outletCollection property="gamemodeButtons" destination="5gH-y5-Ii1" collectionClass="NSMutableArray" id="aPI-0Y-Qb9"/>
                         <outletCollection property="gamemodeButtons" destination="U5g-sZ-AqI" collectionClass="NSMutableArray" id="DP4-L3-0HX"/>
@@ -1199,7 +1205,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="4cG-7q-7tp"/>
-        <segue reference="Th9-pw-b0x"/>
-        <segue reference="XJj-c5-6F9"/>
+        <segue reference="2n9-BF-tBN"/>
+        <segue reference="FNE-Lr-RRh"/>
     </inferredMetricsTieBreakers>
 </document>

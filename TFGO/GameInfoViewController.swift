@@ -12,7 +12,8 @@ class GameInfoViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        getGameInfo()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -20,9 +21,8 @@ class GameInfoViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    private func getGameInfo() {
+        
     }
 
     // MARK: - Table view data source

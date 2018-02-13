@@ -39,7 +39,12 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
                     //give invalid description message
                 }
             } else if textField == passwordField {
-                
+                if usePassword {
+                    if !game.setPassword(to: text) {
+                        textField.text = ""
+                        //give invalid password message
+                    }
+                }
             }
         }
     }
@@ -56,6 +61,21 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
             game.setMode(to: gamemodes[modeIndex])
         }
     }
+    
+    private var usePassword = false
+    
+    @IBAction func passwordSwitch(_ sender: UISwitch) {
+        usePassword = sender.isOn
+        if usePassword {
+            passwordField.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        } else {
+            passwordField.backgroundColor = #colorLiteral(red: 0.7540688515, green: 0.7540867925, blue: 0.7540771365, alpha: 1)
+        }
+    }
+    
+    
+    
+    
 
     // MARK: - Table view data source
 

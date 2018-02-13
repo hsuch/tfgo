@@ -36,6 +36,7 @@ public class Game {
     private var maxPoints: Int?
     private var maxPlayers: Int?
     private var description: String
+    private var password: String?
     
     private var players: [Player]
     private var boundaries: [MKMapPoint]
@@ -111,6 +112,18 @@ public class Game {
     func setDescription(to description: String) -> Bool {
         if validDescription(description) {
             self.description = description
+            return true
+        }
+        return false
+    }
+    
+    func getPassword() -> String? {
+        return password
+    }
+    
+    func setPassword(to password: String) -> Bool {
+        if validDescription(password) {
+            self.password = password
             return true
         }
         return false
