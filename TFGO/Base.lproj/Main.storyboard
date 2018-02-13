@@ -965,7 +965,7 @@
         <!--Game Info-->
         <scene sceneID="26e-JF-Icc">
             <objects>
-                <tableViewController id="fl4-6m-JGR" sceneMemberID="viewController">
+                <tableViewController id="fl4-6m-JGR" customClass="GameInfoViewController" customModule="TFGO" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Hqr-sK-nwM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1198,8 +1198,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="xzX-Iq-bnB"/>
-        <segue reference="2n9-BF-tBN"/>
-        <segue reference="FNE-Lr-RRh"/>
+        <segue reference="4cG-7q-7tp"/>
+        <segue reference="Th9-pw-b0x"/>
+        <segue reference="XJj-c5-6F9"/>
     </inferredMetricsTieBreakers>
 </document>
