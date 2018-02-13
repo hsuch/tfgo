@@ -19,6 +19,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         if game.setMaxPlayers(to: 2) {}
         if game.setMaxPoints(to: 10) {}
         if game.setTimeLimit(to: 2) {}
+        game.setMode(to: .cp)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -33,19 +34,21 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordField: UITextField!
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        var name = game.getName() ?? ""
+        name.append(string)
         if textField == nameField {
-            if !game.setName(to: string) {
+            if !game.setName(to: name) {
                 //give invalid name message
                 return false
             }
         } else if textField == descriptionField {
-            if !game.setDescription(to: string) {
+            if !game.setDescription(to: name) {
                 //give invalid description message
                 return false
             }
         } else if textField == passwordField {
             if usePassword {
-                if !game.setPassword(to: string) {
+                if !game.setPassword(to: name) {
                     //give invalid password message
                     return false
                 }
