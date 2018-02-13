@@ -16,19 +16,20 @@ func serveClient(conn net.Conn) {
 	var p *Player
 	var g *Game
 
-	d := json.NewDecoder(conn)
+	decoder := json.NewDecoder(conn)
 	for {
 		var msg ClientMessage
-		if err := d.Decode(&msg); err != nil {
+		if err := decoder.Decode(&msg); err != nil {
 			break
 		}
 
 		switch msg.Action {
 		case "CreateGame":
-			g, p = createNewGame(msg.Data)
+			g, p = createNewGame(conn, msg.Data)
 		case "ShowGames":
 			sendAvailableGames(p)
 		case "ShowGameInfo":
+			sendGameInfo(msg.Data["GameID"].(string))
 		case "JoinGame":
 		case "StartGame":
 		case "LocationUpdate":

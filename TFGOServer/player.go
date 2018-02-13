@@ -4,6 +4,7 @@ import (
 	"net"
 	"time"
 	"math"
+	"encoding/json"
 )
 
 type Allegiance int
@@ -30,7 +31,8 @@ type Player struct {
 	Name string
 	Icon string
 	Conn net.Conn
-	Chan chan []byte
+	Chan chan map[string]interface{}
+	Encoder *json.Encoder
 	Team Allegiance
 	ControlPoint *ControlPoint
 
@@ -192,6 +194,7 @@ func (p *Player) awaitRespawn(game *Game) {
 
 func (p *Player) respawn(game *Game) {
 	p.Status = NORMAL
+	p.StatusTimer = nil
 	p.Health = 100
 	p.Armor = 0
 	p.Inventory = nil
