@@ -99,7 +99,7 @@ public class Game {
     
     func setMaxPlayers(to players: Int) -> Bool {
         if validNumber(of: players) {
-            self.maxPoints = players
+            self.maxPlayers = players
             return true
         }
         return false
@@ -160,7 +160,7 @@ public class Game {
     }
     
     private func validDescription(_ description: String) -> Bool {
-        return description.count > 100
+        return description.count < 100
     }
     
     func isValid() -> Bool {
