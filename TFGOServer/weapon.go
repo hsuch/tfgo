@@ -52,13 +52,15 @@ type Weapon struct {
 	ClipReload time.Duration
 }
 
-func (w Weapon) canHit(src, dst Location, dir Direction) bool {
+// determines whether the weapon fired from src in dir direction can hit a player at dst
+// if it can, returns the distance from src to dst, if not returns MaxFloat64
+func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	target := Direction{dst.X - src.X, dst.Y - src.Y}
 	dist := target.magnitude()
 	angle := math.acos(dot(target, dir) / (dist * dir.magnitude()))
 	if angle <= w.Spread && dist <= w.Range {
-		return true
+		return dist
 	} else {
-		return false
+		return math.MaxFloat64
 	}
 }

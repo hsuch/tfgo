@@ -23,6 +23,12 @@ type Location struct {
 	Y float64
 }
 
+type Border struct {
+	P Location	//one of the two vertices which define this border
+	D Direction	//the direction vector of the line
+	T float64	//the max t-value for this line segment
+}
+
 type Game struct {
 	ID string
 	Name string
@@ -40,6 +46,6 @@ type Game struct {
 	RedTeam *Team
 	BlueTeam *Team
 
-	Boundaries [4]Location // ul, ur, lr, ll
+	Boundaries []Border
 	ControlPoints map[string]*ControlPoint
 }
