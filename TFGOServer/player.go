@@ -19,11 +19,6 @@ const (
 	RESPAWNING
 )
 
-const initStatus = NORMAL
-const initHealth = 100
-const initArmor = 0
-const initPickup = nil
-
 var PlayerStatusMap = map[PlayerStatus]string{
 	NORMAL : "NORMAL",
 	OUTOFBOUNDS : "OUTOFBOUNDS",
@@ -97,29 +92,33 @@ func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 	//will we want to communicate to the client that they've hit someone?
 }
 
-/* Input: Weapon dealing damage
-   Output: Void, runs goroutine to
-   place player in respawn queue if killed.
-*/
-func (p *Player) takeHit(wep Weapon) bool {
-	if wep.Damage <= p.armor {
-		p.armor -= wep.Damage
-	}
-	else {
-		splash := wep.Damage - p.armor
-		p.health -= splash
+func (p *Player) takeHit(game *Game, wep Weapon) {
+	if wep.Damage <= p.Armor {
+		p.Armor -= wep.Damage
+	} else {
+		splash := wep.Damage - p.Armor
+		p.Armor = 0
+		p.Health -= splash
 	}
 
-	if p.health <= 0 {
-		go awaitRespawn ()
+	if p.Health <= 0 {
+		go p.awaitRespawn(game)
 	}
+
+	// send message to player informing hit
 }
 
-/* Called by awaitRespawn () goroutine after timer reset */
-func (p *player) respawn () {
-	p.status = RESPAWNING
-	p.health = initHealth
-	p.armor = initArmor
-	p.pickup = initPickup
-	p.location = p.Team.Base
+func (p *Player) awaitRespawn(game *Game) {
+	p.Status = RESPAWNING
+	<- p.StatusTimer.C
+	p.respawn(game)
+	// send message to player informing respawn
+}
+
+func (p *Player) respawn(game *Game) {
+	p.Status = NORMAL
+	p.Health = 100
+	p.Armor = 0
+	p.Inventory = nil
+	// if player not in base...
 }
