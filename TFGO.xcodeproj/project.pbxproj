@@ -20,7 +20,10 @@
 		00DA1D2120210C21001AF71A /* TFGOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2020210C21001AF71A /* TFGOTests.swift */; };
 		00DA1D2C20210C21001AF71A /* TFGOUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2B20210C21001AF71A /* TFGOUITests.swift */; };
 		00FFA870202F67E200C83F74 /* GameLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */; };
+		08FDDB7959D3CAD811ADB258 /* Pods_TFGO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49D865F5D5025571845B309 /* Pods_TFGO.framework */; };
 		18EB71AE20336C05005A677C /* WaitingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB71AD20336C05005A677C /* WaitingViewController.swift */; };
+		3187F71B82853B50B524A00F /* Pods_TFGOTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16AC2F6F3D23992CE0559E4E /* Pods_TFGOTests.framework */; };
+		4A0C76347F9BB61107B7D70D /* Pods_TFGOUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A73166019802528EF3334C /* Pods_TFGOUITests.framework */; };
 		7F17E35D2033A5B600F548F3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F17E35C2033A5B600F548F3 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00870A72088A3E23FFC2F8E4 /* Pods-TFGOUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFGOUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TFGOUITests/Pods-TFGOUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		00A27FDE202E825900D58C3A /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		00A27FE0202E84A900D58C3A /* HostGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostGameViewController.swift; sourceTree = "<group>"; };
 		00A27FE2202E900B00D58C3A /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
@@ -61,8 +65,16 @@
 		00DA1D2B20210C21001AF71A /* TFGOUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFGOUITests.swift; sourceTree = "<group>"; };
 		00DA1D2D20210C21001AF71A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLobbyViewController.swift; sourceTree = "<group>"; };
+		16AC2F6F3D23992CE0559E4E /* Pods_TFGOTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFGOTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EB71AD20336C05005A677C /* WaitingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingViewController.swift; sourceTree = "<group>"; };
+		20F713770F85750BB4A0CA3C /* Pods-TFGOTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFGOTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TFGOTests/Pods-TFGOTests.debug.xcconfig"; sourceTree = "<group>"; };
+		622015BB06ACCEC9C58138EE /* Pods-TFGO.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFGO.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TFGO/Pods-TFGO.debug.xcconfig"; sourceTree = "<group>"; };
+		679F17A81BCC4140CC6B8A3B /* Pods-TFGOUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFGOUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TFGOUITests/Pods-TFGOUITests.release.xcconfig"; sourceTree = "<group>"; };
 		7F17E35C2033A5B600F548F3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		80EC1399934EEA543F9FF827 /* Pods-TFGO.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFGO.release.xcconfig"; path = "Pods/Target Support Files/Pods-TFGO/Pods-TFGO.release.xcconfig"; sourceTree = "<group>"; };
+		A4A73166019802528EF3334C /* Pods_TFGOUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFGOUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B49D865F5D5025571845B309 /* Pods_TFGO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFGO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D982C6FD0138B2F505FB6A60 /* Pods-TFGOTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFGOTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TFGOTests/Pods-TFGOTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +83,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F17E35D2033A5B600F548F3 /* CoreLocation.framework in Frameworks */,
+				08FDDB7959D3CAD811ADB258 /* Pods_TFGO.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3187F71B82853B50B524A00F /* Pods_TFGOTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A0C76347F9BB61107B7D70D /* Pods_TFGOUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +114,7 @@
 				00DA1D2A20210C21001AF71A /* TFGOUITests */,
 				00DA1D0920210C21001AF71A /* Products */,
 				7F17E35B2033A5B500F548F3 /* Frameworks */,
+				434784B400C5E2D343A3BF6B /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -150,10 +166,26 @@
 			path = TFGOUITests;
 			sourceTree = "<group>";
 		};
+		434784B400C5E2D343A3BF6B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				622015BB06ACCEC9C58138EE /* Pods-TFGO.debug.xcconfig */,
+				80EC1399934EEA543F9FF827 /* Pods-TFGO.release.xcconfig */,
+				20F713770F85750BB4A0CA3C /* Pods-TFGOTests.debug.xcconfig */,
+				D982C6FD0138B2F505FB6A60 /* Pods-TFGOTests.release.xcconfig */,
+				00870A72088A3E23FFC2F8E4 /* Pods-TFGOUITests.debug.xcconfig */,
+				679F17A81BCC4140CC6B8A3B /* Pods-TFGOUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		7F17E35B2033A5B500F548F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				7F17E35C2033A5B600F548F3 /* CoreLocation.framework */,
+				B49D865F5D5025571845B309 /* Pods_TFGO.framework */,
+				16AC2F6F3D23992CE0559E4E /* Pods_TFGOTests.framework */,
+				A4A73166019802528EF3334C /* Pods_TFGOUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -165,9 +197,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00DA1D3020210C21001AF71A /* Build configuration list for PBXNativeTarget "TFGO" */;
 			buildPhases = (
+				3BFFCBF87AFD43CAD503192E /* [CP] Check Pods Manifest.lock */,
 				00DA1D0420210C20001AF71A /* Sources */,
 				00DA1D0520210C20001AF71A /* Frameworks */,
 				00DA1D0620210C20001AF71A /* Resources */,
+				5A58E8B5A80D4435EE47715F /* [CP] Embed Pods Frameworks */,
+				8E89FE7B6676235729B2F2E4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -182,9 +217,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00DA1D3320210C21001AF71A /* Build configuration list for PBXNativeTarget "TFGOTests" */;
 			buildPhases = (
+				868AB5C413693C836BA97B0D /* [CP] Check Pods Manifest.lock */,
 				00DA1D1820210C21001AF71A /* Sources */,
 				00DA1D1920210C21001AF71A /* Frameworks */,
 				00DA1D1A20210C21001AF71A /* Resources */,
+				D17159DFDB94804D11CB677D /* [CP] Embed Pods Frameworks */,
+				B6C832D42552BD8DEB483A74 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -200,9 +238,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00DA1D3620210C21001AF71A /* Build configuration list for PBXNativeTarget "TFGOUITests" */;
 			buildPhases = (
+				E0178ED2E604B81CE584DA74 /* [CP] Check Pods Manifest.lock */,
 				00DA1D2320210C21001AF71A /* Sources */,
 				00DA1D2420210C21001AF71A /* Frameworks */,
 				00DA1D2520210C21001AF71A /* Resources */,
+				3536CA02A2F630BFA79572AD /* [CP] Embed Pods Frameworks */,
+				61100C5163247E892900E1EB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -286,6 +327,156 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3536CA02A2F630BFA79572AD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TFGOUITests/Pods-TFGOUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3BFFCBF87AFD43CAD503192E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFGO-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5A58E8B5A80D4435EE47715F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-TFGO/Pods-TFGO-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TFGO/Pods-TFGO-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		61100C5163247E892900E1EB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TFGOUITests/Pods-TFGOUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		868AB5C413693C836BA97B0D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFGOTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8E89FE7B6676235729B2F2E4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TFGO/Pods-TFGO-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B6C832D42552BD8DEB483A74 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TFGOTests/Pods-TFGOTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D17159DFDB94804D11CB677D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TFGOTests/Pods-TFGOTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0178ED2E604B81CE584DA74 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TFGOUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		00DA1D0420210C20001AF71A /* Sources */ = {
@@ -464,6 +655,7 @@
 		};
 		00DA1D3120210C21001AF71A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 622015BB06ACCEC9C58138EE /* Pods-TFGO.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -478,6 +670,7 @@
 		};
 		00DA1D3220210C21001AF71A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80EC1399934EEA543F9FF827 /* Pods-TFGO.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -492,6 +685,7 @@
 		};
 		00DA1D3420210C21001AF71A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 20F713770F85750BB4A0CA3C /* Pods-TFGOTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -508,6 +702,7 @@
 		};
 		00DA1D3520210C21001AF71A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D982C6FD0138B2F505FB6A60 /* Pods-TFGOTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -524,6 +719,7 @@
 		};
 		00DA1D3720210C21001AF71A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 00870A72088A3E23FFC2F8E4 /* Pods-TFGOUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -539,6 +735,7 @@
 		};
 		00DA1D3820210C21001AF71A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 679F17A81BCC4140CC6B8A3B /* Pods-TFGOUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

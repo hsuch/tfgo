@@ -1,5 +1,7 @@
 package main
 
+// main.go: server setup code
+
 import (
 	"net"
 	"fmt"
@@ -10,8 +12,6 @@ const (
 	HOST = "127.0.0.1"
 	PORT = ":8080"
 )
-
-var games = make(map[string]*Game)
 
 // the following server code is heavily inspired by the example at
 // https://astaxie.gitbooks.io/build-web-application-with-golang/en/08.1.html

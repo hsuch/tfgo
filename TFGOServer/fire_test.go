@@ -42,26 +42,6 @@ func TestCanHit(t *testing.T) {
 	}
 }
 
-func TestGetPlayerLocs(t *testing.T) {
-	g := makeSampleGame()
-	redTeam := g.RedTeam
-
-	// red team (two members)
-	playerLocs := redTeam.getPlayerLocs()
-	if playerLocs[0] != g.Boundaries[2] {
-		t.Errorf("TestGetTeamLocs(redTeam) failed, expected (100,100), got (%f,%f).", playerLocs[0].X, playerLocs[0].Y)
-	}
-	if playerLocs[1] != g.Boundaries[3] {
-		t.Errorf("TestGetTeamLocs(redTeam) failed, expected (0,100), got (%f,%f).", playerLocs[1].X, playerLocs[1].Y)
-	}
-
-	// empty team (no members)
-	playerLocs = Team{}.getPlayerLocs()
-	if playerLocs != nil {
-		t.Errorf("TestGetTeamLocs(emptyTeam) failed, expected output length 0, got length %d.", len(playerLocs))
-	}
-}
-
 func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status PlayerStatus, fname, pname string) {
 	if player.Health != hp {
 		t.Errorf("%s(%s) failed, expected (Health: %d), got (Health: %d)",
@@ -75,7 +55,7 @@ func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status Player
 
 	if player.Status != status {
 		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
-			fname, pname, PlayerStatusMap[status], PlayerStatusMap[player.Status])
+			fname, pname, playerStatusMap[status], playerStatusMap[player.Status])
 	}
 }
 
