@@ -36,7 +36,7 @@ func inBounds(game *Game, loc Location) bool {
 	for _, val := range game.Boundaries {
 		t := val.P.Y + val.D.Y * (loc.X - val.P.X) / val.D.X - loc.Y
 		s := (loc.X - val.P.X) / val.D.X
-		if t >= 0 && s <= 1 {
+		if t >= 0 && s >= 0 && s <= 1 {
 			intersections++
 		}
 	}
