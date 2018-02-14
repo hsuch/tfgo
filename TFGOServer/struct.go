@@ -116,7 +116,6 @@ type Direction struct {
 type Border struct {
 	P Location	// one of the two vertices which define this border
 	D Direction	// the direction vector of the line
-	T float64	// the max t-value for this line segment
 }
 
 type Game struct {

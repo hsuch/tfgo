@@ -8,8 +8,14 @@ import (
 )
 
 func (game *Game) findCenter() Location {
-	// jenny halp
-	return Location{}
+	X := 0.0
+	Y := 0.0
+	c := len(game.Boundaries)
+	_, val := range game.Boundaries {
+		X += val.P.X
+		Y += val.P.Y
+	}
+	return Location{X / c, Y / c}
 }
 
 // the following random string generation code is heavily inspired by the
@@ -38,13 +44,17 @@ func createNewGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) 
 	g.Mode = stringToMode[data["Mode"].(string)]
 
 	boundaries := data["Boundaries"].([]interface{})
-	for _, val := range boundaries {
+	for key, val := range boundaries {
 		vertex := val.(map[string]interface{})
 		p := Location{X: vertex["X"].(float64), Y: vertex["Y"].(float64)}
-		// calculate d, t here
 		border := Border{P: p}
+		prev := g.Boundaries[key - 1].P
+		g.Boundaries[key - 1].D = Direction{p.X - prev.X, p.Y - prev.Y}
 		g.Boundaries = append(g.Boundaries, border)
 	}
+	first := g.Boundaries[0].P
+	last := g.Boundaries[len(g.Boundaries) - 1].P
+	g.Boundaries[len(g.Boundaries) - 1].D = Direction{first.X - last.X, first.Y - last.Y}
 
 	var p Player
 	host := data["Host"].(map[string]interface{})
