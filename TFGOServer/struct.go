@@ -199,3 +199,19 @@ var SHOTGUN = Weapon {
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
 }
+
+func (m float64) meterToDegree() {
+	return m * 9 / 1000000
+}
+
+func (d float64) degreeToMeter() {
+	return d * 1000000 / 9
+}
+
+func BASERADIUS() {
+	return (3.0).meterToDegree()
+}
+
+func CPRADIUS() {
+	return (1.0).meterToDegree()
+}

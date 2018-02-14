@@ -36,11 +36,24 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
  *
  * wep: the Weapon used to fire the shot
  *
- * dir: Direction vector of the shot
+ * angle: angle of shot, with North = 0
  *
  * Returns: Nothing
  */
-func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
+func (p *Player) fire(game *Game, wep Weapon, angle float64) {
+	//calculate direction vector of shot
+	var dir Direction
+	if angle == 0 || angle == 180 {
+		dir = Direction{0,1}
+	} else {
+		dir.X = 1
+		dir.Y = math.Cos(angle * math.Pi / 180) / math.Sin(angle * math.Pi / 180)
+	}
+	if angle >= 180 {
+		dir.X *= -1
+		dir.Y *= -1
+	}
+
 	minDist := math.MaxFloat64
 	var closestP *Player
 	var enemies map[string]*Player
