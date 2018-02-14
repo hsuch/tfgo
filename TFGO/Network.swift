@@ -10,22 +10,22 @@ import Foundation
 import SwiftSocket
 
 class Connection {
-    private var address: String?
-    private var port: UInt32?
-    let client = TCPClient(address: address, port: port)
+    private var servadd: String = "www.google.com" // to be replaced with real server ip
+    private var servport: Int32 = 80
+    private var client: TCPClient
     
-    func sendData(data: Data) -> Bool {
-        let result = client.send(data)
-        return result
+    func sendData(data: Data) -> Result{
+        return client.send(data: data)
     }
     
-    func recvData() -> [Data] {
+    func recvData() -> Data? {
         guard let response = client.read(1024*10)
         else { return nil }
-        return String(bytes: response, encoding: .utf8)
+        return String(bytes: response, encoding: .utf8)?.data(using: .utf8)
     }
     
     init(){
+        client = TCPClient(address: servadd, port: servport)
         client.connect(timeout: 10) // this should probably have success and failure case but whatever
     }
 }
@@ -34,15 +34,15 @@ class ServerMessage {
     private enum type: String {
         case PlayerListUpdate, AvailableGames, GameInfo, JoinGame, GameStartInfo, GameUpdate, StatusUpdate
     }
-    private var data: JSONSerialization
+    private var data: [String: Any]
     
     func parse() {
-        
+        //todo
     }
     
     init(conn: Connection) {
-        received = conn.recvData()
-        data = try? JSONSerialization.jsonObject(with: received, options: [])
+        let received = conn.recvData()
+        data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
     }
 }
 
