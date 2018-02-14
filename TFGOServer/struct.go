@@ -86,6 +86,12 @@ const (
 	BLUE
 )
 
+var allegianceToString = map[Allegiance]string {
+	RED : "Red",
+	NEUTRAL : "Neutral",
+	BLUE : "Blue",
+}
+
 type PlayerStatus int
 const (
 	NORMAL PlayerStatus = iota
