@@ -19,14 +19,25 @@ class Player {
     
     private var name: String
     private var icon: String
+    private var loc = CLLocation(0.0, 0.0)
     
     func getName() -> String {
         return name
     }
     
+    func setName(name: String) {
+        self.name = name
+    }
+    
+    func getLocation() -> CLLocation {
+        return loc
+    }
+    
     func getIcon() -> String {
         return icon
     }
+    
+    
     
     init(name: String, icon: String) {
         self.name = name
