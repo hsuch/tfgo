@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"net"
 	"encoding/json"
-	"math"
 	"strconv"
 )
 
@@ -125,28 +124,12 @@ func (p *Player) joinGame(gameID string) *Game {
 	}
 }
 
-// assign players to teams at the start of a game
-func (g *Game) randomizeTeams() {
-	teamSize := len(g.Players) / 2
-	count := 0
-
-	// iteration order through maps is random
-	for _, player := range g.Players {
-		if count < teamSize {
-			player.Team = g.RedTeam
-		} else {
-			player.Team = g.BlueTeam
-		}
-		count++
-	}
-}
-
 // determine locations and radii of bases and control points
 func (g *Game) generateObjectives(numCP int) {
-	minX := math.MaxFloat64
-	maxX := math.MinFloat64
-	minY := math.MaxFloat64
-	maxY := math.MinFloat64
+	minX := g.Boundaries[0].P.X
+	maxX := g.Boundaries[0].P.X
+	minY := g.Boundaries[0].P.Y
+	maxY := g.Boundaries[0].P.Y
 	for _, val := range g.Boundaries {
 		if val.P.X < minX {
 			minX = val.P.X
@@ -187,7 +170,6 @@ func (g *Game) generateObjectives(numCP int) {
 	xrange = maxX - minX
 	yrange = maxY - minY
 	cpRadius := CPRADIUS()
-	var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
 		if inBounds(g, cpLoc) {
@@ -197,6 +179,22 @@ func (g *Game) generateObjectives(numCP int) {
 		} else {
 			i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
 		}
+	}
+}
+
+// assign players to teams at the start of a game
+func (g *Game) randomizeTeams() {
+	teamSize := len(g.Players) / 2
+	count := 0
+
+	// iteration order through maps is random
+	for _, player := range g.Players {
+		if count < teamSize {
+			player.Team = g.RedTeam
+		} else {
+			player.Team = g.BlueTeam
+		}
+		count++
 	}
 }
 
