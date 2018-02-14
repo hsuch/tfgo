@@ -4,10 +4,12 @@ package main
 
 import "math"
 
+//returns the dot product of two Direction vectors
 func dot(v, w Direction) float64 {
 	return v.X * w.X + v.Y * w.Y
 }
 
+//returns the magnitude of Direction vector v
 func (v Direction) magnitude() float64 {
 	return math.Sqrt(dot(v, v))
 }
@@ -25,7 +27,19 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	}
 }
 
-// decides whether the shot hits anyone, and if so, calls takeHit()
+/*
+ * fire() - determines whether the shot hits anyone, if so calls takeHit()
+ *
+ * p: Player who fired the shot
+ *
+ * game: the Game struct containing all game-related information
+ *
+ * wep: the Weapon used to fire the shot
+ *
+ * dir: Direction vector of the shot
+ *
+ * Returns: Nothing
+ */
 func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 	minDist := math.MaxFloat64
 	var closestP *Player
