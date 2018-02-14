@@ -8,6 +8,11 @@
 
 import UIKit
 
+class WaitingViewCell: UITableViewCell {
+    @IBOutlet weak var icon: UILabel!
+    @IBOutlet weak var name: UILabel!
+}
+
 class WaitingViewController: UIViewController, UITableViewDelegate {
 
     var state: GameState?
@@ -22,8 +27,11 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath)
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath) as! WaitingViewCell
+        let player = state?.getCurrentGame().getPlayers()[indexPath.row]
+        cell.icon.text = player?.getIcon()
+        cell.icon.backgroundColor = #colorLiteral(red: 1, green: 0.5212053061, blue: 1, alpha: 1)
+        cell.name.text = player?.getName()
     }
 
     @IBOutlet weak var table: UITableView!
