@@ -1,5 +1,7 @@
 package main
 
+// struct.go: definitions and constants for game structures
+
 import (
 	"time"
 	"net"
@@ -7,8 +9,77 @@ import (
 	"math"
 )
 
-// definitions and constants for game structures
+// global collection of all active games
+var games = make(map[string]*Game)
 
+type GameStatus int
+const (
+	CREATING GameStatus = iota
+	PLAYING
+	GAMEOVER
+)
+
+type Mode int
+const (
+	SINGLECAP Mode = iota
+	MULTICAP
+	PAYLOAD
+)
+
+// mode/string maps to facilitate JSON communication
+var modeToString = map[Mode]string {
+	SINGLECAP : "SingleCapture",
+	MULTICAP : "MultiCapture",
+	PAYLOAD : "Payload",
+}
+
+var stringToMode = map[string]Mode {
+	"SingleCapture" : SINGLECAP,
+	"MultiCapture" : MULTICAP,
+	"Payload" : PAYLOAD,
+}
+
+// represents a point in space
+type Location struct {
+	X float64
+	Y float64
+}
+
+// represents a direction vector
+type Direction struct {
+	X float64
+	Y float64
+}
+
+// represents a bounding edge for the game arena
+type Border struct {
+	P Location	// one of the two vertices which define this border
+	D Direction	// the direction vector of the line
+	T float64	// the max t-value for this line segment
+}
+
+type Game struct {
+	ID          string
+	Name        string
+	Password    string
+	Description string
+
+	PlayerLimit int
+	PointLimit  int
+	TimeLimit   time.Duration
+
+	Status GameStatus
+	Mode   Mode
+	Timer  *time.Timer
+
+	RedTeam  *Team
+	BlueTeam *Team
+
+	Boundaries    []Border
+	ControlPoints map[string]*ControlPoint
+}
+
+// the team that a player or control point is currently aligned with
 type Allegiance int
 const (
 	RED Allegiance = iota
@@ -32,28 +103,29 @@ var playerStatusToString = map[PlayerStatus]string {
 type Player struct {
 	Name string
 	Icon string
-	Conn net.Conn
-	Chan chan map[string]interface{}
-	Encoder *json.Encoder
 	Team Allegiance
-	OccupyingPoint *ControlPoint
+
+	Conn net.Conn
+	Chan chan map[string]interface{} // used to synchronize sends
+	Encoder *json.Encoder
 
 	Status PlayerStatus
-	StatusTimer *time.Timer
+	StatusTimer *time.Timer // tracks duration of abnormal statuses
 
 	Health int
 	Armor int
-
 	Inventory map[string]Pickup
-
 	Location Location
+	OccupyingPoint *ControlPoint // control point player is currently in
 }
 
 type Team struct {
 	Name string
 	Players map[string]*Player
-	Base Location
 	Points int
+
+	Base Location
+	BaseRadius float64
 }
 
 type ControlPoint struct {
@@ -62,6 +134,7 @@ type ControlPoint struct {
 	Location Location
 	Radius float64
 
+	// only used for payload games
 	PayloadPath [2]Location // start, end
 	PayloadLoc Location
 
@@ -77,73 +150,27 @@ type ControlPoint struct {
 	ControllingTeam Allegiance
 }
 
-type GameStatus int
-const (
-	CREATING GameStatus = iota
-	PLAYING
-	GAMEOVER
-)
-
-type Mode int
-const (
-	SINGLECAP Mode = iota
-	MULTICAP
-	PAYLOAD
-)
-
-var modeToString = map[Mode]string {
-	SINGLECAP : "SingleCapture",
-	MULTICAP : "MultiCapture",
-	PAYLOAD : "Payload",
-}
-
-var stringToMode = map[string]Mode {
-	"SingleCapture" : SINGLECAP,
-	"MultiCapture" : MULTICAP,
-	"Payload" : PAYLOAD,
-}
-
-type Location struct {
-	X float64
-	Y float64
-}
-
-type Direction struct {
-	X float64
-	Y float64
-}
-
-type Border struct {
-	P Location	// one of the two vertices which define this border
-	D Direction	// the direction vector of the line
-	T float64	// the max t-value for this line segment
-}
-
-type Game struct {
-	ID string
-	Name string
-	Password string
-	Description string
-
-	PlayerLimit int
-	PointLimit int
-	TimeLimit time.Duration
-
-	Status GameStatus
-	Mode Mode
-	Timer *time.Timer
-
-	RedTeam *Team
-	BlueTeam *Team
-
-	Boundaries []Border
-	ControlPoints map[string]*ControlPoint
-}
-
-var games = make(map[string]*Game)
-
+// since pickups can vary wildly, we use an interface rather than
+// a type and only require them to implement a use() method
 type Pickup interface {
 	use(game *Game, player *Player)
+}
+
+type Weapon struct {
+	Name string
+
+	Damage int
+	Spread float64
+	Range float64
+
+	ClipSize int
+	ShotReload time.Duration
+	ClipReload time.Duration
+}
+
+var weapons = map[string]Weapon {
+	"Sword" : SWORD,
+	"Shotgun" : SHOTGUN,
 }
 
 // each of the available weapons is defined as a globally
@@ -166,21 +193,4 @@ var SHOTGUN = Weapon {
 	ClipSize: 2,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
-}
-
-var weapons = map[string]Weapon {
-	"Sword" : SWORD,
-	"Shotgun" : SHOTGUN,
-}
-
-type Weapon struct {
-	Name string
-
-	Damage int
-	Spread float64
-	Range float64
-
-	ClipSize int
-	ShotReload time.Duration
-	ClipReload time.Duration
 }

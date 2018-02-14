@@ -1,5 +1,7 @@
 package main
 
+// clienthandler.go: primary goroutine serving each connected client
+
 import (
 	"net"
 	"encoding/json"

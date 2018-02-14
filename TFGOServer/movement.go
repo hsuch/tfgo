@@ -1,5 +1,7 @@
 package main
 
+// movement.go: functions for handling player movement
+
 import (
 	"time"
 	"math"

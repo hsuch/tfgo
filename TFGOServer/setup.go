@@ -1,5 +1,7 @@
 package main
 
+// setup.go: functions for game setup
+
 import (
 	"time"
 	"math/rand"

@@ -1,5 +1,7 @@
 package main
 
+// fire.go: functions for handling firing weapon
+
 import "math"
 
 func dot(v, w Direction) float64 {

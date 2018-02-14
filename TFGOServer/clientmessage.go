@@ -1,5 +1,7 @@
 package main
 
+// clientmessage.go: functions for building and sending messages to clients
+
 func (p *Player) sender() {
 	for {
 		msg := <-p.Chan
