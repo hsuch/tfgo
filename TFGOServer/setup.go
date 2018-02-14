@@ -66,7 +66,7 @@ func createGameID() string {
 func (g *Game) setBoundaries(boundaries []interface{}) {
 	for _, val := range boundaries {
 		vertex := val.(map[string]interface{})
-		p := Location{X: vertex["X"].(float64), Y: vertex["Y"].(float64)}
+		p := Location{X: degreeToMeter(vertex["X"].(float64)), Y: degreeToMeter(vertex["Y"].(float64))}
 		g.Boundaries = append(g.Boundaries, Border{P: p})
 	}
 
@@ -126,10 +126,10 @@ func (p *Player) joinGame(gameID string) *Game {
 
 // determine locations and radii of bases and control points
 func (g *Game) generateObjectives(numCP int) {
-	minX := g.Boundaries[0].P.X
-	maxX := g.Boundaries[0].P.X
-	minY := g.Boundaries[0].P.Y
-	maxY := g.Boundaries[0].P.Y
+	minX := math.MaxFloat64
+	maxX := -math.MaxFloat64
+	minY := math.MaxFloat64
+	maxY := -math.MathFloat64
 	for _, val := range g.Boundaries {
 		if val.P.X < minX {
 			minX = val.P.X
@@ -151,7 +151,7 @@ func (g *Game) generateObjectives(numCP int) {
 	baseRadius := BASERADIUS()
 	g.RedTeam.BaseRadius = baseRadius
 	g.BlueTeam.BaseRadius = baseRadius
-	offset := baseRadius + meterToDegree(2.0)
+	offset := baseRadius + 2
 	if xrange > yrange {
 		mid := yrange / 2
 		g.RedTeam.Base = Location{maxX - offset, mid}
@@ -163,13 +163,14 @@ func (g *Game) generateObjectives(numCP int) {
 	}
 
 	// set up control points
-	minX = minX + offset + baseRadius
-	maxX = maxX - offset - baseRadius
-	minY = minY + offset + baseRadius
-	maxY = maxY - offset - baseRadius
+	cpRadius := CPRADIUS()
+	// make sure that control points don't intersect bases
+	minX = minX + 2 * offset + cpRadius
+	maxX = maxX - 2 * offset - cpRadius
+	minY = minY + 2 * offset + cpRadius
+	maxY = maxY - 2 * offset - cpRadius
 	xrange = maxX - minX
 	yrange = maxY - minY
-	cpRadius := CPRADIUS()
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
 		if inBounds(g, cpLoc) {
