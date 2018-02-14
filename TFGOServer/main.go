@@ -11,8 +11,6 @@ const (
 	PORT = ":8080"
 )
 
-var games = make(map[string]*Game)
-
 // the following server code is heavily inspired by the example at
 // https://astaxie.gitbooks.io/build-web-application-with-golang/en/08.1.html
 func main() {
