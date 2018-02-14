@@ -21,7 +21,7 @@ class Connection {
     func recvData() -> Data? {
         guard let response = client.read(1024*10)
         else { return nil }
-        return String(bytes: response, encoding: .utf8)?.data(using: .utf8)
+        return Data.init(response)
     }
     
     init(){
@@ -38,9 +38,13 @@ class MsgFromServer {
 
     private var data: [String: Any]
     
+    func getType() -> String {
+        return type
+    }
+    
     /* parse(): convert data array into appropriate data struct depending on message type */
     func parse() {
-        //todo
+        // might need refactoring into different functions
     }
     
     init(conn: Connection) {
@@ -52,6 +56,7 @@ class MsgFromServer {
     }
 }
 
+/* MsgToServer: use this class to generate a message that requires data input, aka a message without a fixed payload */
 class MsgToServer {
     private var action: String
     /* possible message actions:
@@ -61,8 +66,9 @@ class MsgToServer {
     private var data: [String: Any]
     
     /* toJson(): convert action type and data array into server-readable json */
-    func toJson() {
-        // todo
+    func toJson() -> Data {
+        let retval = Data.init() //todo
+        return retval
     }
     
     init(action: String, data: [String: Any]) {
