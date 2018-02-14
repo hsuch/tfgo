@@ -24,7 +24,7 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 }
 
 // decides whether the shot hits anyone, and if so, calls takeHit()
-func (p *Player) fire(game *Game, wep Weapon, dir float64) {
+func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 	minDist := math.MaxFloat64
 	var closestP *Player
 	var enemies map[string]*Player

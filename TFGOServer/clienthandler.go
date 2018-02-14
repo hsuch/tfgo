@@ -34,7 +34,7 @@ func serveClient(conn net.Conn) {
 		case "StartGame":
 		case "LocationUpdate":
 		case "Fire":
-			p.fire(g, weapons[msg.Data["Weapon"].(string)], msg.Data["Direction"].(float64))
+			p.fire(g, weapons[msg.Data["Weapon"].(string)], msg.Data["Direction"].(Direction))
 		}
 	}
 }
