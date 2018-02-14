@@ -1,5 +1,7 @@
 package main
 
+// main.go: server setup code
+
 import (
 	"net"
 	"fmt"
