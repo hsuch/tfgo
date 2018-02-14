@@ -17,13 +17,20 @@ enum Gamemode: String{
 
 class Player {
     
-    private var id: String
     private var name: String
-    //private var icon: ???
+    private var icon: String
     
-    init(id: String, name: String) {
-        self.id = id
+    func getName() -> String {
+        return name
+    }
+    
+    func getIcon() -> String {
+        return icon
+    }
+    
+    init(name: String, icon: String) {
         self.name = name
+        self.icon = icon
     }
 }
 

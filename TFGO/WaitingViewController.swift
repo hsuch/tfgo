@@ -8,27 +8,33 @@
 
 import UIKit
 
-class WaitingViewController: UIViewController {
+class WaitingViewCell: UITableViewCell {
+    @IBOutlet weak var icon: UILabel!
+    @IBOutlet weak var name: UILabel!
+}
+
+class WaitingViewController: UIViewController, UITableViewDelegate {
 
     var state: GameState?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if let game = state?.getCurrentGame() {
+            table.numberOfRows(inSection: game.getPlayers().count)
+        }
         // Do any additional setup after loading the view.
     }
-
     
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath) as! WaitingViewCell
+        let player = state?.getCurrentGame().getPlayers()[indexPath.row]
+        cell.icon.text = player?.getIcon()
+        cell.icon.backgroundColor = #colorLiteral(red: 1, green: 0.5212053061, blue: 1, alpha: 1)
+        cell.name.text = player?.getName()
     }
-    */
+
+    @IBOutlet weak var table: UITableView!
+    
 
 }
