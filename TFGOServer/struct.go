@@ -192,3 +192,19 @@ var SHOTGUN = Weapon {
 func TICK() time.Duration {
 	return 200 * time.Millisecond
 }
+
+func meterToDegree(m float64) float64 {
+	return m * 9 / 1000000
+}
+
+func degreeToMeter(d float64) float64 {
+	return d * 1000000 / 9
+}
+
+func BASERADIUS() float64 {
+	return meterToDegree(3.0)
+}
+
+func CPRADIUS() float64 {
+	return meterToDegree(1.0)
+}

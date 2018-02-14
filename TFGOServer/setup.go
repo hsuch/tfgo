@@ -7,6 +7,8 @@ import (
 	"math/rand"
 	"net"
 	"encoding/json"
+	"math"
+	"strconv"
 )
 
 // return the central position of a game
@@ -140,19 +142,69 @@ func (g *Game) randomizeTeams() {
 }
 
 // determine locations and radii of bases and control points
-func (g *Game) generateObjectives() {
-	// jenny halp
-	// determine location and radius of bases and control points
-	// teams have already been defined, so simply set the Base, BaseRadius fields
-	// control points have not been defined, so the control point must be created,
-	// all relevant fields filled out, and its pointer set in the map of the game's
-	// ControlPoints
+func (g *Game) generateObjectives(numCP int) {
+	minX := math.MaxFloat64
+	maxX := math.MinFloat64
+	minY := math.MaxFloat64
+	maxY := math.MinFloat64
+	for _, val := range g.Boundaries {
+		if val.P.X < minX {
+			minX = val.P.X
+		}
+		if val.P.X > maxX {
+			maxX = val.P.X
+		}
+		if val.P.Y < minY {
+			minY = val.P.Y
+		}
+		if val.P.Y > maxY {
+			maxY = val.P.Y
+		}
+	}
+	xrange := maxX - minX
+	yrange := maxY - minY
+
+	// set up base locations for the two teams
+	baseRadius := BASERADIUS()
+	g.RedTeam.BaseRadius = baseRadius
+	g.BlueTeam.BaseRadius = baseRadius
+	offset := baseRadius + meterToDegree(2.0)
+	if xrange > yrange {
+		mid := yrange / 2
+		g.RedTeam.Base = Location{maxX - offset, mid}
+		g.BlueTeam.Base = Location{minX + offset, mid}
+	} else {
+		mid := xrange / 2
+		g.RedTeam.Base = Location{mid, maxY - offset}
+		g.BlueTeam.Base = Location{mid, minY + offset}
+	}
+
+	// set up control points
+	minX = minX + offset + baseRadius
+	maxX = maxX - offset - baseRadius
+	minY = minY + offset + baseRadius
+	maxY = maxY - offset - baseRadius
+	xrange = maxX - minX
+	yrange = maxY - minY
+	cpRadius := CPRADIUS()
+	var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < numCP; i++ {
+		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
+		if inBounds(g, cpLoc) {
+			id := "CP" + strconv.Itoa(i)
+			cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
+			g.ControlPoints[id] = cp
+		} else {
+			i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
+		}
+	}
 }
 
 // begin a game, determining objective and team information and
 // starting goroutines that will run for the duration of the game
 func (g *Game) start() {
-	g.generateObjectives()
+	// for now we're doing just one ControlPoint, that may change later
+	g.generateObjectives(1)
 	g.randomizeTeams()
 
 	startTime := time.Now().Add(time.Minute)

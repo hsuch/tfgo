@@ -9,6 +9,8 @@
 import Foundation
 import SwiftSocket
 
+var gameState = GameState()
+
 class Connection {
     private var servadd: String = "www.google.com" // to be replaced with real server ip
     private var servport: Int32 = 80
@@ -21,7 +23,7 @@ class Connection {
     func recvData() -> Data? {
         guard let response = client.read(1024*10)
         else { return nil }
-        return String(bytes: response, encoding: .utf8)?.data(using: .utf8)
+        return Data.init(response)
     }
     
     init(){
@@ -38,9 +40,13 @@ class MsgFromServer {
 
     private var data: [String: Any]
     
+    func getType() -> String {
+        return type
+    }
+    
     /* parse(): convert data array into appropriate data struct depending on message type */
     func parse() {
-        //todo
+        // might need refactoring into different functions
     }
     
     init(conn: Connection) {
@@ -55,14 +61,15 @@ class MsgFromServer {
 class MsgToServer {
     private var action: String
     /* possible message actions:
-        case CreateGame, ShowGames, ShowGameInfo, JoinGame, LocationUpdate, Fire
+        case CreateGame, ShowGames, ShowGameInfo, JoinGame, StartGame, LocationUpdate, Fire
     */
     
     private var data: [String: Any]
     
     /* toJson(): convert action type and data array into server-readable json */
-    func toJson() {
-        // todo
+    func toJson() -> Data {
+        let retval = Data.init() //todo
+        return retval
     }
     
     init(action: String, data: [String: Any]) {
@@ -71,15 +78,55 @@ class MsgToServer {
     }
 }
 
+/* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
+
+func CreateGameMsg(game: Game) -> Data {
+    // todo
+    return Data.init()
+}
+func ShowGamesMsg() -> Data {
+    let payload = ["Name": gameState.getPlayerName(), "Icon": gameState.getPlayerIcon()]
+    return MsgToServer(action: "ShowGames", data: payload).toJson()
+}
+func ShowGameInfo(IDtoShow: String) -> Data {
+    return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
+}
+func JoinGameMsg(IDtoJoin: String) -> Data {
+    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+}
+func StartGameMsg() -> Data {
+    return MsgToServer(action: "StartGame", data: [:]).toJson()
+}
+func LocUpMsg() -> Data {
+    // todo, take location from this client's player
+    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
+}
+func FireMsg() -> Data {
+    // todo, take orientation and weapon from this client's player
+    return MsgToServer(action: "Fire", data: [:]).toJson()
+
+}
+
+
+
 class GameState {
     
     private var currentGame: Game?
     private var foundGames: [Game] = []
+    private var user: Player = Player(name: "", icon:"")
+    
+    func getPlayerName() -> String {
+        return user.getName()
+    }
+    func getPlayerIcon() -> String {
+        return user.getIcon()
+    }
     
     /* Do not call unless a game exists!!! */
     func getCurrentGame() -> Game {
         return currentGame!
     }
+    
     
     func setCurrentGame(to game: Game) -> Bool {
         let valid = game.isValid()
