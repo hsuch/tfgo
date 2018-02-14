@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 )
 
+// return the central position of a game
 func (g *Game) findCenter() Location {
 	X := 0.0
 	Y := 0.0
@@ -20,11 +21,13 @@ func (g *Game) findCenter() Location {
 	return Location{X / c, Y / c}
 }
 
+// register a new player, but do not add them to any team.
+// performed whenever someone chooses Create Game or Join
+// Game from the primary app menu
 func createPlayer(conn net.Conn, name, icon string) *Player {
 	var p Player
 	p.Name = name
 	p.Icon = icon
-	p.Team = NEUTRAL
 
 	p.Conn = conn
 	p.Chan = make(chan map[string]interface{})
@@ -44,6 +47,7 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 const idChars = "abcdefghijklmnopqrstuvwxyz1234567890"
 
+// generate a random unique game ID
 func createGameID() string {
 	candidate := make([]byte, 16)
 	for i := range candidate {
@@ -57,19 +61,8 @@ func createGameID() string {
 	}
 }
 
-func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
-	var g Game
-	g.ID = createGameID()
-	g.Name = data["Name"].(string)
-	g.Password = data["Password"].(string)
-	g.Description = data["Description"].(string)
-	g.PlayerLimit = int(data["PlayerLimit"].(float64))
-	g.PointLimit = int(data["PointLimit"].(float64))
-	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
-	g.Status = CREATING
-	g.Mode = stringToMode[data["Mode"].(string)]
-
-	boundaries := data["Boundaries"].([]interface{})
+// determine game boundaries based on vertex information
+func (g *Game) setBoundaries(boundaries []interface{}) {
 	for _, val := range boundaries {
 		vertex := val.(map[string]interface{})
 		p := Location{X: vertex["X"].(float64), Y: vertex["Y"].(float64)}
@@ -87,57 +80,66 @@ func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
 		prev := g.Boundaries[index].P
 		g.Boundaries[index].D = Direction{boundary.P.X - prev.X, boundary.P.Y - prev.Y}
 	}
+}
+
+// register a new game instance, with the host as its first player
+func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
+	var g Game
+	g.ID = createGameID()
+	g.Name = data["Name"].(string)
+	g.Password = data["Password"].(string)
+	g.Description = data["Description"].(string)
+	g.PlayerLimit = int(data["PlayerLimit"].(float64))
+	g.PointLimit = int(data["PointLimit"].(float64))
+	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
+	g.Status = CREATING
+	g.Mode = stringToMode[data["Mode"].(string)]
+	g.setBoundaries(data["Boundaries"].([]interface{}))
 
 	host := data["Host"].(map[string]interface{})
 	p := createPlayer(conn, host["Name"].(string), host["Icon"].(string))
 
-	// during game creation, everyone is placed on the red team as NEUTRAL.
-	// starting the game will randomly assign teams
-	g.RedTeam = &Team{Name: "Red Team", Players: map[string]*Player{p.Name : p}}
-	g.BlueTeam = &Team{Name: "Blue Team", Players: map[string]*Player{}}
+	g.RedTeam = &Team{Name: "Red"}
+	g.BlueTeam = &Team{Name: "Blue"}
+	g.Players = map[string]*Player{p.Name : p}
 
 	games[g.ID] = &g
 	return &g, p
 }
 
+// add a player to a game if possible
 func (p *Player) joinGame(gameID string) *Game {
 	target := games[gameID]
-	if len(target.RedTeam.Players) == target.PlayerLimit {
+	if len(target.Players) == target.PlayerLimit {
 		sendJoinGameError(p, "GameFull")
 		return nil
 	} else if target.Status != CREATING {
 		sendJoinGameError(p, "GameStarted")
 		return nil
 	} else {
-		target.RedTeam.Players[p.Name] = p
+		target.Players[p.Name] = p
 		sendPlayerListUpdate(target)
 		return target
 	}
 }
 
+// assign players to teams at the start of a game
 func (g *Game) randomizeTeams() {
-	teamSize := len(g.RedTeam.Players) / 2
+	teamSize := len(g.Players) / 2
 	count := 0
 
 	// iteration order through maps is random
-	for _, player := range g.RedTeam.Players {
+	for _, player := range g.Players {
 		if count < teamSize {
-			delete(g.RedTeam.Players, player.Name)
-			g.BlueTeam.Players[player.Name] = player
-			count++
+			player.Team = g.RedTeam
 		} else {
-			break
+			player.Team = g.BlueTeam
 		}
-	}
-
-	for _, player := range g.RedTeam.Players {
-		player.Team = RED
-	}
-	for _, player := range g.BlueTeam.Players {
-		player.Team = BLUE
+		count++
 	}
 }
 
+// determine locations and radii of bases and control points
 func (g *Game) generateObjectives() {
 	// jenny halp
 	// determine location and radius of bases and control points
@@ -147,19 +149,31 @@ func (g *Game) generateObjectives() {
 	// ControlPoints
 }
 
+// begin a game, determining objective and team information and
+// starting goroutines that will run for the duration of the game
 func (g *Game) start() {
-	g.randomizeTeams()
 	g.generateObjectives()
+	g.randomizeTeams()
 
 	startTime := time.Now().Add(time.Minute)
 	sendGameStartInfo(g, startTime)
 
 	time.Sleep(time.Until(startTime))
 	g.Status = PLAYING
-	g.Timer = time.NewTimer(g.TimeLimit)
-	go g.awaitGameEnd()
+	g.Timer = time.AfterFunc(g.TimeLimit, func() {
+		g.stop()
+	})
 	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
 		go cp.updateStatus(g)
+	}
+}
+
+// end a game, signalling and performing resource cleanup
+func (g *Game) stop() {
+	g.Status = GAMEOVER
+	delete(games, g.ID)
+	for _, player := range g.Players {
+		close(player.Chan)
 	}
 }

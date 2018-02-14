@@ -59,8 +59,9 @@ func inBounds(game *Game, loc Location) bool {
  *
  * Returns: Nothing
  */
-func (p *Player) handleLoc(game *Game, loc Location) {
+func (p *Player) handleLoc(game *Game, loc Location, orientation float64) {
 	p.Location = loc
+	p.Orientation = orientation
 
 	// Check if player is in/out of bounds and handle accordingly
 	if !inBounds(game, p.Location) && p.Status == NORMAL {
@@ -84,16 +85,16 @@ func (p *Player) handleLoc(game *Game, loc Location) {
 
 	// Set new control point and change team counts at control points accordingly
 	if newCP != nil && newCP != p.OccupyingPoint {
-		if p.Team == RED {
+		if p.Team == game.RedTeam {
 			newCP.RedCount++
-		} else if p.Team == BLUE {
+		} else if p.Team == game.BlueTeam {
 			newCP.BlueCount++
 		}
 	}
 	if p.OccupyingPoint != nil && newCP != p.OccupyingPoint{
-		if p.Team == RED {
+		if p.Team == game.RedTeam {
 			p.OccupyingPoint.RedCount--
-		} else if p.Team == BLUE {
+		} else if p.Team == game.BlueTeam {
 			p.OccupyingPoint.BlueCount--
 		}
 	}
@@ -119,24 +120,20 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 	// (1) CaptureProgress hits 0 OR
 	// (2) sign of CaptureProgress changes
 	if cp.CaptureProgress == 0 || oldCaptureProgress ^ cp.CaptureProgress < 0  {
-		cp.ControllingTeam = NEUTRAL
+		cp.ControllingTeam = nil
 	}
 
 	// Set appropriate ControllingTeam
 	if cp.CaptureProgress >= 7 {
-		cp.ControllingTeam = BLUE
+		cp.ControllingTeam = game.BlueTeam
 		cp.CaptureProgress = 7
 	} else if cp.CaptureProgress <= -7 {
-		cp.ControllingTeam = RED
+		cp.ControllingTeam = game.RedTeam
 		cp.CaptureProgress = -7
 	}
 
 	// Add a point to the team controlling this control point
-	if cp.ControllingTeam == RED {
-		game.RedTeam.Points++
-	} else if cp.ControllingTeam == BLUE {
-		game.BlueTeam.Points++
-	}
+	cp.ControllingTeam.Points++
 }
 
 func (l1 Location) getDistance(l2 Location) float64 {

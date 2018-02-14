@@ -43,21 +43,13 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 	minDist := math.MaxFloat64
 	var closestP *Player
-	var enemies map[string]*Player
-	if p.Team == RED {
-		enemies = game.BlueTeam.Players
-	} else if p.Team == BLUE {
-		enemies = game.RedTeam.Players
-	} else {
-		enemies = nil
-	}
 
 	// loop through list of enemies and find nearest hit
-	for _, enemy := range enemies {
-		if enemy.Status == NORMAL {
-			currDist := wep.canHit(p.Location, enemy.Location, dir)
+	for _, other := range game.Players {
+		if p.Team != other.Team && other.Status == NORMAL {
+			currDist := wep.canHit(p.Location, other.Location, dir)
 			if currDist < minDist {
-				closestP = enemy
+				closestP = other
 				minDist = currDist
 			}
 		}
