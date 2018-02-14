@@ -60,7 +60,7 @@ class MsgFromServer {
 class MsgToServer {
     private var action: String
     /* possible message actions:
-        case CreateGame, ShowGames, ShowGameInfo, JoinGame, LocationUpdate, Fire
+        case CreateGame, ShowGames, ShowGameInfo, JoinGame, StartGame, LocationUpdate, Fire
     */
     
     private var data: [String: Any]
@@ -76,6 +76,37 @@ class MsgToServer {
         self.data = data
     }
 }
+
+/* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
+
+func CreateGameMsg(game: Game) -> Data {
+    // todo
+    return Data.init()
+}
+func ShowGamesMsg() -> Data {
+    // todo
+    return MsgToServer(action: "ShowGames", data:[:]).toJson()
+}
+func ShowGameInfo(IDtoShow: String) -> Data {
+    return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
+}
+func JoinGameMsg(IDtoJoin: String) -> Data {
+    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+}
+func StartGameMsg() -> Data {
+    return MsgToServer(action: "StartGame", data: [:]).toJson()
+}
+func LocUpMsg() -> Data {
+    // todo, take location from this client's player
+    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
+}
+func FireMsg() -> Data {
+    // todo, take orientation and weapon from this client's player
+    return MsgToServer(action: "Fire", data: [:]).toJson()
+
+}
+
+
 
 class GameState {
     
