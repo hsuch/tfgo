@@ -201,10 +201,14 @@ func degreeToMeter(d float64) float64 {
 	return d * 1000000 / 9
 }
 
+func (l Location) locationToDegrees() Location {
+	return Location{X: meterToDegree(l.X), Y: meterToDegree(l.Y)}
+}
+
 func BASERADIUS() float64 {
-	return meterToDegree(3.0)
+	return 3.0
 }
 
 func CPRADIUS() float64 {
-	return meterToDegree(1.0)
+	return 1.0
 }
