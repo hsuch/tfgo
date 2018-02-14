@@ -1,12 +1,15 @@
 PODS:
   - SwiftSocket (2.0.2)
+  - SwiftyJSON (4.0.0)
 
 DEPENDENCIES:
   - SwiftSocket (~> 2.0)
+  - SwiftyJSON
 
 SPEC CHECKSUMS:
   SwiftSocket: 6f4c9c63fbc5c1d61188936bb3c599fd546f40ae
+  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
 
-PODFILE CHECKSUM: 80cc44bcf9e27c76bb94b054e4527726e4469d2e
+PODFILE CHECKSUM: 4f421b51063cf8cda577378df113580e6f7623d5
 
 COCOAPODS: 1.4.0

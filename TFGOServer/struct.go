@@ -73,23 +73,10 @@ type Game struct {
 
 	RedTeam  *Team
 	BlueTeam *Team
+	Players map[string]*Player
 
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
-}
-
-// the team that a player or control point is currently aligned with
-type Allegiance int
-const (
-	RED Allegiance = iota
-	NEUTRAL
-	BLUE
-)
-
-var allegianceToString = map[Allegiance]string {
-	RED : "Red",
-	NEUTRAL : "Neutral",
-	BLUE : "Blue",
 }
 
 type PlayerStatus int
@@ -108,7 +95,7 @@ var playerStatusToString = map[PlayerStatus]string {
 type Player struct {
 	Name string
 	Icon string
-	Team Allegiance
+	Team *Team
 
 	Conn net.Conn
 	Chan chan map[string]interface{} // used to synchronize sends
@@ -121,12 +108,12 @@ type Player struct {
 	Armor int
 	Inventory map[string]Pickup
 	Location Location
+	Orientation float64
 	OccupyingPoint *ControlPoint // control point player is currently in
 }
 
 type Team struct {
 	Name string
-	Players map[string]*Player
 	Points int
 
 	Base Location
@@ -152,7 +139,7 @@ type ControlPoint struct {
 	// control point to red or blue, respectively. hitting 0
 	// from team ownership neutralizes control point.
 	CaptureProgress int
-	ControllingTeam Allegiance
+	ControllingTeam *Team
 }
 
 // since pickups can vary wildly, we use an interface rather than
@@ -200,18 +187,28 @@ var SHOTGUN = Weapon {
 	ClipReload: time.Second * 3,
 }
 
-func (m float64) meterToDegree() {
+// constants defined via functions, as Go does not allow
+// for non-primitive constants
+func TICK() time.Duration {
+	return 200 * time.Millisecond
+}
+
+func meterToDegree(m float64) float64 {
 	return m * 9 / 1000000
 }
 
-func (d float64) degreeToMeter() {
+func degreeToMeter(d float64) float64 {
 	return d * 1000000 / 9
 }
 
-func BASERADIUS() {
-	return (3.0).meterToDegree()
+func (l Location) locationToDegrees() Location {
+	return Location{X: meterToDegree(l.X), Y: meterToDegree(l.Y)}
 }
 
-func CPRADIUS() {
-	return (1.0).meterToDegree()
+func BASERADIUS() float64 {
+	return 3.0
+}
+
+func CPRADIUS() float64 {
+	return 1.0
 }

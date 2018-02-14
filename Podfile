@@ -7,6 +7,7 @@ target 'TFGO' do
 
   # Pods for TFGO
   pod 'SwiftSocket', '~> 2.0'
+  pod 'SwiftyJSON'
 
   target 'TFGOTests' do
     inherit! :search_paths
