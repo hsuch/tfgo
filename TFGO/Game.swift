@@ -17,13 +17,20 @@ enum Gamemode: String{
 
 class Player {
     
-    private var id: String
     private var name: String
-    //private var icon: ???
+    private var icon: String
     
-    init(id: String, name: String) {
-        self.id = id
+    func getName() -> String {
+        return name
+    }
+    
+    func getIcon() -> String {
+        return icon
+    }
+    
+    init(name: String, icon: String) {
         self.name = name
+        self.icon = icon
     }
 }
 
@@ -99,7 +106,7 @@ public class Game {
     
     func setMaxPlayers(to players: Int) -> Bool {
         if validNumber(of: players) {
-            self.maxPoints = players
+            self.maxPlayers = players
             return true
         }
         return false
@@ -160,7 +167,7 @@ public class Game {
     }
     
     private func validDescription(_ description: String) -> Bool {
-        return description.count > 100
+        return description.count < 100
     }
     
     func isValid() -> Bool {

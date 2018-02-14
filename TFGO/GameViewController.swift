@@ -7,15 +7,39 @@
 //
 
 import UIKit
+import MapKit
+import CoreLocation
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, CLLocationManagerDelegate {
+    
 
+    @IBOutlet weak var game_map: MKMapView!
+    
+    let manager = CLLocationManager()
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        // we want the most recent position of our user
+        let location = locations [0]
+        
+        let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
+        let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
+        let region:MKCoordinateRegion = MKCoordinateRegionMake(myLocation, span)
+        
+        game_map.setRegion(region, animated: true)
+        self.game_map.showsUserLocation = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
+        
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
     }
-
+    
     
     @IBAction func fireButton(_ sender: UIButton) {
         //Get Location and heading
@@ -23,15 +47,16 @@ class GameViewController: UIViewController {
         //Send information to server
     }
     
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
+
