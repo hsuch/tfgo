@@ -49,13 +49,27 @@ class MsgFromServer {
         switch type {
         case "PlayerListUpdate":
             return parsePlayerListUpdate(data: data)
+        case "AvailableGames":
+            return parseAvailableGames(data: data)
+        case "GameInfo":
+            return parseGameInfo(data: data)
+        case "JoinGameError":
+            return parseJoinGameError(data: data)
+        case "GameStartInfo":
+            return parseGameStartInfo(data: data)
+        case "GameUpdate":
+            return parseGameUpdate(data: data)
+        case "StatusUpdate":
+            return parseStatusUpdate(data: data)
+        case "TakeHit":
+            return parseTakeHit(data: data)
         }
     }
     
     init(conn: Connection) {
         let received = conn.recvData()
         self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-        let type = data.removeValueForKey("Type")
+        let type = data.removeValue(forKey: "Type") as! String
         self.type = type
         
     }
@@ -63,7 +77,35 @@ class MsgFromServer {
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
-func parsePlayerListUpdate(data: [String: Any]) -> Player {
+func parsePlayerListUpdate(data: [String: Any]) -> [Player] {
+    
+}
+
+func parseAvailableGames(data: [String: Any]) -> [AvailableGames] {
+    
+}
+
+func parseGameInfo(data: [String: Any]) -> GameInfo {
+    
+}
+
+func parseJoinGameError(data: [String: Any]) -> String {
+    
+}
+
+func parseGameStartInfo(data: [String: Any]) -> Game {
+    
+}
+
+func parseGameUpdate(data: [String: Any]) -> GameUpdate {
+    
+}
+
+func parseStatusUpdate(data: [String: Any]) -> StatusUpdate {
+    
+}
+
+func parseTakeHit(data: [String: Any]) -> HitInfo {
     
 }
 
