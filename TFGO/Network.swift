@@ -9,6 +9,8 @@
 import Foundation
 import SwiftSocket
 
+var gameState = GameState()
+
 class Connection {
     private var servadd: String = "www.google.com" // to be replaced with real server ip
     private var servport: Int32 = 80
@@ -56,7 +58,6 @@ class MsgFromServer {
     }
 }
 
-/* MsgToServer: use this class to generate a message that requires data input, aka a message without a fixed payload */
 class MsgToServer {
     private var action: String
     /* possible message actions:
@@ -84,8 +85,8 @@ func CreateGameMsg(game: Game) -> Data {
     return Data.init()
 }
 func ShowGamesMsg() -> Data {
-    // todo
-    return MsgToServer(action: "ShowGames", data:[:]).toJson()
+    let payload = ["Name": gameState.getPlayerName(), "Icon": gameState.getPlayerIcon()]
+    return MsgToServer(action: "ShowGames", data: payload).toJson()
 }
 func ShowGameInfo(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
@@ -112,11 +113,20 @@ class GameState {
     
     private var currentGame: Game?
     private var foundGames: [Game] = []
+    private var user: Player = Player(name: "", icon:"")
+    
+    func getPlayerName() -> String {
+        return user.getName()
+    }
+    func getPlayerIcon() -> String {
+        return user.getIcon()
+    }
     
     /* Do not call unless a game exists!!! */
     func getCurrentGame() -> Game {
         return currentGame!
     }
+    
     
     func setCurrentGame(to game: Game) -> Bool {
         let valid = game.isValid()
