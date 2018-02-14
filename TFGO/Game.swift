@@ -19,7 +19,7 @@ class Player {
     
     private var name: String
     private var icon: String
-    private var loc = CLLocation(0.0, 0.0)
+    private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     
     func getName() -> String {
         return name
