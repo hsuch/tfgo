@@ -10,12 +10,14 @@ type Direction struct {
 	Y float64
 }
 
+//returns the dot product of two Direction vectors
 func dot(v, w Direction) float64 {
 	return v.X * w.X + v.Y * w.Y
 }
 
+//returns the magnitude of Direction vector v
 func (v Direction) magnitude() float64 {
-	return math.sqrt(dot(v, v))
+	return math.Sqrt(dot(v, v))
 }
 
 // each of the available weapons is defined as a globally
@@ -57,7 +59,7 @@ type Weapon struct {
 func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	target := Direction{dst.X - src.X, dst.Y - src.Y}
 	dist := target.magnitude()
-	angle := math.acos(dot(target, dir) / (dist * dir.magnitude()))
+	angle := math.Acos(dot(target, dir) / (dist * dir.magnitude()))
 	if angle <= w.Spread && dist <= w.Range {
 		return dist
 	} else {

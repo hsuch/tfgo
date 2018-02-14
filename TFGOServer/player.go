@@ -137,7 +137,19 @@ func (p *Player) handleLoc(game *Game, loc Location) {
 	p.ControlPoint = newCP
 }
 
-// decides whether the shot hits anyone, and if so, calls takeHit()
+/*
+ * fire() - determines whether the shot hits anyone, if so calls takeHit()
+ *
+ * p: Player who fired the shot
+ *
+ * game: the Game struct containing all game-related information
+ *
+ * wep: the Weapon used to fire the shot
+ *
+ * dir: Direction vector of the shot
+ *
+ * Returns: Nothing
+ */
 func (p *Player) fire(game *Game, wep Weapon, dir Direction) {
 	min_dist := math.MaxFloat64
 	var closest_p *Player
