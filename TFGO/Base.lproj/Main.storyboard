@@ -672,9 +672,6 @@
                         <viewLayoutGuide key="safeArea" id="TYh-lU-GEx"/>
                     </view>
                     <navigationItem key="navigationItem" title="Game Lobby" id="R3e-XL-Grp"/>
-                    <connections>
-                        <outlet property="publicPrivateButton" destination="bcI-As-hxd" id="k2c-9Y-zLv"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oRK-Gv-tbz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

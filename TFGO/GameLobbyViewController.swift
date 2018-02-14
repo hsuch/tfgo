@@ -8,9 +8,9 @@
 
 import UIKit
 
-class UserListCustomCell: UICollectionViewCell {
-    
-}
+//class UserListCustomCell: UICollectionViewCell {
+//
+//}
 
 class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var gamemodeLabel: UILabel!
@@ -19,7 +19,7 @@ class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var userCollection: UICollectionView!
 }
 
-class GameLobbyViewController: UITableViewController {
+class GameLobbyViewController: UIViewController {
     
     var state: GameState?
 
@@ -68,40 +68,40 @@ class GameLobbyViewController: UITableViewController {
     
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 0
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if activeType == .isPublic {
-            return gamesPublic.count
-        }
-        return gamesPrivate.count
-    }
-
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
-
-        // Configure the cell...
-        var chosenGame: Game
-        if activeType == .isPublic {
-            chosenGame = (state?.findPublicGames()[indexPath.row])!
-        } else {
-            chosenGame = (state?.findPrivateGames()[indexPath.row])!
-        }
-        switch chosenGame.getMode()! {
-        case .cp:
-            cell.gamemodeLabel?.text = "◆"
-        case .payload:
-            cell.gamemodeLabel?.text = "⇥"
-        case .multi:
-            cell.gamemodeLabel?.text = "❖"
-        }
-        cell.gameNameLabel.text = chosenGame.getName()
-        cell.gameDistanceLabel.text = "\(0) Miles Away"
-        return cell
-    }
+//    override func numberOfSections(in tableView: UITableView) -> Int {
+//        return 0
+//    }
+//
+//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        if activeType == .isPublic {
+//            return gamesPublic.count
+//        }
+//        return gamesPrivate.count
+//    }
+//
+//    
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
+//
+//        // Configure the cell...
+//        var chosenGame: Game
+//        if activeType == .isPublic {
+//            chosenGame = (state?.findPublicGames()[indexPath.row])!
+//        } else {
+//            chosenGame = (state?.findPrivateGames()[indexPath.row])!
+//        }
+//        switch chosenGame.getMode()! {
+//        case .cp:
+//            cell.gamemodeLabel?.text = "◆"
+//        case .payload:
+//            cell.gamemodeLabel?.text = "⇥"
+//        case .multi:
+//            cell.gamemodeLabel?.text = "❖"
+//        }
+//        cell.gameNameLabel.text = chosenGame.getName()
+//        cell.gameDistanceLabel.text = "\(0) Miles Away"
+//        return cell
+//    }
     
 
     /*
