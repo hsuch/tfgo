@@ -19,12 +19,13 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+        var region = game_map.region
+        
         // we want the most recent position of our user
         let location = locations [0]
-        
         let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
-        let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
-        let region:MKCoordinateRegion = MKCoordinateRegionMake(myLocation, span)
+        
+        region.center = myLocation
         
         game_map.setRegion(region, animated: true)
         self.game_map.showsUserLocation = true
