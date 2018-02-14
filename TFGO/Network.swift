@@ -7,28 +7,43 @@
 //
 
 import Foundation
+import SwiftSocket
 
-class Network : NSObject {
-    private var servadd: String?
+class Connection {
+    private var address: String?
     private var port: UInt32?
-    private var inputStream: InputStream!
-    private var outputStream: OutputStream!
+    let client = TCPClient(address: address, port: port)
     
-    func setupConn() {
-        var readStream: Unmanaged<CFReadStream>?
-        var writeStream: Unmanaged<CFWriteStream>?
-        CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, servadd as CFString?, port!, &readStream, &writeStream)
-        
-        inputStream = readStream!.takeRetainedValue()
-        outputStream = writeStream!.takeRetainedValue()
-        
-        inputStream.schedule(in: .current, forMode: .commonModes)
-        outputStream.schedule(in: .current, forMode: .commonModes)
-        
-        inputStream.open()
-        outputStream.open()
+    func sendData(data: Data) -> Bool {
+        let result = client.send(data)
+        return result
     }
     
+    func recvData() -> [Data] {
+        guard let response = client.read(1024*10)
+        else { return nil }
+        return String(bytes: response, encoding: .utf8)
+    }
+    
+    init(){
+        client.connect(timeout: 10) // this should probably have success and failure case but whatever
+    }
+}
+
+class ServerMessage {
+    private enum type: String {
+        case PlayerListUpdate, AvailableGames, GameInfo, JoinGame, GameStartInfo, GameUpdate, StatusUpdate
+    }
+    private var data: JSONSerialization
+    
+    func parse() {
+        
+    }
+    
+    init(conn: Connection) {
+        received = conn.recvData()
+        data = try? JSONSerialization.jsonObject(with: received, options: [])
+    }
 }
 
 class GameState {
