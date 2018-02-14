@@ -30,19 +30,44 @@ class Connection {
     }
 }
 
-class ServerMessage {
-    private enum type: String {
-        case PlayerListUpdate, AvailableGames, GameInfo, JoinGame, GameStartInfo, GameUpdate, StatusUpdate
-    }
+class MsgFromServer {
+    private var type: String
+    /* possible message types:
+        PlayerListUpdate, AvailableGames, GameInfo, JoinGameError, GameStartInfo, GameUpdate, StatusUpdate
+    */
+
     private var data: [String: Any]
     
+    /* parse(): convert data array into appropriate data struct depending on message type */
     func parse() {
         //todo
     }
     
     init(conn: Connection) {
         let received = conn.recvData()
-        data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
+        self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
+        let type = data["Type"] as! String
+        self.type = type
+        
+    }
+}
+
+class MsgToServer {
+    private var action: String
+    /* possible message actions:
+        case CreateGame, ShowGames, ShowGameInfo, JoinGame, LocationUpdate, Fire
+    */
+    
+    private var data: [String: Any]
+    
+    /* toJson(): convert action type and data array into server-readable json */
+    func toJson() {
+        // todo
+    }
+    
+    init(action: String, data: [String: Any]) {
+        self.action = action
+        self.data = data
     }
 }
 
