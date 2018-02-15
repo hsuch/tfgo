@@ -76,15 +76,15 @@ class MsgToServer {
     /* possible message actions:
         case CreateGame, ShowGames, ShowGameInfo, JoinGame, StartGame, LocationUpdate, Fire
     */
-
+    
     private var data: [String: Any]
-
+    
     /* toJson(): convert action type and data array into server-readable json */
     func toJson() -> Data {
         let retval = Data.init() //todo
         return retval
     }
-
+    
     init(action: String, data: [String: Any]) {
         self.action = action
         self.data = data
@@ -185,6 +185,10 @@ class GameState {
             currentGame = game
         }
         return valid
+    }
+    
+    func getConnection() -> Connection {
+        return connection
     }
     
     func findPublicGames() -> [Game]{

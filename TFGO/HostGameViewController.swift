@@ -139,7 +139,9 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "Create Game" {
             if gameState.setCurrentGame(to: game) {
-                return true
+                if gameState.getConnection().sendData(data: CreateGameMsg(game: game)).isSuccess {
+                    return true
+                }
             }
         }
         //Give incomplete gamestate alert
