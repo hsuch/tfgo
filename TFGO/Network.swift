@@ -190,34 +190,16 @@ class MsgToServer {
 /* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
 
 func CreateGameMsg(game: Game) -> Data {
-    // literally why does swift handle strings like this. i hate this stupid language.
-    // still needs to take boundaries from the game page
-    var payload = "{\"Action\": \"CreateGame\", \"Data\": {\"Name\": "
-    payload += game.getName()!
-    payload += ",\"Password\": "
-    payload += game.getPassword()!
-    payload += ",\"Description\": "
-    payload += game.getDescription()
-    payload += ",\"PlayerLimit\": "
-    payload += String(describing: game.getMaxPlayers())
-    payload += ",\"PointLimit\": "
-    payload += String(describing: game.getMaxPoints())
-    payload += ",\"TimeLimit\": "
-    payload += String(describing: game.getTimeLimit())
-    payload += ",\"Mode\": "
-    payload += game.getMode()!.rawValue
-    payload += ",\"Boundaries\": [0], \"Host\": {\"Name\": "
-    payload += gameState.getUserName()
-    payload += ", \"Icon\": "
-    payload += gameState.getUserIcon()
-    payload += "}}}"
-    return payload.data(using: .utf8)!
+    // still needs to take boundaries from game page
+    let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
+    let payload = ["Name": game.getName(), "Password": game.getPassword(), "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": game.getTimeLimit(), "Mode": game.getMode().rawValue, "Boundaries": [], "Host": host] as [String: Any]
+    return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
     let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
     return MsgToServer(action: "ShowGames", data: payload).toJson()
 }
-func ShowGameInfo(IDtoShow: String) -> Data {
+func ShowGameInfoMsg(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
 }
 func JoinGameMsg(IDtoJoin: String) -> Data {
@@ -227,15 +209,9 @@ func StartGameMsg() -> Data {
     return MsgToServer(action: "StartGame", data: [:]).toJson()
 }
 func LocUpMsg() -> Data {
-    // todo, take location from this client's player
-    var payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": { \"X\":"
-    payload += String(gameState.getUserLocation().coordinate.latitude)
-    payload += ", \"Y\":"
-    payload += String(gameState.getUserLocation().coordinate.longitude)
-    payload += "}, \"Orientation\": "
-    payload += "0" //gameState.getUserOrientation() is not done
-    payload += "} }"
-    return payload.data(using: .utf8)!
+    let location = ["X": gameState.getUserLocation().coordinate.latitude, "Y": gameState.getUserLocation().coordinate.longitude]
+    let payload = ["Location": location, "Orientation": gameState.getUserOrientation()]
+    return MsgToServer(action: "LocationUpdate", data: payload).toJson()
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
