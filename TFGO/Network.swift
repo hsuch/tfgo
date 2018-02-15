@@ -96,16 +96,8 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // todo
     // THIS PART IS NOT DONE
-    /*let payload = ["Name": game.getName(),
-     "Password": game.getPassword(),
-     "Description": game.getDescription(),
-     "PlayerLimit": game.getMaxPlayers(),
-     "PointLimit": game.getMaxPoints(),
-     "TimeLimit": game.getTimeLimit(),
-     "Mode": game.getMode(),
-     "Boundaries": [0], // not done
-     "Host": {gameState.getUserName()}] // not done*/
-    return Data.init()
+    let payload = "[\"Name\": game.getName(),\"Password\": game.getPassword(),\"Description\": game.getDescription(),\"PlayerLimit\": game.getMaxPlayers(),\"PointLimit\": game.getMaxPoints(),\"TimeLimit\": game.getTimeLimit(),\"Mode\": game.getMode(),\"Boundaries\": [0], \"Host\": {\"Name\": gameState.getUserName(), \"Icon\": gameState.getUserIcon()}]"
+    return payload.data(using: .utf8)!
 }
 func ShowGamesMsg() -> Data {
     let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
@@ -130,6 +122,7 @@ func FireMsg() -> Data {
     let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
     return payload.data(using: .utf8)!
     //return MsgToServer(action: "Fire", data: [:]).toJson()
+
 }
 
 
