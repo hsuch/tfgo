@@ -45,6 +45,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         self.game_map.showsUserLocation = true
     }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
