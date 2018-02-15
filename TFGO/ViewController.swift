@@ -24,8 +24,8 @@ class ViewController: UIViewController {
         if identifier == "temp" {
             if gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
                 while true {
-                    if gameState.findPublicGames().count > 0 {
-                        if MsgFromServer().parse() {
+                    if MsgFromServer().parse() {
+                        if gameState.findPublicGames().count > 0 {
                             return gameState.setCurrentGame(to: gameState.findPublicGames()[0])
                         }
                     }
