@@ -72,6 +72,8 @@ class MsgFromServer {
             return parseStatusUpdate(data: data)
         case "TakeHit":
             return parseTakeHit(data: data)
+        case "Gameover":
+            return parseGameOver(data: data)
         default:
             return false
         }
@@ -246,6 +248,21 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
                 }
             }
         }
+        return true
+    }
+    return false
+}
+
+func parseGameOver(data: [String: Any]) -> Bool {
+    
+    // not necessary for iteration 1
+    if let gameOver = data["Data"] as? String {
+        
+        let alert = UIAlertController(title: gameOver, message: "Has won the game", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Return to game select", style: .cancel, handler: nil))
+        
+        //self.present(alert, animated: true)  TODO figure out how to send message without extension UIViewController
+        
         return true
     }
     return false
