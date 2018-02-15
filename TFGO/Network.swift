@@ -23,8 +23,9 @@ class Connection {
     }
 
     func recvData() -> Data? {
-        let response = client.read(1024*10)
-        return Data.init(response!)
+        guard let response = client.read(1024*10)
+            else { return nil }
+        return Data.init(response)
     }
 
     init() {
@@ -41,12 +42,12 @@ class Connection {
 }
 
 class MsgFromServer {
-    private var type: String
+    private var type: String = ""
     /* possible message types:
         PlayerListUpdate, AvailableGames, GameInfo, JoinGameError, GameStartInfo, GameUpdate, StatusUpdate
     */
 
-    private var data: [String: Any]
+    private var data: [String: Any] = [:]
 
     func getType() -> String {
         return type
@@ -79,12 +80,18 @@ class MsgFromServer {
 
     init() {
         let conn = gameState.getConnection()
-        let received = conn.recvData()
-            self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-            let type = data.removeValue(forKey: "Type")
-            self.type = type as! String
-        
-
+        var received: Data? = nil
+        while (received == nil) {
+            print("waiting for receive")
+            received = conn.recvData()
+            if(received != nil)
+            {
+                self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
+                let type = data.removeValue(forKey: "Type")
+                self.type = type as! String
+                print(type!)
+            }
+        }
     }
 }
 
