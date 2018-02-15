@@ -20,8 +20,6 @@ class LobbyCustomViewCell: UITableViewCell {
 }
 
 class GameLobbyViewController: UIViewController {
-    
-    var state: GameState?
 
     override func viewDidLoad() {
         super.viewDidLoad()

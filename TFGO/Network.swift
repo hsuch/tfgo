@@ -47,10 +47,10 @@ class MsgFromServer {
     }
 
     /* parse(): convert data array into appropriate data struct depending on message type */
-    func parse() {
+    func parse() -> AnyObject {
         switch type {
         case "PlayerListUpdate":
-            parsePlayerListUpdate(data: data)
+            return parsePlayerListUpdate(data: data)
         default:
             break
         }
@@ -59,16 +59,16 @@ class MsgFromServer {
     init(conn: Connection) {
         let received = conn.recvData()
         self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-        let type = data.removeValue(forKey: "Type")
-        self.type = type as! String
+        let type = data.removeValueForKey("Type")
+        self.type = type
 
     }
 }
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
-func parsePlayerListUpdate(data: [String: Any]) {
-    
+func parsePlayerListUpdate(data: [String: Any]) -> Player {
+
 }
 
 class MsgToServer {
@@ -76,15 +76,15 @@ class MsgToServer {
     /* possible message actions:
         case CreateGame, ShowGames, ShowGameInfo, JoinGame, StartGame, LocationUpdate, Fire
     */
-    
+
     private var data: [String: Any]
-    
+
     /* toJson(): convert action type and data array into server-readable json */
     func toJson() -> Data {
         let retval = Data.init() //todo
         return retval
     }
-    
+
     init(action: String, data: [String: Any]) {
         self.action = action
         self.data = data
@@ -114,14 +114,11 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
-    let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
-    return payload.data(using: .utf8)!
+    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
-    let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
-    return payload.data(using: .utf8)!
-    //return MsgToServer(action: "Fire", data: [:]).toJson()
+    return MsgToServer(action: "Fire", data: [:]).toJson()
 
 }
 
@@ -132,6 +129,7 @@ class GameState {
     private var currentGame: Game?
     private var foundGames: [Game] = []
     private var user: Player = Player(name: "", icon:"")
+    private var connection = Connection()
     
     
     func getUserName() -> String {

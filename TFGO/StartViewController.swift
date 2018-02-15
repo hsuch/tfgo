@@ -23,7 +23,7 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
         
-        cell.backgroundColor = randomColor()
+        cell.label.backgroundColor = randomColor()
         cell.label.text = icons[indexPath.row]
         return cell
     }
@@ -36,7 +36,9 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     }
     
     private func randomColor() -> UIColor {
-        return UIColor(red: CGFloat(arc4random_uniform(100)), green: CGFloat(arc4random_uniform(100)), blue: CGFloat(arc4random_uniform(100)), alpha: 1)
+        let color = UIColor(red: CGFloat(6), green: CGFloat(96), blue: CGFloat(200), alpha: 1)
+        print(color)
+        return color
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

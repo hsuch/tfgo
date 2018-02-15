@@ -11,7 +11,6 @@ import MapKit
 
 class HostGameViewController: UITableViewController, UITextFieldDelegate {
     
-    var state: GameState?
     private let game = Game()
     
     @IBOutlet weak var host_map: MKMapView!
@@ -139,25 +138,13 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "Create Game" {
-            if state?.setCurrentGame(to: game) ?? false {
+            if gameState.setCurrentGame(to: game) {
                 return true
             }
         }
         //Give incomplete gamestate alert
         return false
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let identifier = segue.identifier {
-            if identifier == "Create Game" {
-                if let waitingVC = segue.destination as? WaitingViewController {
-                    waitingVC.state = state
-                }
-            }
-        }
-    }
-    
-    
     
     // MARK: - Table view data source
     
