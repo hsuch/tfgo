@@ -19,6 +19,7 @@
 		00DA1D1620210C21001AF71A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00DA1D1420210C21001AF71A /* LaunchScreen.storyboard */; };
 		00DA1D2120210C21001AF71A /* TFGOTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2020210C21001AF71A /* TFGOTests.swift */; };
 		00DA1D2C20210C21001AF71A /* TFGOUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DA1D2B20210C21001AF71A /* TFGOUITests.swift */; };
+		00DC724D2034DD35002F0CC1 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DC724C2034DD35002F0CC1 /* StartViewController.swift */; };
 		00FFA870202F67E200C83F74 /* GameLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */; };
 		08FDDB7959D3CAD811ADB258 /* Pods_TFGO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49D865F5D5025571845B309 /* Pods_TFGO.framework */; };
 		18EB71AE20336C05005A677C /* WaitingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EB71AD20336C05005A677C /* WaitingViewController.swift */; };
@@ -64,6 +65,7 @@
 		00DA1D2720210C21001AF71A /* TFGOUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TFGOUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00DA1D2B20210C21001AF71A /* TFGOUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TFGOUITests.swift; sourceTree = "<group>"; };
 		00DA1D2D20210C21001AF71A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		00DC724C2034DD35002F0CC1 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		00FFA86F202F67E200C83F74 /* GameLobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLobbyViewController.swift; sourceTree = "<group>"; };
 		16AC2F6F3D23992CE0559E4E /* Pods_TFGOTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFGOTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EB71AD20336C05005A677C /* WaitingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitingViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				00DA1D0B20210C21001AF71A /* AppDelegate.swift */,
 				00DA1D0D20210C21001AF71A /* ViewController.swift */,
 				00DA1D0F20210C21001AF71A /* Main.storyboard */,
+				00DC724C2034DD35002F0CC1 /* StartViewController.swift */,
 				18EB71AD20336C05005A677C /* WaitingViewController.swift */,
 				00B70F0820329DA9003BF9C6 /* GameInfoViewController.swift */,
 				00B70F0A20329E48003BF9C6 /* Network.swift */,
@@ -370,10 +373,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-TFGO/Pods-TFGO-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -488,6 +493,7 @@
 				18EB71AE20336C05005A677C /* WaitingViewController.swift in Sources */,
 				00B70F0B20329E48003BF9C6 /* Network.swift in Sources */,
 				00A27FE3202E900B00D58C3A /* Game.swift in Sources */,
+				00DC724D2034DD35002F0CC1 /* StartViewController.swift in Sources */,
 				00A27FDF202E825900D58C3A /* GameViewController.swift in Sources */,
 				00A27FE1202E84A900D58C3A /* HostGameViewController.swift in Sources */,
 				00DA1D0C20210C21001AF71A /* AppDelegate.swift in Sources */,

@@ -60,14 +60,15 @@ func inBounds(game *Game, loc Location) bool {
  * Returns: Nothing
  */
 func (p *Player) handleLoc(game *Game, loc Location, orientation float64) {
-	p.Location = loc
+	p.Location = Location{X: degreeToMeter(loc.X), Y: degreeToMeter(loc.Y)}
 	p.Orientation = orientation
 
 	// Check if player is in/out of bounds and handle accordingly
-	if !inBounds(game, p.Location) && p.Status == NORMAL {
+	inbounds := inBounds(game, p.Location)
+	if !inbounds && p.Status == NORMAL {
 		p.Status = OUTOFBOUNDS
 		go handleOutOfBoundsTimer(game, p)
-	} else if inBounds(game, p.Location) && p.Status == OUTOFBOUNDS {
+	} else if inbounds && p.Status == OUTOFBOUNDS {
 		p.Status = NORMAL
 		p.StatusTimer.Stop()
 	}
