@@ -174,12 +174,25 @@ public class Game {
         players.append(player)
     }
     
+    func removePlayer(index: Int) {
+        players.remove(at: index)
+    }
+    
     func getBoundaries() -> [MKMapPoint] {
         return boundaries
     }
     
     func setBoundaries(_ points: [MKMapPoint]) {
         boundaries = points
+    }
+    
+    func hasPlayer(name: String) -> Bool {
+        for player in players {
+            if name == player.getName() {
+                return true
+            }
+        }
+        return false
     }
     
     private func validName(_ name: String?) -> Bool {

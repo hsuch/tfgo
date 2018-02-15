@@ -82,9 +82,40 @@ class MsgFromServer {
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
 func parsePlayerListUpdate(data: [String: Any]) -> Bool {
-    let json = JSON(data)
-    var players [Player] = 
-    let players = json["data"]
+    
+    var players = [Player]()
+    
+    if let info = data["Data"] as? [[String: Any]] {
+        for player in info {
+            if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                players.append(Player(name: name, icon: icon))
+            }
+        }
+    }
+    
+    var current_players = gameState.getCurrentGame().getPlayers()
+    var index = 0
+    
+    for c_player in current_players {
+        let c_name = c_player.getName()
+        for player in players {
+            if c_name == player.getName() {
+                gameState.getCurrentGame().removePlayer(index: index)
+                index = index - 1
+                break
+            }
+        }
+        index = index + 1
+    }
+    
+    current_players = gameState.getCurrentGame().getPlayers()
+    
+    for player in players {
+        if gameState.getCurrentGame().hasPlayer(name: player.getName()) {
+            gameState.getCurrentGame().addPlayer(toGame: player)
+        }
+    }
+    
 }
 
 //func parseAvailableGames(data: [String: Any]) -> Bool {
