@@ -60,14 +60,14 @@ class MsgFromServer {
             return true
         case "AvailableGames":
             return parseAvailableGames(data: data)
-//        case "GameInfo":
-//            return parseGameInfo(data: data)
+        case "GameInfo":
+            return parseGameInfo(data: data)
         case "JoinGameError":
             return parseJoinGameError(data: data)
-//        case "GameStartInfo":
-//            return parseGameStartInfo(data: data)
-//        case "GameUpdate":
-//            return parseGameUpdate(data: data)
+        case "GameStartInfo":
+            return parseGameStartInfo(data: data)
+        case "GameUpdate":
+            return parseGameUpdate(data: data)
         case "StatusUpdate":
             return parseStatusUpdate(data: data)
         case "TakeHit":
@@ -182,26 +182,74 @@ func parseJoinGameError(data: [String: Any]) -> Bool {
 }
 
 func parseGameStartInfo(data: [String: Any]) -> Bool {
+    
     //TODO add bases for iteration 2
     if let info = data["Data"] as? [String: Any] {
         if let players = info["PlayerList"] as? [[String: Any]] {
             for player in players {
                 if let name = player["Name"] as? String, let team = player["Team"] as? String {
                     let index = gameState.getCurrentGame().findPlayerIndex(name: name)
-                    gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
+                    if index > -1 {
+                        gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
+                    }
                 }
             }
         }
         if let objectives = info["Objectives"] as? [[String: Any]] {
-            
+            for objective in objectives {
+                if let loc = objective["Location"] as? [String: Any], let radius = objective["Radius"] as? Double {
+                    if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                        gameState.getCurrentGame().addObjective(toObjective: Objective(x: x, y: y, radius: radius))
+                    }
+                }
+            }
         }
+        return true
     }
     return false
 }
 
-//func parseGameUpdate(data: [String: Any]) -> Bool {
-//
-//}
+func parseGameUpdate(data: [String: Any]) -> Bool {
+    
+    if let info = data["Data"] as? [String: Any] {
+        if let players = info["PlayerList"] as? [[String: Any]], let points = info["Points"] as? [String: Any], let objectives = info["Objectives"] as? [[String: Any]] {
+            
+            for player in players {
+                if let name = player["Name"] as? String, let orientation = player["Orientation"] as? Float, let loc = player["Location"] as? [String: Any] {
+                    
+                    let index = gameState.getCurrentGame().findPlayerIndex(name: name)
+                    if index > -1 {
+                        gameState.getCurrentGame().getPlayers()[index].setOrientation(to: orientation)
+                        if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                            gameState.getCurrentGame().getPlayers()[index].setLocation(to: x, to: y)
+                        }
+                    }
+                }
+            }
+            
+            if let redPoints = points["Red"] as? Int, let bluePoints = points["Blue"] as? Int {
+                gameState.getCurrentGame().setRedPoints(to: redPoints)
+                gameState.getCurrentGame().setBluePoints(to: bluePoints)
+            }
+            
+            for objective in objectives {
+                if let loc = objective["Location"] as? [String: Any], let occupants = objective["Occupying"] as? [String], let owner = objective["BelongsTo"] as? String, let progress = objective["Progress"] as? Int {
+                    
+                    if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                        let objIndex = gameState.getCurrentGame().findObjectiveIndex(x: x, y: y)
+                        if objIndex > -1 {
+                            gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
+                            gameState.getCurrentGame().getObjectives()[objIndex].setProgress(to: progress)
+                            gameState.getCurrentGame().getObjectives()[objIndex].setOccupants(to: occupants)
+                        }
+                    }
+                }
+            }
+        }
+        return true
+    }
+    return false
+}
 
 func parseStatusUpdate(data: [String: Any]) -> Bool {
     if let status = data["Data"] as? String {
