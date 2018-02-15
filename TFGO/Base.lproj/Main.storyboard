@@ -94,6 +94,24 @@
                                     <constraint firstItem="7oH-mt-UXU" firstAttribute="width" secondItem="Nwm-qu-lXV" secondAttribute="height" multiplier="94:43" id="fOM-4B-dzh"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itu-Qh-RHT">
+                                <rect key="frame" x="16" y="613" width="343" height="165"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                <connections>
+                                    <segue destination="mhV-e7-hMe" kind="popoverPresentation" identifier="temp" popoverAnchorView="itu-Qh-RHT" id="crL-Tg-uOg">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="JOIN GAME ITERATION 1 TEMP" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZm-3j-sgj">
+                                <rect key="frame" x="16" y="613" width="343" height="165"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1377,7 +1395,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="xzX-Iq-bnB"/>
+        <segue reference="crL-Tg-uOg"/>
         <segue reference="2n9-BF-tBN"/>
         <segue reference="FNE-Lr-RRh"/>
     </inferredMetricsTieBreakers>
