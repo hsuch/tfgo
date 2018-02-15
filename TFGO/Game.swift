@@ -43,6 +43,10 @@ class Player {
         return loc
     }
     
+    func setLocation(to x: Double, to y: Double) {
+        self.loc = CLLocation(latitude: x, longitude: y)
+    }
+    
     func getIcon() -> String {
         return icon
     }
@@ -77,6 +81,10 @@ class Player {
     
     func getOrientation() -> Float {
         return orientation
+    }
+    
+    func setOrientation(to orientation: Float) {
+        self.orientation = orientation
     }
     
     func getTeam() -> String {
@@ -125,12 +133,8 @@ public class Objective {
         return radius
     }
     
-    func addOccupant(toGame name: String) {
-        occupants.append(name)
-    }
-    
-    func removeOccupant(index: Int) {
-        occupants.remove(at: index)
+    func setOccupants(to occupants: [String]) {
+        self.occupants = occupants
     }
     
     func getOwner() -> String {
@@ -169,6 +173,8 @@ public class Game {
     private var maxTime: Int = 2
     private var maxPoints: Int = 10
     private var maxPlayers: Int = 2
+    private var redPoints: Int = 0
+    private var bluePoints: Int = 0
     private var description: String
     private var password: String?
     private var objectives: [Objective]
@@ -220,6 +226,22 @@ public class Game {
         self.maxPoints = points
     }
     
+    func getRedPoints() -> Int {
+        return redPoints
+    }
+    
+    func setRedPoints(to redPoints: Int) {
+        self.redPoints = redPoints
+    }
+    
+    func getBluePoints() -> Int {
+        return bluePoints
+    }
+    
+    func setBluePoints(to bluePoints: Int) {
+        self.bluePoints = bluePoints
+    }
+    
     func getMaxPlayers() -> Int {
         return maxPlayers
     }
@@ -256,6 +278,10 @@ public class Game {
         return players
     }
     
+    func getObjectives() -> [Objective] {
+        return objectives
+    }
+    
     func addPlayer(toGame player: Player) {
         players.append(player)
     }
@@ -264,8 +290,8 @@ public class Game {
         players.remove(at: index)
     }
     
-    func addObjective(toObjective objective: Player) {
-        players.append(objective)
+    func addObjective(toObjective objective: Objective) {
+        objectives.append(objective)
     }
     
     func getBoundaries() -> [MKMapPoint] {
@@ -289,6 +315,17 @@ public class Game {
         var i = 0;
         for player in players {
             if name == player.getName() {
+                return i
+            }
+            i = i + 1
+        }
+        return -1
+    }
+    
+    func findObjectiveIndex(x: Double, y: Double) -> Int {
+        var i = 0
+        for objective in objectives {
+            if x == objective.getXLoc(), y == objective.getYLoc() {
                 return i
             }
             i = i + 1
