@@ -17,7 +17,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     let manager = CLLocationManager()
     
-    var initialized = false
+    var initialized = false  // boolean set to true after the first tracking of user's position
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         

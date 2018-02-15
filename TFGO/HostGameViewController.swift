@@ -8,12 +8,46 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
-class HostGameViewController: UITableViewController, UITextFieldDelegate {
+class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate {
     
     private let game = Game()
     
     @IBOutlet weak var host_map: MKMapView!
+    
+    let manager = CLLocationManager()
+    
+    var initialized = false  // boolean set to true after the first tracking of user's position
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        
+        if (initialized == false) {
+            // we want the most recent position of our user
+            let location = locations [0]
+        
+            var region:MKCoordinateRegion
+        
+            let myLocation = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
+        
+            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
+            region = MKCoordinateRegionMake(myLocation, span)
+            host_map.isRotateEnabled = false
+            initialized = true
+        
+            host_map.setRegion(region, animated: false)
+            self.host_map.showsUserLocation = true
+            
+            let myLat = myLocation.latitude
+            let myLon = myLocation.longitude
+            
+            // These are hardcoded boundaries for the purpose of testing iteration 1 code
+            game.setBoundaries([MKMapPointMake(myLat + 0.1, myLon + 0.1), MKMapPointMake(myLat + 0.1, myLon - 0.1), MKMapPointMake(myLat - 0.1, myLon + 0.1), MKMapPointMake(myLat - 0.1, myLon - 0.1)])
+            
+            initialized = true
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +58,12 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         let span = MKCoordinateSpanMake(0.1, 0.1)
         let region = MKCoordinateRegionMake(center, span)
         self.host_map.setRegion(region, animated: true)
+        
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
+        manager.startUpdatingHeading()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
