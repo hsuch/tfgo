@@ -202,7 +202,7 @@ public class Game {
         return false
     }
     
-    func getMode() -> Gamemode? {
+    func getMode() -> Gamemode {
         return mode
     }
     
@@ -210,28 +210,20 @@ public class Game {
         self.mode = mode
     }
     
-    func getTimeLimit() -> Int? {
+    func getTimeLimit() -> Int {
         return maxTime
     }
     
-    func setTimeLimit(to time: Int) -> Bool {
-        if validNumber(of: time) {
-            self.maxTime = time
-            return true
-        }
-        return false
+    func setTimeLimit(to time: Int) {
+        self.maxTime = time
     }
     
-    func getMaxPoints() -> Int? {
+    func getMaxPoints() -> Int {
         return maxPoints
     }
     
-    func setMaxPoints(to points: Int) -> Bool {
-        if validNumber(of: points) {
-            self.maxPoints = points
-            return true
-        }
-        return false
+    func setMaxPoints(to points: Int) {
+        self.maxPoints = points
     }
     
     func getRedPoints() -> Int {
@@ -254,12 +246,8 @@ public class Game {
         return maxPlayers
     }
     
-    func setMaxPlayers(to players: Int) -> Bool {
-        if validNumber(of: players) {
-            self.maxPlayers = players
-            return true
-        }
-        return false
+    func setMaxPlayers(to players: Int) {
+        self.maxPlayers = players
     }
     
     func getDescription() -> String {

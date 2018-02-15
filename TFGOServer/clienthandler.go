@@ -31,7 +31,7 @@ func serveClient(conn net.Conn) {
 	var g *Game
 
 	decoder := json.NewDecoder(conn)
-	for {
+	for g == nil || g.Status != GAMEOVER {
 		var msg ClientMessage
 		if err := decoder.Decode(&msg); err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read message: %s\nClosing connection.\n", err.Error())
