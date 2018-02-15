@@ -50,15 +50,16 @@ class MsgFromServer {
     func parse() -> Bool {
         switch type {
         case "PlayerListUpdate":
-            return parsePlayerListUpdate(data: data)
-        case "AvailableGames":
-            return parseAvailableGames(data: data)
-        case "GameInfo":
-            return parseGameInfo(data: data)
-        case "JoinGameError":
-            return parseJoinGameError(data: data)
-        case "GameStartInfo":
-            return parseGameStartError(data: data)
+            parsePlayerListUpdate(data: data)
+            return true
+//        case "AvailableGames":
+//            return parseAvailableGames(data: data)
+//        case "GameInfo":
+//            return parseGameInfo(data: data)
+//        case "JoinGameError":
+//            return parseJoinGameError(data: data)
+//        case "GameStartInfo":
+//            return parseGameStartError(data: data)
         case "GameUpdate":
             return parseGameUpdate(data: data)
         case "StatusUpdate":
@@ -81,7 +82,7 @@ class MsgFromServer {
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
-func parsePlayerListUpdate(data: [String: Any]) -> Bool {
+func parsePlayerListUpdate(data: [String: Any]) {
     
     var players = [Player]()
     
@@ -132,15 +133,25 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
 //func parseGameStartError(data: [String: Any]) -> Bool {
 //    let json = JSON(data)
 //}
-//
-//func parseGameUpdate(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
-//
+
+func parseGameUpdate(data: [String: Any]) -> Bool {
+    if let error = data["Data"] as? String {
+        let alert = UIAlertController(title: error, message: "Please join a different game", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Return", style: .cancel, handler: nil))
+        
+        //self.present(alert, animated: true)  TODO figure out how to send message without extension UIViewController
+        
+        return true
+    }
+    return false
+}
+
 func parseStatusUpdate(data: [String: Any]) -> Bool {
     if let status = data["Data"] as? String {
         gameState.setUserStatus(to: status)
+        return true
     }
+    return false
 }
 
 func parseTakeHit(data: [String: Any]) -> Bool {
@@ -148,8 +159,10 @@ func parseTakeHit(data: [String: Any]) -> Bool {
         if let health = info["Health"] as? Int, let armor = info["Armor"] as? Int {
             gameState.setUserHealth(to: health)
             gameState.setUserArmor(to: armor)
+            return true
         }
     }
+    return false
 }
 
 class MsgToServer {
