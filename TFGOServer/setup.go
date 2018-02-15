@@ -207,13 +207,13 @@ func (g *Game) start() {
 
 	startTime := time.Now().Add(time.Minute)
 	sendGameStartInfo(g, startTime)
+	go sendGameUpdates(g)
 
 	time.Sleep(time.Until(startTime))
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
 	})
-	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
 		go cp.updateStatus(g)
 	}

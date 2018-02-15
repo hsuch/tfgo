@@ -26,7 +26,6 @@ func (g *Game) broadcast(msg map[string]interface{}) {
 	}
 }
 
-
 // utility functions that help construct various message components
 
 // this method of retrieving field values by name inspired by
@@ -197,4 +196,23 @@ func sendGameUpdates(game *Game) {
 
 		time.Sleep(TICK())
 	}
+}
+
+func sendStatusUpdate(player *Player, status string) {
+	msg := map[string]interface{} {
+		"Type" : "StatusUpdate",
+		"Data" : status,
+	}
+	player.Chan <- msg
+}
+
+func sendTakeHit(player *Player) {
+	msg := map[string]interface{} {
+		"Type" : "TakeHit",
+		"Data" : map[string]int {
+			"Health" : player.Health,
+			"Armor" : player.Armor,
+		},
+	}
+	player.Chan <- msg
 }
