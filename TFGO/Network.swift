@@ -68,7 +68,7 @@ class MsgFromServer {
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
 func parsePlayerListUpdate(data: [String: Any]) {
-    
+
 }
 
 class MsgToServer {
@@ -186,6 +186,10 @@ class GameState {
             currentGame = game
         }
         return valid
+    }
+    
+    func getConnection() -> Connection {
+        return connection
     }
     
     func findPublicGames() -> [Game]{
