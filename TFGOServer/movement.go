@@ -131,6 +131,9 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 		// add a point to the team controlling this control point
 		if cp.ControllingTeam != nil {
 			cp.ControllingTeam.Points++
+			if cp.ControllingTeam.Points == game.PointLimit {
+				game.stop()
+			}
 		}
 
 		time.Sleep(time.Second)
