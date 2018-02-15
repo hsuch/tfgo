@@ -47,10 +47,10 @@ class MsgFromServer {
     }
 
     /* parse(): convert data array into appropriate data struct depending on message type */
-    func parse() -> AnyObject {
+    func parse() {
         switch type {
         case "PlayerListUpdate":
-            return parsePlayerListUpdate(data: data)
+            parsePlayerListUpdate(data: data)
         default:
             break
         }
@@ -59,16 +59,16 @@ class MsgFromServer {
     init(conn: Connection) {
         let received = conn.recvData()
         self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-        let type = data.removeValueForKey("Type")
-        self.type = type
+        let type = data.removeValue(forKey: "Type")
+        self.type = type as! String
 
     }
 }
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
-func parsePlayerListUpdate(data: [String: Any]) -> Player {
-
+func parsePlayerListUpdate(data: [String: Any]) {
+    
 }
 
 class MsgToServer {
@@ -76,15 +76,15 @@ class MsgToServer {
     /* possible message actions:
         case CreateGame, ShowGames, ShowGameInfo, JoinGame, StartGame, LocationUpdate, Fire
     */
-
+    
     private var data: [String: Any]
-
+    
     /* toJson(): convert action type and data array into server-readable json */
     func toJson() -> Data {
         let retval = Data.init() //todo
         return retval
     }
-
+    
     init(action: String, data: [String: Any]) {
         self.action = action
         self.data = data
@@ -95,6 +95,16 @@ class MsgToServer {
 
 func CreateGameMsg(game: Game) -> Data {
     // todo
+    // THIS PART IS NOT DONE
+    /*let payload = ["Name": game.getName(),
+                   "Password": game.getPassword(),
+                   "Description": game.getDescription(),
+                   "PlayerLimit": game.getMaxPlayers(),
+                   "PointLimit": game.getMaxPoints(),
+                   "TimeLimit": game.getTimeLimit(),
+                   "Mode": game.getMode(),
+                   "Boundaries": [0], // not done
+                   "Host": {gameState.getUserName()}] // not done*/
     return Data.init()
 }
 func ShowGamesMsg() -> Data {
@@ -112,11 +122,14 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
-    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
+    let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
+    return payload.data(using: .utf8)!
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
-    return MsgToServer(action: "Fire", data: [:]).toJson()
+    let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
+    return payload.data(using: .utf8)!
+    //return MsgToServer(action: "Fire", data: [:]).toJson()
 
 }
 
