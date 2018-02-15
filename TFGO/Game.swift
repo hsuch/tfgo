@@ -10,9 +10,9 @@ import Foundation
 import MapKit
 
 enum Gamemode: String {
-    case cp = "Control Point"
+    case cp = "SingleCapture"
     case payload = "Payload"
-    case multi = "Multipoint"
+    case multi = "MultiCapture"
 }
 
 class Player {

@@ -30,7 +30,6 @@ class ViewController: UIViewController {
                         if connection.sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
                             return gameState.setCurrentGame(to: game)
                         }
-                    }
                 }
             }
             return false
