@@ -24,12 +24,10 @@ class ViewController: UIViewController {
         if identifier == "temp" {
             let connection = gameState.getConnection()
             if connection.sendData(data: ShowGamesMsg()).isSuccess {
-                while true {
-                    if MsgFromServer().parse(), gameState.findPublicGames().count > 0 {
-                        let game = gameState.findPublicGames()[0]
-                        if connection.sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
-                            return gameState.setCurrentGame(to: game)
-                        }
+                if MsgFromServer().parse(), gameState.findPublicGames().count > 0 {
+                    let game = gameState.findPublicGames()[0]
+                    if connection.sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
+                        return gameState.setCurrentGame(to: game)
                     }
                 }
             }
