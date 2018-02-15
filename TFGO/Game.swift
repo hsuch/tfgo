@@ -169,12 +169,12 @@ public class Game {
     
     private var ID: String?
     private var name: String?
-    private var mode: Gamemode?
-    private var maxTime: Int?
-    private var maxPoints: Int?
-    private var redPoints: Int
-    private var bluePoints: Int
-    private var maxPlayers: Int?
+    private var mode: Gamemode = .cp
+    private var maxTime: Int = 2
+    private var maxPoints: Int = 10
+    private var maxPlayers: Int = 2
+    private var redPoints: Int = 0
+    private var bluePoints: Int = 0
     private var description: String
     private var password: String?
     private var objectives: [Objective]
@@ -242,7 +242,7 @@ public class Game {
         self.bluePoints = bluePoints
     }
     
-    func getMaxPlayers() -> Int? {
+    func getMaxPlayers() -> Int {
         return maxPlayers
     }
     
@@ -363,7 +363,5 @@ public class Game {
         players = []
         boundaries = []
         objectives = []
-        redPoints = 0
-        bluePoints = 0
     }
 }
