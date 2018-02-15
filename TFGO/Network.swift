@@ -9,6 +9,7 @@
 import Foundation
 import SwiftSocket
 import SwiftyJSON
+import MapKit
 
 var gameState = GameState()
 
@@ -81,36 +82,38 @@ class MsgFromServer {
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
 func parsePlayerListUpdate(data: [String: Any]) -> Bool {
-
+    let json = JSON(data)
+    var players [Player] = 
+    let players = json["data"]
 }
 
-func parseAvailableGames(data: [String: Any]) -> Bool {
-    
-}
-
-func parseGameInfo(data: [String: Any]) -> Bool {
-    
-}
-
-func parseJoinGameError(data: [String: Any]) -> Bool {
-    
-}
-
-func parseGameStartError(data: [String: Any]) -> Bool {
-    
-}
-
-func parseGameUpdate(data: [String: Any]) -> Bool {
-    
-}
-
-func parseStatusUpdate(data: [String: Any]) -> Bool {
-    
-}
-
-func parseTakeHit(data: [String: Any]) -> Bool {
-    
-}
+//func parseAvailableGames(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+//func parseGameInfo(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+//func parseJoinGameError(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+//func parseGameStartError(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+//func parseGameUpdate(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+//func parseStatusUpdate(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+//func parseTakeHit(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
 
 class MsgToServer {
     private var action: String
@@ -136,6 +139,16 @@ class MsgToServer {
 
 func CreateGameMsg(game: Game) -> Data {
     // todo
+    // THIS PART IS NOT DONE
+    /*let payload = ["Name": game.getName(),
+                   "Password": game.getPassword(),
+                   "Description": game.getDescription(),
+                   "PlayerLimit": game.getMaxPlayers(),
+                   "PointLimit": game.getMaxPoints(),
+                   "TimeLimit": game.getTimeLimit(),
+                   "Mode": game.getMode(),
+                   "Boundaries": [0], // not done
+                   "Host": {gameState.getUserName()}] // not done*/
     return Data.init()
 }
 func ShowGamesMsg() -> Data {
@@ -153,11 +166,14 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
-    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
+    let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
+    return payload.data(using: .utf8)!
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
-    return MsgToServer(action: "Fire", data: [:]).toJson()
+    let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
+    return payload.data(using: .utf8)!
+    //return MsgToServer(action: "Fire", data: [:]).toJson()
 
 }
 
