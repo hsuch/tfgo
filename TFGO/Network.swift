@@ -8,6 +8,8 @@
 
 import Foundation
 import SwiftSocket
+import SwiftyJSON
+import MapKit
 
 var gameState = GameState()
 
@@ -144,8 +146,19 @@ class GameState {
         user.setIcon(to: icon)
     }
     
+    func getUserWeapon() -> String {
+        return user.getWeapon()
+    }
+    
     func getUser() -> Player {
         return user
+    }
+    func getUserLocation() -> CLLocation {
+        return user.getLocation()
+    }
+    
+    func getUserOrientation() -> Float {
+        return user.getOrientation()
     }
     
     /* Do not call unless a game exists!!! */
@@ -186,3 +199,4 @@ class GameState {
         
     }
 }
+

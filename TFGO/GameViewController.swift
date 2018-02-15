@@ -12,7 +12,7 @@ import CoreLocation
 
 class GameViewController: UIViewController, CLLocationManagerDelegate {
     
-
+    
     @IBOutlet weak var game_map: MKMapView!
     
     let manager = CLLocationManager()
@@ -73,4 +73,3 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
      */
     
 }
-
