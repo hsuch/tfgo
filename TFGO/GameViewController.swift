@@ -17,7 +17,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     let manager = CLLocationManager()
     
-    var initialized = false
+    var initialized = false  // boolean set to true after the first tracking of user's position
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
@@ -61,6 +61,17 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    private var updateTimer = Timer()
+    
+    func runTimer() {
+        updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
+    }
+    
+    @objc func update() {
+        if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
+            print(gameState.getUser().getLocation())
+        }
+    }
     
     /*
      // MARK: - Navigation

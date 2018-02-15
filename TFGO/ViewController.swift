@@ -16,19 +16,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        background.image = UIImage(named: "dark-triangles")
+        background.image = UIImage(named: "redblue")
         // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "temp" {
             if gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
-                while true {
                     if MsgFromServer().parse() {
                         if gameState.findPublicGames().count > 0 {
                             return gameState.setCurrentGame(to: gameState.findPublicGames()[0])
                         }
-                    }
                 }
             }
             return false

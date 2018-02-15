@@ -2,10 +2,7 @@ package main
 
 // update_test.go: tests for update functions in update.go
 
-import (
-	"testing"
-	"math"
-)
+import "testing"
 
 func TestDistance(t *testing.T) {
 	// same point
@@ -23,24 +20,38 @@ func TestDistance(t *testing.T) {
 
 func TestInRange(t *testing.T) {
 	// in range
-	if inRange(Location{1, 0}, Location{0, 0}, 2) == true {
+	if inRange(Location{1, 0}, Location{0, 0}, 2) == false {
 		t.Errorf("TestInRange(1) failed, expected TRUE, got FALSE")
 	}
 
 	// on border
-	if inRange(Location{2, 0}, Location{0, 0}, 2) == true {
+	if inRange(Location{2, 0}, Location{0, 0}, 2) == false {
 		t.Errorf("TestInRange(2) failed, expected TRUE, got FALSE")
 	}
 
 	// out of range
-	if inRange(Location{3, 0}, Location{0, 0}, 2) == false {
+	if inRange(Location{3, 0}, Location{0, 0}, 2) == true {
 		t.Errorf("TestInRange(3) failed, expected FALSE, got TRUE")
 	}
 }
 
 func TestInGameBounds(t *testing.T) {
-	// check if loc is within game boundaries
-	// func inGameBounds(game *Game, loc Location) bool
+	g := makeSampleGame()
+
+	// in bounds
+	if inGameBounds(g, Location{50, 50}) == false {
+		t.Errorf("TestInGameBounds(1) failed, expected TRUE, got FALSE")
+	}
+
+	// on border
+	if inGameBounds(g, Location{0, 0}) == false {
+		t.Errorf("TestInGameBounds(2) failed, expected TRUE, got FALSE")
+	}
+
+	// out of bounds
+	if inGameBounds(g, Location{420, 420}) == true {
+		t.Errorf("TestInGameBounds(3) failed, expected FALSE, got TRUE")
+	}
 }
 
 func TestUpdateLocation(t *testing.T) {
@@ -49,7 +60,7 @@ func TestUpdateLocation(t *testing.T) {
 	oliver := getOliver(g)
 
 	// player moves out of bounds
-	oliver.updateLocation(g, Location{420, 170}, 0)
+	oliver.updateLocation(g, Location{420, 420}, 0)
 	if oliver.Status != OUTOFBOUNDS {
 		t.Errorf("TestUpdateLocation(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusToString[oliver.Status])
 	}
