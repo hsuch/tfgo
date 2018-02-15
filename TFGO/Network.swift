@@ -14,7 +14,7 @@ import MapKit
 var gameState = GameState()
 
 class Connection {
-    private var servadd: String = "128.135.98.90" // to be replaced with real server ip
+    private var servadd: String = "10.152.35.37" // to be replaced with real server ip
     private var servport: Int32 = 9566
     private var client: TCPClient
 
@@ -199,7 +199,9 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // still needs to take boundaries from game page
     let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
-    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers()!, "PointLimit": game.getMaxPoints()!, "TimeLimit": game.getTimeLimit()!, "Mode": game.getMode()!.rawValue, "Boundaries": [], "Host": host] as [String: Any]
+    let minutes = game.getTimeLimit()!
+    let timelimit = "0h" + "\(minutes)" + "m0s"
+    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers()!, "PointLimit": game.getMaxPoints()!, "TimeLimit": timelimit, "Mode": game.getMode()!.rawValue, "Boundaries": [], "Host": host] as [String: Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
