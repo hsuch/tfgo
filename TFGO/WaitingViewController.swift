@@ -34,5 +34,10 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
 
     @IBOutlet weak var table: UITableView!
     
+    private var playerTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(WaitingViewController.updatePlayers), userInfo: nil, repeats: true)
+    
+    @objc private func updatePlayers() {
+        
+    }
 
 }
