@@ -2,9 +2,7 @@ package main
 
 // setup_test.go: tests for game setup functions in setup.go
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestFindCenter(t *testing.T) {
 	// func (g *Game) findCenter() Location

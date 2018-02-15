@@ -16,15 +16,11 @@ func distance(l1, l2 Location) float64 {
 
 // checks whether l1 is within dist distance of l2
 func inRange(l1, l2 Location, dist float64) bool {
-	if distance(l1, l2) <= dist {
-		return true
-	} else {
-		return false
-	}
+	return distance(l1, l2) <= dist
 }
 
 // check if loc is within game boundaries
-func inBounds(game *Game, loc Location) bool {
+func inGameBounds(game *Game, loc Location) bool {
 	intersections := 0.0
 	for _, val := range game.Boundaries {
 		t := val.P.Y + val.D.Y * (loc.X - val.P.X) / val.D.X - loc.Y
@@ -33,11 +29,7 @@ func inBounds(game *Game, loc Location) bool {
 			intersections++
 		}
 	}
-	if math.Mod(intersections, 2) == 1 {
-		return true
-	} else {
-		return false
-	}
+	return math.Mod(intersections, 2) == 1
 }
 
  // set player location, updating respawn, out-of-bounds, and control point
@@ -57,13 +49,13 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 	}
 
 	// handle entering/exiting game boundaries
-	if p.Status == NORMAL && !inBounds(game, p.Location) {
+	if p.Status == NORMAL && !inGameBounds(game, p.Location) {
 		p.Status = OUTOFBOUNDS
 		p.StatusTimer = time.AfterFunc(OUTOFBOUNDSTIME(), func() {
 			p.awaitRespawn(game)
 		})
 		sendStatusUpdate(p, "OutOfBounds")
-	} else if p.Status == OUTOFBOUNDS && inBounds(game, p.Location) {
+	} else if p.Status == OUTOFBOUNDS && inGameBounds(game, p.Location) {
 		p.Status = NORMAL
 		p.StatusTimer.Stop()
 		p.StatusTimer = nil

@@ -4,21 +4,43 @@ package main
 
 import (
 	"testing"
+	"math"
 )
 
 func TestDistance(t *testing.T) {
-	// returns distance between l1 and l2
-	// func distance(l1, l2 Location) float64
+	// same point
+	dist := distance(Location{-5, 5}, Location{-5, 5})
+	if isAcceptableError(dist, 0, EPSILON) {
+		t.Errorf("TestDistance(1) failed, expected distance 0, got distance %d", dist)
+	}
+
+	// different points
+	dist = distance(Location{-4, -5}, Location{6, 5})
+	if isAcceptableError(dist, 14.1421356, EPSILON) {
+		t.Errorf("TestDistance(2) failed, expected distance 14.1421356, got distance %d", dist)
+	}
 }
 
 func TestInRange(t *testing.T) {
-	// checks whether l1 is within dist distance of l2
-	// func inRange(l1, l2 Location, dist float64) bool
+	// in range
+	if inRange(Location{1, 0}, Location{0, 0}, 2) == true {
+		t.Errorf("TestInRange(1) failed, expected TRUE, got FALSE")
+	}
+
+	// on border
+	if inRange(Location{2, 0}, Location{0, 0}, 2) == true {
+		t.Errorf("TestInRange(2) failed, expected TRUE, got FALSE")
+	}
+
+	// out of range
+	if inRange(Location{3, 0}, Location{0, 0}, 2) == false {
+		t.Errorf("TestInRange(3) failed, expected FALSE, got TRUE")
+	}
 }
 
-func TestInBounds(t *testing.T) {
+func TestInGameBounds(t *testing.T) {
 	// check if loc is within game boundaries
-	// func inBounds(game *Game, loc Location) bool
+	// func inGameBounds(game *Game, loc Location) bool
 }
 
 func TestUpdateLocation(t *testing.T) {
@@ -60,7 +82,7 @@ func TestUpdateStatus(t *testing.T) {
 	oliver.updateLocation(g, Location{0, 0}, 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
-		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
+		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
 	// blue players exceed red by one; check capture progress
@@ -68,7 +90,7 @@ func TestUpdateStatus(t *testing.T) {
 	oliver.updateLocation(g, cp2.Location, 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
-		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
+		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
 	// both control points uncontrolled; check team points
