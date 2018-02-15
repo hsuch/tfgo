@@ -84,6 +84,14 @@ func (p *Player) takeHit(game *Game, wep Weapon) {
 
 func (p *Player) awaitRespawn(game *Game) {
 	p.Status = RESPAWNING
+	if p.OccupyingPoint != nil {
+		if p.Team == game.RedTeam {
+			p.OccupyingPoint.RedCount--
+		} else if p.Team == game.BlueTeam {
+			p.OccupyingPoint.BlueCount--
+		}
+		p.OccupyingPoint = nil
+	}
 	sendStatusUpdate(p, "Respawn")
 	<- p.StatusTimer.C
 	p.respawn(game)
