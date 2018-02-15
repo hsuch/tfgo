@@ -56,12 +56,12 @@ class MsgFromServer {
 //            return parseAvailableGames(data: data)
 //        case "GameInfo":
 //            return parseGameInfo(data: data)
-//        case "JoinGameError":
-//            return parseJoinGameError(data: data)
+        case "JoinGameError":
+            return parseJoinGameError(data: data)
 //        case "GameStartInfo":
-//            return parseGameStartError(data: data)
-        case "GameUpdate":
-            return parseGameUpdate(data: data)
+//            return parseGameStartInfo(data: data)
+//        case "GameUpdate":
+//            return parseGameUpdate(data: data)
         case "StatusUpdate":
             return parseStatusUpdate(data: data)
         case "TakeHit":
@@ -119,22 +119,14 @@ func parsePlayerListUpdate(data: [String: Any]) {
 }
 
 //func parseAvailableGames(data: [String: Any]) -> Bool {
-
+//
 //}
 //
 //func parseGameInfo(data: [String: Any]) -> Bool {
 //    let json = JSON(data)
 //}
 //
-//func parseJoinGameError(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
-//
-//func parseGameStartError(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
-
-func parseGameUpdate(data: [String: Any]) -> Bool {
+func parseJoinGameError(data: [String: Any]) -> Bool {
     if let error = data["Data"] as? String {
         let alert = UIAlertController(title: error, message: "Please join a different game", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Return", style: .cancel, handler: nil))
@@ -145,6 +137,14 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
     }
     return false
 }
+//
+//func parseGameStartInfo(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+
+//func parseGameUpdate(data: [String: Any]) -> Bool {
+//
+//}
 
 func parseStatusUpdate(data: [String: Any]) -> Bool {
     if let status = data["Data"] as? String {
