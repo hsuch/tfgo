@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"os"
 )
 
 // clientmessage.go: functions for building and sending messages to clients
@@ -14,12 +13,8 @@ import (
 // converts a ClientMessage into formatted JSON that can be fed to printing functions
 func prettyPrintJSON(rawJSON []byte) string {
 	var out bytes.Buffer
-	if err := json.Indent(&out, rawJSON, "", "    "); err != nil {
-		fmt.Fprintln(os.Stderr, "Invalid JSON received in prettyPrintJSON().")
-		return ""
-	} else {
-		return string(out.Bytes())
-	}
+	json.Indent(&out, rawJSON, "", "    ")
+	return string(out.Bytes())
 }
 
 // goroutine responsible for delivering messages to players
@@ -236,4 +231,19 @@ func sendTakeHit(player *Player) {
 		},
 	}
 	player.Chan <- msg
+}
+
+func sendGameOver(game *Game) {
+	var winner string
+	if game.RedTeam.Points > game.BlueTeam.Points {
+		winner = game.RedTeam.Name
+	} else {
+		winner = game.BlueTeam.Name
+	}
+
+	msg := map[string]interface{} {
+		"Type" : "GameOver",
+		"Data" : winner,
+	}
+	game.broadcast(msg)
 }

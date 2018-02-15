@@ -233,6 +233,7 @@ func (g *Game) start() {
 
 // end a game, signalling and performing resource cleanup
 func (g *Game) stop() {
+	sendGameOver(g)
 	g.Status = GAMEOVER
 	delete(games, g.ID)
 	for _, player := range g.Players {
