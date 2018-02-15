@@ -91,10 +91,20 @@ class MsgToServer {
 
 func CreateGameMsg(game: Game) -> Data {
     // todo
+    // THIS PART IS NOT DONE
+    let payload = ["Name": game.getName(),
+                   "Password": game.getPassword(),
+                   "Description": game.getDescription(),
+                   "PlayerLimit": game.getMaxPlayers(),
+                   "PointLimit": game.getMaxPoints(),
+                   "TimeLimit": game.getTimeLimit(),
+                   "Mode": game.getMode(),
+                   "Boundaries": [TBD], // not done
+                   "Host": {gameState.getUserName()}] // not done
     return Data.init()
 }
 func ShowGamesMsg() -> Data {
-    let payload = ["Name": gameState.getPlayerName(), "Icon": gameState.getPlayerIcon()]
+    let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
     return MsgToServer(action: "ShowGames", data: payload).toJson()
 }
 func ShowGameInfo(IDtoShow: String) -> Data {
@@ -108,11 +118,14 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
-    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
+    let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
+    return payload as Data
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
-    return MsgToServer(action: "Fire", data: [:]).toJson()
+    let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
+    return payload as Data
+    //return MsgToServer(action: "Fire", data: [:]).toJson()
 
 }
 
@@ -124,11 +137,23 @@ class GameState {
     private var foundGames: [Game] = []
     private var user: Player = Player(name: "", icon:"")
     
-    func getPlayerName() -> String {
+    func getUserName() -> String {
         return user.getName()
     }
-    func getPlayerIcon() -> String {
+    func getUserIcon() -> String {
         return user.getIcon()
+    }
+    
+    func getUserWeapon() -> String {
+        return user.getWeapon()
+    }
+    
+    func getUserLocation() -> CLLocation {
+        return user.getLocation()
+    }
+    
+    func getUserOrientation() -> float {
+        return user.getOrientation()
     }
     
     /* Do not call unless a game exists!!! */

@@ -12,22 +12,34 @@ import CoreLocation
 
 class GameViewController: UIViewController, CLLocationManagerDelegate {
     
-
+    
     @IBOutlet weak var game_map: MKMapView!
     
     let manager = CLLocationManager()
     
+    var initialized = false
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        var region = game_map.region
         
         // we want the most recent position of our user
         let location = locations [0]
+        
+        var region:MKCoordinateRegion
+        
         let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
         
-        region.center = myLocation
+        if (initialized == false) {
+            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
+            region = MKCoordinateRegionMake(myLocation, span)
+            game_map.isRotateEnabled = false
+            initialized = true
+        }
+        else {
+            region = game_map.region
+            region.center = myLocation
+        }
         
-        game_map.setRegion(region, animated: true)
+        game_map.setRegion(region, animated: false)
         self.game_map.showsUserLocation = true
     }
     
@@ -39,6 +51,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
+        manager.startUpdatingHeading()
     }
     
     
@@ -60,4 +73,3 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
      */
     
 }
-
