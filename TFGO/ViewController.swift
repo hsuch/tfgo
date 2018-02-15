@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        background.image = UIImage(named: "redblue")
+        //background.image = UIImage(named: "redblue")
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -30,6 +30,7 @@ class ViewController: UIViewController {
                         if connection.sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
                             return gameState.setCurrentGame(to: game)
                         }
+                    }
                 }
             }
             return false
