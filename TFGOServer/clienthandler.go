@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+var verbose = false
+
 // each incoming client message must conform to this format.
 // for a detailed description of each message and its purpose,
 // see https://github.com/hsuch/tfgo/wiki/Network-Messages
@@ -22,6 +24,8 @@ type ClientMessage struct {
 func serveClient(conn net.Conn) {
 	defer conn.Close()
 
+	fmt.Println("New connection received.")
+
 	// the current player and game
 	var p *Player
 	var g *Game
@@ -31,7 +35,26 @@ func serveClient(conn net.Conn) {
 		var msg ClientMessage
 		if err := decoder.Decode(&msg); err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to read message: %s\nClosing connection.\n", err.Error())
+
+			if p != nil {
+				fmt.Printf("Player %s disconnected.\n", p.Name)
+				if p.Chan != nil {
+					close(p.Chan)
+				}
+				if g != nil {
+					delete(g.Players, p.Name)
+				}
+			}
 			break
+		}
+
+		if verbose {
+			rawJSON, _ := json.Marshal(msg)
+			source := "client"
+			if p != nil {
+				source = p.Name
+			}
+			fmt.Printf("Received from %s:\n%s\n", source, prettyPrintJSON(rawJSON))
 		}
 
 		switch msg.Action {

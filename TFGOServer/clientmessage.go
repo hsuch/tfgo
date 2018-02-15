@@ -3,15 +3,34 @@ package main
 import (
 	"time"
 	"reflect"
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"os"
 )
 
 // clientmessage.go: functions for building and sending messages to clients
+
+// converts a ClientMessage into formatted JSON that can be fed to printing functions
+func prettyPrintJSON(rawJSON []byte) string {
+	var out bytes.Buffer
+	if err := json.Indent(&out, rawJSON, "", "    "); err != nil {
+		fmt.Fprintln(os.Stderr, "Invalid JSON received in prettyPrintJSON().")
+		return ""
+	} else {
+		return string(out.Bytes())
+	}
+}
 
 // goroutine responsible for delivering messages to players
 func (p *Player) sender() {
 	for {
 		msg, open := <-p.Chan
 		if open {
+			if verbose {
+				rawJSON, _ := json.Marshal(msg)
+				fmt.Printf("Sending to %s:\n%s\n", p.Name, prettyPrintJSON(rawJSON))
+			}
 			p.Encoder.Encode(msg)
 		} else {
 			return
