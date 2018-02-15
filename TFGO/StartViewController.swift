@@ -12,7 +12,7 @@ class IconViewCell: UICollectionViewCell {
     @IBOutlet weak var label: UILabel!
 }
 
-class StartViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class StartViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return icons.count
@@ -28,21 +28,27 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         return cell
     }
     
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBOutlet weak var iconCollection: UICollectionView!
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = iconCollection.cellForItem(at: indexPath) as! IconViewCell
+        gameState.setUserIcon(to: cell.label.text!)
     }
     
     private func randomColor() -> UIColor {
         return UIColor(red: CGFloat(arc4random_uniform(100)), green: CGFloat(arc4random_uniform(100)), blue: CGFloat(arc4random_uniform(100)), alpha: 1)
     }
-
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return gameState.getUser().isValid()
+    }
+    
+    @IBOutlet weak var nameField: UITextField!
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        var name = gameState.getUserName()
+        name.append(string)
+        gameState.setUserName(to: name)
+        return true
+    }
 }

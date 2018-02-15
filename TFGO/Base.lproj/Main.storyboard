@@ -1251,6 +1251,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="xOP-Cs-MEl" id="LUc-EO-Nag"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to TFGO!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORa-r9-hzW">
                                 <rect key="frame" x="16" y="57" width="343" height="50.333333333333343"/>
@@ -1345,6 +1348,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="UC4-rq-5g3"/>
                     </view>
+                    <connections>
+                        <outlet property="iconCollection" destination="TUF-pz-nA9" id="5Xk-84-beA"/>
+                        <outlet property="nameField" destination="fTC-zR-KSw" id="84H-d2-FYQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e5K-e7-Jrv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

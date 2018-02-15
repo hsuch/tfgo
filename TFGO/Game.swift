@@ -25,7 +25,7 @@ class Player {
         return name
     }
     
-    func setName(name: String) {
+    func setName(to name: String) {
         self.name = name
     }
     
@@ -37,6 +37,13 @@ class Player {
         return icon
     }
     
+    func setIcon(to icon: String) {
+        self.icon = icon
+    }
+    
+    func isValid() -> Bool {
+        return name != "" && icon.count == 1
+    }
     
     
     init(name: String, icon: String) {
