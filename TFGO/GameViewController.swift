@@ -28,6 +28,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         
         let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
         
+        gameState.getUser().setLocation(to: myLocation.latitude, to: myLocation.longitude)
+        
         if (initialized == false) {
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
             region = MKCoordinateRegionMake(myLocation, span)
