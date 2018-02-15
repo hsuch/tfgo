@@ -8,21 +8,21 @@ func TestHandleLoc(t *testing.T) {
 	oliver := getOliver(g)
 
 	// player moves out of bounds
-	oliver.handleLoc(g, Location{420, 170})
+	oliver.handleLoc(g, Location{420, 170}, 0)
 	if oliver.Status != OUTOFBOUNDS {
 		t.Errorf("TestHandleLoc(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusToString[oliver.Status])
 	}
 
 	// player exits control point
 	expBlueCount := cp.BlueCount - 1
-	oliver.handleLoc(g, Location{0, 0})
+	oliver.handleLoc(g, Location{0, 0}, 0)
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestHandleLoc(3) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
 
 	// player enters control point
 	expBlueCount = cp.BlueCount + 1
-	oliver.handleLoc(g, cp.Location)
+	oliver.handleLoc(g, cp.Location, 0)
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestHandleLoc(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
@@ -38,7 +38,7 @@ func TestUpdateStatus(t *testing.T) {
 
 	// equal players from each team; check capture progress
 	expCaptureProg := cp2.CaptureProgress
-	oliver.handleLoc(g, Location{0, 0})
+	oliver.handleLoc(g, Location{0, 0}, 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
@@ -46,15 +46,15 @@ func TestUpdateStatus(t *testing.T) {
 
 	// blue players exceed red by one; check capture progress
 	expCaptureProg = cp2.CaptureProgress + 1
-	oliver.handleLoc(g, cp2.Location)
+	oliver.handleLoc(g, cp2.Location, 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
 	// both control points uncontrolled; check team points
-	cp1.ControllingTeam = NEUTRAL
-	cp2.ControllingTeam = NEUTRAL
+	cp1.ControllingTeam = nil
+	cp2.ControllingTeam = nil
 	expRedPoints := redTeam.Points
 	expBluePoints := blueTeam.Points
 	cp1.updateStatus(g)
@@ -67,8 +67,8 @@ func TestUpdateStatus(t *testing.T) {
 	}
 
 	// both control points controlled by blue; check team points
-	cp1.ControllingTeam = BLUE
-	cp2.ControllingTeam = BLUE
+	cp1.ControllingTeam = blueTeam
+	cp2.ControllingTeam = blueTeam
 	expRedPoints = redTeam.Points
 	expBluePoints = blueTeam.Points + 2
 	cp1.updateStatus(g)

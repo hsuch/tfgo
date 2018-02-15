@@ -8,7 +8,7 @@ import (
 )
 
 /*
- * handleTimer - sets the out-of-bounds timer and kills the player if it fires
+ * handleOutOfBoundsTimer - sets the out-of-bounds timer and kills the player if it fires
  *
  * p: Player whose life is at stake (is out of bounds)
  *
