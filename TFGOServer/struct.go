@@ -73,7 +73,7 @@ type Game struct {
 
 	RedTeam  *Team
 	BlueTeam *Team
-	Players map[string]*Player
+	Players  map[string]*Player
 
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
@@ -153,9 +153,9 @@ type Weapon struct {
 
 	Damage int
 	Spread float64
-	Range float64
+	Range  float64
 
-	ClipSize int
+	ClipSize   int
 	ShotReload time.Duration
 	ClipReload time.Duration
 }
