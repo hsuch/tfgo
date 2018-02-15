@@ -115,11 +115,10 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
             gameState.getCurrentGame().addPlayer(toGame: player)
         }
     }
-    
 }
 
 //func parseAvailableGames(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
+
 //}
 //
 //func parseGameInfo(data: [String: Any]) -> Bool {
@@ -138,13 +137,20 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
 //    let json = JSON(data)
 //}
 //
-//func parseStatusUpdate(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
-//
-//func parseTakeHit(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
+func parseStatusUpdate(data: [String: Any]) -> Bool {
+    if let status = data["Data"] as? String {
+        gameState.setUserStatus(to: status)
+    }
+}
+
+func parseTakeHit(data: [String: Any]) -> Bool {
+    if let info = data["Data"] as? [String: Any] {
+        if let health = info["Health"] as? Int, let armor = info["Armor"] as? Int {
+            gameState.setUserHealth(to: health)
+            gameState.setUserArmor(to: armor)
+        }
+    }
+}
 
 class MsgToServer {
     private var action: String
@@ -226,6 +232,30 @@ class GameState {
         user.setIcon(to: icon)
     }
     
+    func getUserStatus() -> String {
+        return user.getStatus()
+    }
+    
+    func setUserStatus(to status: String) {
+        user.setStatus(to: status)
+    }
+    
+    func getUserHealth() -> Int {
+        return user.getHealth()
+    }
+    
+    func setUserHealth(to health: Int) {
+        user.setHealth(to: health)
+    }
+    
+    func getUserArmor() -> Int {
+        return user.getArmor()
+    }
+    
+    func setUserArmor(to armor: Int) {
+        user.setArmor(to: armor)
+    }
+    
     func getUserWeapon() -> String {
         return user.getWeapon()
     }
@@ -233,6 +263,7 @@ class GameState {
     func getUser() -> Player {
         return user
     }
+    
     func getUserLocation() -> CLLocation {
         return user.getLocation()
     }
@@ -244,6 +275,10 @@ class GameState {
     /* Do not call unless a game exists!!! */
     func getCurrentGame() -> Game {
         return currentGame!
+    }
+    
+    func addFoundGame(found: Game) {
+        foundGames.append(found)
     }
     
     
