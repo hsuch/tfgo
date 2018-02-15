@@ -192,7 +192,7 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // still needs to take boundaries from game page
     let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
-    let payload = ["Name": game.getName(), "Password": game.getPassword(), "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": game.getTimeLimit(), "Mode": game.getMode().rawValue, "Boundaries": [], "Host": host] as [String: Any]
+    let payload = ["Name": game.getName()!, "Password": game.getPassword()!, "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers()!, "PointLimit": game.getMaxPoints()!, "TimeLimit": game.getTimeLimit()!, "Mode": game.getMode()!.rawValue, "Boundaries": [], "Host": host] as [String: Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
@@ -210,7 +210,7 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     let location = ["X": gameState.getUserLocation().coordinate.latitude, "Y": gameState.getUserLocation().coordinate.longitude]
-    let payload = ["Location": location, "Orientation": gameState.getUserOrientation()]
+    let payload = ["Location": location, "Orientation": gameState.getUserOrientation()] as [String : Any]
     return MsgToServer(action: "LocationUpdate", data: payload).toJson()
 }
 func FireMsg() -> Data {
