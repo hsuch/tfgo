@@ -14,7 +14,7 @@ import (
 func main() {
 	flag.BoolVar(&verbose, "v", false, "print sent and received JSON")
 	var HOST = flag.String("h", "127.0.0.1", "ip address on which to run server")
-	var PORT = flag.String("p", "8080", "port on which to run server")
+	var PORT = flag.String("p", "9265", "port on which to run server")
 	flag.Parse()
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", *HOST+":"+*PORT)
