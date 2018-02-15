@@ -14,7 +14,7 @@ import MapKit
 var gameState = GameState()
 
 class Connection {
-    private var servadd: String = "128.135.98.90" // to be replaced with real server ip
+    private var servadd: String = "10.152.35.37" // to be replaced with real server ip
     private var servport: Int32 = 9566
     private var client: TCPClient
 
@@ -59,8 +59,8 @@ class MsgFromServer {
         case "PlayerListUpdate":
             parsePlayerListUpdate(data: data)
             return true
-//        case "AvailableGames":
-//            return parseAvailableGames(data: data)
+        case "AvailableGames":
+            return parseAvailableGames(data: data)
 //        case "GameInfo":
 //            return parseGameInfo(data: data)
         case "JoinGameError":
@@ -105,10 +105,10 @@ func parsePlayerListUpdate(data: [String: Any]) {
     var current_players = gameState.getCurrentGame().getPlayers()
     var index = 0
     
-    for c_player in current_players {
-        let c_name = c_player.getName()
+    for current_player in current_players {
+        let current_name = current_player.getName()
         for player in players {
-            if c_name == player.getName() {
+            if current_name == player.getName() {
                 gameState.getCurrentGame().removePlayer(index: index)
                 index = index - 1
                 break
@@ -126,14 +126,49 @@ func parsePlayerListUpdate(data: [String: Any]) {
     }
 }
 
-//func parseAvailableGames(data: [String: Any]) -> Bool {
-//
-//}
-//
-//func parseGameInfo(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
-//
+func parseAvailableGames(data: [String: Any]) -> Bool {
+
+    if let info = data["Data"] as? [[String: Any]] {
+        for game in info {
+            if let id = game["ID"] as? String {
+                if !gameState.hasGame(to: id) {
+                    //TODO also get the game location and player list
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? Gamemode {
+                        let newGame = Game()
+                        newGame.setID(to: id)
+                        newGame.setName(to: name)   // these games will always give a valid name
+                        newGame.setMode(to: mode)
+                        gameState.addFoundGame(found: newGame)
+                    }
+                }
+            }
+        }
+        return true
+    }
+    return false
+}
+
+func parseGameInfo(data: [String: Any]) -> Bool {
+    
+    if let info = data["Data"] as? [String: Any] {
+        if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
+            gameState.getCurrentGame().setMaxPlayers(to: playerNum)
+            gameState.getCurrentGame().setDescription(to: desc)
+            gameState.getCurrentGame().setMaxPoints(to: pointLim)
+            
+        }
+        if let players = info["PlayerList"] as? [[String: Any]] {
+            for player in players {
+                if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                    gameState.getCurrentGame().addPlayer(toGame: Player(name: name, icon: icon))
+                }
+            }
+            return true
+        }
+    }
+    return false
+}
+
 func parseJoinGameError(data: [String: Any]) -> Bool {
     if let error = data["Data"] as? String {
         let alert = UIAlertController(title: error, message: "Please join a different game", preferredStyle: .alert)
@@ -145,10 +180,24 @@ func parseJoinGameError(data: [String: Any]) -> Bool {
     }
     return false
 }
-//
-//func parseGameStartInfo(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
+
+func parseGameStartInfo(data: [String: Any]) -> Bool {
+    //TODO add bases for iteration 2
+    if let info = data["Data"] as? [String: Any] {
+        if let players = info["PlayerList"] as? [[String: Any]] {
+            for player in players {
+                if let name = player["Name"] as? String, let team = player["Team"] as? String {
+                    let index = gameState.getCurrentGame().findPlayerIndex(name: name)
+                    gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
+                }
+            }
+        }
+        if let objectives = info["Objectives"] as? [[String: Any]] {
+            
+        }
+    }
+    return false
+}
 
 //func parseGameUpdate(data: [String: Any]) -> Bool {
 //
@@ -199,7 +248,9 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // still needs to take boundaries from game page
     let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
-    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers()!, "PointLimit": game.getMaxPoints()!, "TimeLimit": game.getTimeLimit()!, "Mode": game.getMode()!.rawValue, "Boundaries": [], "Host": host] as [String: Any]
+    let minutes = game.getTimeLimit()!
+    let timelimit = "0h" + "\(minutes)" + "m0s"
+    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers()!, "PointLimit": game.getMaxPoints()!, "TimeLimit": timelimit, "Mode": game.getMode()!.rawValue, "Boundaries": [], "Host": host] as [String: Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
@@ -304,6 +355,14 @@ class GameState {
         foundGames.append(found)
     }
     
+    func hasGame(to id: String) -> Bool {
+        for game in foundGames {
+            if id == game.getID() {
+                return true
+            }
+        }
+        return false
+    }
     
     func setCurrentGame(to game: Game) -> Bool {
         let valid = game.isValid()
