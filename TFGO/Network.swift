@@ -71,7 +71,8 @@ class MsgFromServer {
         }
     }
 
-    init(conn: Connection) {
+    init() {
+        let conn = gameState.getConnection()
         let received = conn.recvData()
         self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
         let type = data.removeValue(forKey: "Type")
