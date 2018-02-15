@@ -140,16 +140,8 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // todo
     // THIS PART IS NOT DONE
-    /*let payload = ["Name": game.getName(),
-                   "Password": game.getPassword(),
-                   "Description": game.getDescription(),
-                   "PlayerLimit": game.getMaxPlayers(),
-                   "PointLimit": game.getMaxPoints(),
-                   "TimeLimit": game.getTimeLimit(),
-                   "Mode": game.getMode(),
-                   "Boundaries": [0], // not done
-                   "Host": {gameState.getUserName()}] // not done*/
-    return Data.init()
+    let payload = "[\"Name\": game.getName(),\"Password\": game.getPassword(),\"Description\": game.getDescription(),\"PlayerLimit\": game.getMaxPlayers(),\"PointLimit\": game.getMaxPoints(),\"TimeLimit\": game.getTimeLimit(),\"Mode\": game.getMode(),\"Boundaries\": [0], \"Host\": {\"Name\": gameState.getUserName(), \"Icon\": gameState.getUserIcon()}]"
+    return payload.data(using: .utf8)!
 }
 func ShowGamesMsg() -> Data {
     let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
@@ -184,6 +176,7 @@ class GameState {
     private var currentGame: Game?
     private var foundGames: [Game] = []
     private var user: Player = Player(name: "", icon:"")
+    private var connection = Connection()
     
     
     func getUserName() -> String {
@@ -229,6 +222,10 @@ class GameState {
             currentGame = game
         }
         return valid
+    }
+    
+    func getConnection() -> Connection {
+        return connection
     }
     
     func findPublicGames() -> [Game]{
