@@ -43,9 +43,16 @@ class Player {
         return icon
     }
     
+    func setIcon(to icon: String) {
+        self.icon = icon
     func getOrientation() -> float {
         return orientation
     }
+    
+    func isValid() -> Bool {
+        return name != "" && icon.count == 1
+    }
+    
     
     init(name: String, icon: String) {
         self.name = name

@@ -38,7 +38,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
             region = game_map.region
             region.center = myLocation
         }
-        
+
         game_map.setRegion(region, animated: false)
         self.game_map.showsUserLocation = true
     }
