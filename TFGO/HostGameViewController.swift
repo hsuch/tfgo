@@ -64,28 +64,9 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         return true
     }
     
-    //    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
-    //        if reason == .committed, let text = textField.text {
-    //            if textField == nameField {
-    //                if !game.setName(to: text) {
-    //                    textField.text = ""
-    //                    //give invalid name message
-    //                }
-    //            } else if textField == descriptionField {
-    //                if !game.setDescription(to: text) {
-    //                    textField.text = ""
-    //                    //give invalid description message
-    //                }
-    //            } else if textField == passwordField {
-    //                if usePassword {
-    //                    if !game.setPassword(to: text) {
-    //                        textField.text = ""
-    //                        //give invalid password message
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return textField.resignFirstResponder()
+    }
     
     @IBOutlet private var gamemodeButtons: [UIButton]!
     
@@ -147,6 +128,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         //Give incomplete gamestate alert
         return false
     }
+    
     
     // MARK: - Table view data source
     

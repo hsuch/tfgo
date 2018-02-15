@@ -100,9 +100,7 @@
                                 <color key="backgroundColor" red="1" green="0.40000000600000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <connections>
-                                    <segue destination="mhV-e7-hMe" kind="popoverPresentation" identifier="temp" popoverAnchorView="itu-Qh-RHT" id="crL-Tg-uOg">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <segue destination="OjP-k2-aXS" kind="show" identifier="temp" id="l98-lC-GIH"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="JOIN GAME ITERATION 1 TEMP" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZm-3j-sgj">
@@ -880,7 +878,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ld3-ss-D4K">
-                                <rect key="frame" x="0.0" y="-24" width="375" height="836"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </mapView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z6L-se-dAk">
                                 <rect key="frame" x="54" y="44" width="267" height="36"/>
@@ -971,7 +969,7 @@
                             <constraint firstItem="hNm-qJ-cQQ" firstAttribute="bottom" secondItem="m7F-xT-3Uj" secondAttribute="bottom" constant="29" id="U8w-20-Nl5"/>
                             <constraint firstItem="hNm-qJ-cQQ" firstAttribute="trailing" secondItem="f85-zp-yLp" secondAttribute="trailing" constant="16" id="WVm-2g-e9t"/>
                             <constraint firstItem="UjK-QY-EBG" firstAttribute="top" secondItem="hNm-qJ-cQQ" secondAttribute="top" constant="3" id="cpV-xb-yGe"/>
-                            <constraint firstItem="Ld3-ss-D4K" firstAttribute="top" secondItem="hNm-qJ-cQQ" secondAttribute="top" constant="-68" id="dCm-ZK-n5s"/>
+                            <constraint firstItem="Ld3-ss-D4K" firstAttribute="top" secondItem="hNm-qJ-cQQ" secondAttribute="top" constant="-44" id="dCm-ZK-n5s"/>
                             <constraint firstAttribute="bottom" secondItem="Ld3-ss-D4K" secondAttribute="bottom" id="grl-2f-xGn"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="trailing" secondItem="hNm-qJ-cQQ" secondAttribute="trailing" id="jLD-Nr-kAQ"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="top" secondItem="hNm-qJ-cQQ" secondAttribute="top" id="lgu-O5-yfv"/>
@@ -1395,8 +1393,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="crL-Tg-uOg"/>
-        <segue reference="2n9-BF-tBN"/>
-        <segue reference="FNE-Lr-RRh"/>
+        <segue reference="xzX-Iq-bnB"/>
+        <segue reference="Th9-pw-b0x"/>
+        <segue reference="l98-lC-GIH"/>
     </inferredMetricsTieBreakers>
 </document>

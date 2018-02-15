@@ -53,4 +53,10 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         gameState.setUserName(to: name)
         return true
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return textField.resignFirstResponder()
+    }
+    
+    
 }
