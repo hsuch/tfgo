@@ -5,6 +5,8 @@ package main
 import (
 	"net"
 	"encoding/json"
+	"fmt"
+	"os"
 )
 
 // each incoming client message must conform to this format.
@@ -28,6 +30,7 @@ func serveClient(conn net.Conn) {
 	for {
 		var msg ClientMessage
 		if err := decoder.Decode(&msg); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to read message: %s\nClosing connection.\n", err.Error())
 			break
 		}
 

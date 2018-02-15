@@ -73,7 +73,7 @@ type Game struct {
 
 	RedTeam  *Team
 	BlueTeam *Team
-	Players map[string]*Player
+	Players  map[string]*Player
 
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
@@ -134,8 +134,8 @@ type ControlPoint struct {
 	RedCount int
 	BlueCount int
 
-	// number in [-100, 100] indicating capture/decapture progress.
-	// hitting -100 or 100 from neutral ownership yields control
+	// number in [-7, 7] indicating capture/decapture progress.
+	// hitting -7 or 7 from neutral ownership yields control
 	// control point to red or blue, respectively. hitting 0
 	// from team ownership neutralizes control point.
 	CaptureProgress int
@@ -153,9 +153,9 @@ type Weapon struct {
 
 	Damage int
 	Spread float64
-	Range float64
+	Range  float64
 
-	ClipSize int
+	ClipSize   int
 	ShotReload time.Duration
 	ClipReload time.Duration
 }
@@ -191,6 +191,14 @@ var SHOTGUN = Weapon {
 // for non-primitive constants
 func TICK() time.Duration {
 	return 200 * time.Millisecond
+}
+
+func OUTOFBOUNDSTIME() time.Duration {
+	return 10 * time.Millisecond
+}
+
+func RESPAWNTIME() time.Duration {
+	return 15 * time.Millisecond
 }
 
 func meterToDegree(m float64) float64 {

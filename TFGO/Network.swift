@@ -47,16 +47,32 @@ class MsgFromServer {
     }
 
     /* parse(): convert data array into appropriate data struct depending on message type */
-    func parse() {
+    func parse() -> Bool {
         switch type {
         case "PlayerListUpdate":
             parsePlayerListUpdate(data: data)
+            return true
+//        case "AvailableGames":
+//            return parseAvailableGames(data: data)
+//        case "GameInfo":
+//            return parseGameInfo(data: data)
+        case "JoinGameError":
+            return parseJoinGameError(data: data)
+//        case "GameStartInfo":
+//            return parseGameStartInfo(data: data)
+//        case "GameUpdate":
+//            return parseGameUpdate(data: data)
+        case "StatusUpdate":
+            return parseStatusUpdate(data: data)
+        case "TakeHit":
+            return parseTakeHit(data: data)
         default:
-            break
+            return false
         }
     }
 
-    init(conn: Connection) {
+    init() {
+        let conn = gameState.getConnection()
         let received = conn.recvData()
         self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
         let type = data.removeValue(forKey: "Type")
@@ -68,7 +84,86 @@ class MsgFromServer {
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
 func parsePlayerListUpdate(data: [String: Any]) {
+    
+    var players = [Player]()
+    
+    if let info = data["Data"] as? [[String: Any]] {
+        for player in info {
+            if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                players.append(Player(name: name, icon: icon))
+            }
+        }
+    }
+    
+    var current_players = gameState.getCurrentGame().getPlayers()
+    var index = 0
+    
+    for c_player in current_players {
+        let c_name = c_player.getName()
+        for player in players {
+            if c_name == player.getName() {
+                gameState.getCurrentGame().removePlayer(index: index)
+                index = index - 1
+                break
+            }
+        }
+        index = index + 1
+    }
+    
+    current_players = gameState.getCurrentGame().getPlayers()
+    
+    for player in players {
+        if gameState.getCurrentGame().hasPlayer(name: player.getName()) {
+            gameState.getCurrentGame().addPlayer(toGame: player)
+        }
+    }
+}
 
+//func parseAvailableGames(data: [String: Any]) -> Bool {
+//
+//}
+//
+//func parseGameInfo(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+//
+func parseJoinGameError(data: [String: Any]) -> Bool {
+    if let error = data["Data"] as? String {
+        let alert = UIAlertController(title: error, message: "Please join a different game", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Return", style: .cancel, handler: nil))
+        
+        //self.present(alert, animated: true)  TODO figure out how to send message without extension UIViewController
+        
+        return true
+    }
+    return false
+}
+//
+//func parseGameStartInfo(data: [String: Any]) -> Bool {
+//    let json = JSON(data)
+//}
+
+//func parseGameUpdate(data: [String: Any]) -> Bool {
+//
+//}
+
+func parseStatusUpdate(data: [String: Any]) -> Bool {
+    if let status = data["Data"] as? String {
+        gameState.setUserStatus(to: status)
+        return true
+    }
+    return false
+}
+
+func parseTakeHit(data: [String: Any]) -> Bool {
+    if let info = data["Data"] as? [String: Any] {
+        if let health = info["Health"] as? Int, let armor = info["Armor"] as? Int {
+            gameState.setUserHealth(to: health)
+            gameState.setUserArmor(to: armor)
+            return true
+        }
+    }
+    return false
 }
 
 class MsgToServer {
@@ -76,15 +171,16 @@ class MsgToServer {
     /* possible message actions:
         case CreateGame, ShowGames, ShowGameInfo, JoinGame, StartGame, LocationUpdate, Fire
     */
-    
+
     private var data: [String: Any]
-    
+
     /* toJson(): convert action type and data array into server-readable json */
     func toJson() -> Data {
-        let retval = Data.init() //todo
+        let message = ["Action": action, "Data": data] as [String : Any]
+        let retval = try! JSONSerialization.data(withJSONObject: message, options: JSONSerialization.WritingOptions.prettyPrinted)
         return retval
     }
-    
+
     init(action: String, data: [String: Any]) {
         self.action = action
         self.data = data
@@ -94,9 +190,27 @@ class MsgToServer {
 /* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
 
 func CreateGameMsg(game: Game) -> Data {
-    // todo
-    // THIS PART IS NOT DONE
-    let payload = "[\"Name\": game.getName(),\"Password\": game.getPassword(),\"Description\": game.getDescription(),\"PlayerLimit\": game.getMaxPlayers(),\"PointLimit\": game.getMaxPoints(),\"TimeLimit\": game.getTimeLimit(),\"Mode\": game.getMode(),\"Boundaries\": [0], \"Host\": {\"Name\": gameState.getUserName(), \"Icon\": gameState.getUserIcon()}]"
+    // literally why does swift handle strings like this. i hate this stupid language.
+    // still needs to take boundaries from the game page
+    var payload = "{\"Action\": \"CreateGame\", \"Data\": {\"Name\": "
+    payload += game.getName()!
+    payload += ",\"Password\": "
+    payload += game.getPassword()!
+    payload += ",\"Description\": "
+    payload += game.getDescription()
+    payload += ",\"PlayerLimit\": "
+    payload += String(describing: game.getMaxPlayers())
+    payload += ",\"PointLimit\": "
+    payload += String(describing: game.getMaxPoints())
+    payload += ",\"TimeLimit\": "
+    payload += String(describing: game.getTimeLimit())
+    payload += ",\"Mode\": "
+    payload += game.getMode()!.rawValue
+    payload += ",\"Boundaries\": [0], \"Host\": {\"Name\": "
+    payload += gameState.getUserName()
+    payload += ", \"Icon\": "
+    payload += gameState.getUserIcon()
+    payload += "}}}"
     return payload.data(using: .utf8)!
 }
 func ShowGamesMsg() -> Data {
@@ -114,14 +228,21 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
-    let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
+    var payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": { \"X\":"
+    payload += String(gameState.getUserLocation().coordinate.latitude)
+    payload += ", \"Y\":"
+    payload += String(gameState.getUserLocation().coordinate.longitude)
+    payload += "}, \"Orientation\": "
+    payload += "0" //gameState.getUserOrientation() is not done
+    payload += "} }"
     return payload.data(using: .utf8)!
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
-    let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
-    return payload.data(using: .utf8)!
-    //return MsgToServer(action: "Fire", data: [:]).toJson()
+    let weapon = gameState.getUserWeapon()
+    let direction = gameState.getUserOrientation()
+    let payload = ["Weapon": weapon, "Direction": direction] as [String: Any]
+    return MsgToServer(action: "Fire", data: payload).toJson()
 
 }
 
@@ -151,6 +272,30 @@ class GameState {
         user.setIcon(to: icon)
     }
     
+    func getUserStatus() -> String {
+        return user.getStatus()
+    }
+    
+    func setUserStatus(to status: String) {
+        user.setStatus(to: status)
+    }
+    
+    func getUserHealth() -> Int {
+        return user.getHealth()
+    }
+    
+    func setUserHealth(to health: Int) {
+        user.setHealth(to: health)
+    }
+    
+    func getUserArmor() -> Int {
+        return user.getArmor()
+    }
+    
+    func setUserArmor(to armor: Int) {
+        user.setArmor(to: armor)
+    }
+    
     func getUserWeapon() -> String {
         return user.getWeapon()
     }
@@ -158,6 +303,7 @@ class GameState {
     func getUser() -> Player {
         return user
     }
+    
     func getUserLocation() -> CLLocation {
         return user.getLocation()
     }
@@ -169,6 +315,10 @@ class GameState {
     /* Do not call unless a game exists!!! */
     func getCurrentGame() -> Game {
         return currentGame!
+    }
+    
+    func addFoundGame(found: Game) {
+        foundGames.append(found)
     }
     
     

@@ -12,33 +12,37 @@ var testWeapon = Weapon {
 
 func TestCanHit(t *testing.T) {
 	// shot is left of target; within spread; within range
-	if !testWeapon.canHit(Location{5, 5}, Location{4, 6}, Direction{-1, 1}) {
-		t.Errorf("TestCanHit(1) failed, expected TRUE, got FALSE.")
+	if testWeapon.canHit(Location{5, 5}, Location{4, 6}, Direction{-1, 1}) == math.MaxFloat64 {
+		t.Errorf("TestCanHit(1) failed, expected distance < math.MaxFloat64 (Can hit), got distance == math.MaxFloat64 (Can't hit).")
 	}
 
 	// shot is right of target; within spread; within range
-	if !testWeapon.canHit(Location{5, 5}, Location{6, 6}, Direction{1, 1}) {
-		t.Errorf("TestCanHit(2) failed, expected TRUE, got FALSE.")
+	if testWeapon.canHit(Location{5, 5}, Location{6, 6}, Direction{1, 1}) == math.MaxFloat64 {
+		t.Errorf("TestCanHit(2) failed, expected distance < math.MaxFloat64 (Can hit), got distance == math.MaxFloat64 (Can't hit).")
 	}
 
 	// shot is left of target; outside spread; within range
-	if testWeapon.canHit(Location{5, 5}, Location{4, 4}, Direction{-1, 1}) {
-		t.Errorf("TestCanHit(3) failed, expected FALSE, got TRUE.")
+	dist := testWeapon.canHit(Location{5, 5}, Location{4, 4}, Direction{-1, 1})
+	if dist != math.MaxFloat64 {
+		t.Errorf("TestCanHit(3) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
 	}
 
 	// shot is right of target; outside spread; within range
-	if testWeapon.canHit(Location{5, 5}, Location{6, 4}, Direction{1, 1}) {
-		t.Errorf("TestCanHit(4) failed, expected FALSE, got TRUE.")
+	dist = testWeapon.canHit(Location{5, 5}, Location{6, 4}, Direction{1, 1})
+	if dist != math.MaxFloat64 {
+		t.Errorf("TestCanHit(4) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
 	}
 
 	// shot is within spread; outside range
-	if SWORD.canHit(Location{5, 5}, Location{10, 10}, Direction{1, 1}) {
-		t.Errorf("TestCanHit(5) failed, expected FALSE, got TRUE.")
+	dist = SWORD.canHit(Location{5, 5}, Location{10, 10}, Direction{1, 1})
+	if dist != math.MaxFloat64 {
+		t.Errorf("TestCanHit(5) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
 	}
 
 	// shot is outside spread; outside range
-	if testWeapon.canHit(Location{5, 5}, Location{20, 20}, Direction{-1, -1}) {
-		t.Errorf("TestCanHit(6) failed, expected FALSE, got TRUE.")
+	dist = testWeapon.canHit(Location{5, 5}, Location{20, 20}, Direction{-1, -1})
+	if dist != math.MaxFloat64 {
+		t.Errorf("TestCanHit(6) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
 	}
 }
 
@@ -55,7 +59,7 @@ func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status Player
 
 	if player.Status != status {
 		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
-			fname, pname, playerStatusMap[status], playerStatusMap[player.Status])
+			fname, pname, playerStatusToString[status], playerStatusToString[player.Status])
 	}
 }
 
@@ -67,19 +71,19 @@ func TestTakeHit(t *testing.T) {
 	brad := getBrad(g) // 80 hp, 30 armor
 
 	// no armor, hp > damage
-	jenny.takeHit(SWORD)
+	jenny.takeHit(g, SWORD)
 	checkPlayerVitals(t, *jenny, jenny.Health - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
 
 	// armor < damage, hp + armor > damage
-	oliver.takeHit (SWORD)
+	oliver.takeHit(g, SWORD)
 	checkPlayerVitals(t, *oliver, oliver.Health + oliver.Armor - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
 
 	// hp + armor < damage
-	anders.takeHit(SWORD)
+	anders.takeHit(g, SWORD)
 	checkPlayerVitals(t, *anders, 0, 0, RESPAWNING, "TestTakeHit", "anders")
 
 	// armor > damage
-	brad.takeHit (SWORD)
+	brad.takeHit(g, SWORD)
 	checkPlayerVitals(t, *brad, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
 
@@ -91,29 +95,29 @@ func TestFire(t *testing.T) {
 	brad := getBrad(g)
 
 	// no targets hit
-	brad.fire(g, Direction{1, 1})
+	brad.fire(g, SWORD,45)
 	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
 	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
 	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
 
 	// single target hit, non-fatal
-	anders.fire(g, Direction{1, 1})
-	jenny.takeHit(SWORD)
+	anders.fire(g, SWORD, 45)
+	jenny.takeHit(g, SWORD)
 	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
 	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
 	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
 
 	// multiple targets available, hits closest
-	oliver.handleLoc(g, Location{100, 99})
-	anders.fire(g, Direction{1, 1})
-	jenny.takeHit(SWORD)
+	oliver.handleLoc(g, Location{100, 99}, 0)
+	anders.fire(g, SWORD, 45)
+	jenny.takeHit(g, SWORD)
 	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
 	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
 	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
 
 	// single target hit, fatal
-	jenny.fire(g, Direction{1, 1})
-	anders.takeHit(SWORD)
+	jenny.fire(g, SWORD, 45)
+	anders.takeHit(g, SWORD)
 	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
 	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, RESPAWNING, "TestFire", "jenny->anders")
 	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")

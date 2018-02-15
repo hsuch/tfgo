@@ -22,6 +22,9 @@ class Player {
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     private var orientation: Float
     private var weapon: String
+    private var status: String
+    private var health: Int
+    private var armor: Int
     
     func getName() -> String {
         return name
@@ -47,6 +50,30 @@ class Player {
         self.icon = icon
     }
     
+    func getStatus() -> String {
+        return status
+    }
+    
+    func setStatus(to status: String) {
+        self.status = status
+    }
+    
+    func getHealth() -> Int {
+        return health
+    }
+    
+    func setHealth(to health: Int) {
+        self.health = health
+    }
+    
+    func getArmor() -> Int {
+        return armor
+    }
+    
+    func setArmor(to armor: Int) {
+        self.armor = armor
+    }
+    
     func getOrientation() -> Float {
         return orientation
     }
@@ -61,6 +88,9 @@ class Player {
         self.icon = icon
         self.orientation = 0
         self.weapon = "" // later
+        self.status = "" // later
+        self.health = 100 // later
+        self.armor = 0 // later
     }
 }
 
@@ -174,12 +204,25 @@ public class Game {
         players.append(player)
     }
     
+    func removePlayer(index: Int) {
+        players.remove(at: index)
+    }
+    
     func getBoundaries() -> [MKMapPoint] {
         return boundaries
     }
     
     func setBoundaries(_ points: [MKMapPoint]) {
         boundaries = points
+    }
+    
+    func hasPlayer(name: String) -> Bool {
+        for player in players {
+            if name == player.getName() {
+                return true
+            }
+        }
+        return false
     }
     
     private func validName(_ name: String?) -> Bool {

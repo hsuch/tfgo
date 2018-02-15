@@ -4,18 +4,18 @@ package main
 
 import "math"
 
-//returns the dot product of two Direction vectors
+// returns the dot product of two Direction vectors
 func dot(v, w Direction) float64 {
 	return v.X * w.X + v.Y * w.Y
 }
 
-//returns the magnitude of Direction vector v
+// returns the magnitude of Direction vector v
 func (v Direction) magnitude() float64 {
 	return math.Sqrt(dot(v, v))
 }
 
 // determines whether the weapon fired from src in dir direction can hit a player at dst
-// if it can, returns the distance from src to dst, if not returns MaxFloat64
+// if it can, returns the distance from src to dst, otherwise, returns MaxFloat64
 func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	target := Direction{dst.X - src.X, dst.Y - src.Y}
 	dist := target.magnitude()
@@ -27,20 +27,12 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	}
 }
 
-/*
- * fire() - determines whether the shot hits anyone, if so calls takeHit()
- *
- * p: Player who fired the shot
- *
- * game: the Game struct containing all game-related information
- *
- * wep: the Weapon used to fire the shot
- *
- * angle: angle of shot, with North = 0
- *
- * Returns: Nothing
- */
+// fire the player's weapon at the given angle
 func (p *Player) fire(game *Game, wep Weapon, angle float64) {
+	if p.Status != NORMAL {
+		return
+	}
+
 	//calculate direction vector of shot
 	var dir Direction
 	if angle == 0 || angle == 180 {
@@ -59,7 +51,7 @@ func (p *Player) fire(game *Game, wep Weapon, angle float64) {
 
 	// loop through list of enemies and find nearest hit
 	for _, other := range game.Players {
-		if p.Team != other.Team && other.Status == NORMAL {
+		if p.Team != other.Team && other.Status != RESPAWNING {
 			currDist := wep.canHit(p.Location, other.Location, dir)
 			if currDist < minDist {
 				closestP = other
@@ -72,7 +64,6 @@ func (p *Player) fire(game *Game, wep Weapon, angle float64) {
 	if closestP != nil {
 		closestP.takeHit(game, wep)
 	}
-	// will we want to communicate to the client that they've hit someone?
 }
 
 func (p *Player) takeHit(game *Game, wep Weapon) {
@@ -86,16 +77,24 @@ func (p *Player) takeHit(game *Game, wep Weapon) {
 
 	if p.Health <= 0 {
 		go p.awaitRespawn(game)
+	} else {
+		sendTakeHit(p)
 	}
-
-	// send message to player informing hit
 }
 
 func (p *Player) awaitRespawn(game *Game) {
 	p.Status = RESPAWNING
+	if p.OccupyingPoint != nil {
+		if p.Team == game.RedTeam {
+			p.OccupyingPoint.RedCount--
+		} else if p.Team == game.BlueTeam {
+			p.OccupyingPoint.BlueCount--
+		}
+		p.OccupyingPoint = nil
+	}
+	sendStatusUpdate(p, "Respawn")
 	<- p.StatusTimer.C
 	p.respawn(game)
-	// send message to player informing respawn
 }
 
 func (p *Player) respawn(game *Game) {
@@ -104,5 +103,9 @@ func (p *Player) respawn(game *Game) {
 	p.Health = 100
 	p.Armor = 0
 	p.Inventory = nil
-	// if player not in base...
+	if !inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
+		go p.awaitRespawn(game)
+	} else {
+		sendStatusUpdate(p, "Respawned")
+	}
 }
