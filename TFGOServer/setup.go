@@ -1,6 +1,6 @@
 package main
 
-// setup.go: functions for game setup
+// setup.go: functions for game setup (and termination)
 
 import (
 	"time"
@@ -184,7 +184,7 @@ func (g *Game) generateObjectives(numCP int) {
 	yrange = maxY - minY
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
-		if inBounds(g, cpLoc) {
+		if inGameBounds(g, cpLoc) {
 			id := "CP" + strconv.Itoa(i)
 			cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
 			g.ControlPoints[id] = cp

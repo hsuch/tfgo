@@ -1,7 +1,21 @@
 package main
 
-// functions for creating instances of a sample game and its components,
-// used for testing.
+// utility functions used for testing, including:
+// (1) checking if a value is within a specified error
+// (2) creating instances of a sample game and its components
+
+import "math"
+
+const EPSILON = 0.05
+
+func isAcceptableError(testValue float64, expectedValue float64, errorThreshold float64) bool {
+	if expectedValue == 0 {
+		return math.Abs(testValue) < 0.0001 // four decimal points should be sufficient for our purposes
+	}
+
+	error := math.Abs(expectedValue - testValue) / expectedValue
+	return error <= errorThreshold
+}
 
 func makeJenny(team *Team) *Player {
 	return &Player {

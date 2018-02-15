@@ -72,7 +72,7 @@ func serveClient(conn net.Conn) {
 			g.start()
 		case "LocationUpdate":
 			loc := msg.Data["Location"].(map[string]interface{})
-			p.handleLoc(g, Location{X: loc["X"].(float64), Y: loc["Y"].(float64)}, msg.Data["Orientation"].(float64))
+			p.updateLocation(g, Location{X: loc["X"].(float64), Y: loc["Y"].(float64)}, msg.Data["Orientation"].(float64))
 		case "Fire":
 			p.fire(g, weapons[msg.Data["Weapon"].(string)], msg.Data["Direction"].(float64))
 		}
