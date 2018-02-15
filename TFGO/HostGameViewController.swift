@@ -17,10 +17,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if game.setMaxPlayers(to: 2) {}
-        if game.setMaxPoints(to: 10) {}
-        if game.setTimeLimit(to: 2) {}
+
         game.setMode(to: .cp)
         
         let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
@@ -89,17 +86,14 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate {
         let value = Int(sender.value)
         switch sender.maximumValue {
         case 10000:
-            if game.setMaxPlayers(to: value) {
-                playerLabel.text = "\(value) Players"
-            }
+            game.setMaxPlayers(to: value)
+            playerLabel.text = "\(value) Players"
         case 525600:
-            if game.setTimeLimit(to: value) {
-                timeLabel.text = "\(value) Minutes"
-            }
+            game.setTimeLimit(to: value)
+            timeLabel.text = "\(value) Minutes"
         case 100000:
-            if game.setMaxPoints(to: value) {
-                pointLabel.text = "\(value) Points"
-            }
+            game.setMaxPoints(to: value)
+            pointLabel.text = "\(value) Points"
         default:
             break;
         }
