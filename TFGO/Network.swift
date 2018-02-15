@@ -15,7 +15,7 @@ var gameState = GameState()
 
 class Connection {
     private var servadd: String = "128.135.98.90" // to be replaced with real server ip
-    private var servport: Int32 = 8080
+    private var servport: Int32 = 9566
     private var client: TCPClient
 
     func sendData(data: Data) -> Result{
