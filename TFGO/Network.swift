@@ -47,10 +47,10 @@ class MsgFromServer {
     }
 
     /* parse(): convert data array into appropriate data struct depending on message type */
-    func parse() -> AnyObject {
+    func parse() {
         switch type {
         case "PlayerListUpdate":
-            return parsePlayerListUpdate(data: data)
+            parsePlayerListUpdate(data: data)
         default:
             break
         }
@@ -59,15 +59,15 @@ class MsgFromServer {
     init(conn: Connection) {
         let received = conn.recvData()
         self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-        let type = data.removeValueForKey("Type")
-        self.type = type
+        let type = data.removeValue(forKey: "Type")
+        self.type = type as! String
 
     }
 }
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
-func parsePlayerListUpdate(data: [String: Any]) -> Player {
+func parsePlayerListUpdate(data: [String: Any]) {
 
 }
 
