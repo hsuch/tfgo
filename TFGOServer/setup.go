@@ -1,6 +1,6 @@
 package main
 
-// setup.go: functions for game setup
+// setup.go: functions for game setup (and termination)
 
 import (
 	"time"

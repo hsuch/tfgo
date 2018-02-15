@@ -1,5 +1,7 @@
 package main
 
+// fire_test.go: tests for weapon firing related functions in fire.go
+
 import (
 	"testing"
 	"math"
@@ -8,6 +10,34 @@ import (
 var testWeapon = Weapon {
 	Spread: math.Pi/2,
 	Range: 5,
+}
+
+/* checkPlayerVitals - helper function that checks a player's health, armor,
+ *                     and status to make sure the appropriate values are set
+ */
+func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status PlayerStatus, fname, pname string) {
+	if player.Health != hp {
+		t.Errorf("%s(%s) failed, expected (Health: %d), got (Health: %d)",
+			fname, pname, hp, player.Health)
+	}
+
+	if player.Armor != armor {
+		t.Errorf("%s(%s) failed, expected (Armor: %d), got (Armor: %d)",
+			fname, pname, armor, player.Armor)
+	}
+
+	if player.Status != status {
+		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
+			fname, pname, playerStatusToString[status], playerStatusToString[player.Status])
+	}
+}
+
+func TestDot(t *testing.T) {
+	// func dot(v, w Direction) float64
+}
+
+func TestMagnitude(t *testing.T) {
+	// func (v Direction) magnitude() float64
 }
 
 func TestCanHit(t *testing.T) {
@@ -46,21 +76,40 @@ func TestCanHit(t *testing.T) {
 	}
 }
 
-func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status PlayerStatus, fname, pname string) {
-	if player.Health != hp {
-		t.Errorf("%s(%s) failed, expected (Health: %d), got (Health: %d)",
-			fname, pname, hp, player.Health)
-	}
+func TestFire(t *testing.T) {
+	g := makeSampleGame()
+	jenny := getJenny(g)
+	oliver := getOliver(g)
+	anders := getAnders(g)
+	brad := getBrad(g)
 
-	if player.Armor != armor {
-		t.Errorf("%s(%s) failed, expected (Armor: %d), got (Armor: %d)",
-			fname, pname, armor, player.Armor)
-	}
+	// no targets hit
+	brad.fire(g, SWORD,45)
+	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
+	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
 
-	if player.Status != status {
-		t.Errorf("%s(%s) failed, expected (Status: %s), got (Status: %s)",
-			fname, pname, playerStatusToString[status], playerStatusToString[player.Status])
-	}
+	// single target hit, non-fatal
+	anders.fire(g, SWORD, 45)
+	jenny.takeHit(g, SWORD)
+	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+
+	// multiple targets available, hits closest
+	oliver.updateLocation(g, Location{100, 99}, 0)
+	anders.fire(g, SWORD, 45)
+	jenny.takeHit(g, SWORD)
+	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+
+	// single target hit, fatal
+	jenny.fire(g, SWORD, 45)
+	anders.takeHit(g, SWORD)
+	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
+	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, RESPAWNING, "TestFire", "jenny->anders")
+	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
 }
 
 func TestTakeHit(t *testing.T) {
@@ -87,38 +136,10 @@ func TestTakeHit(t *testing.T) {
 	checkPlayerVitals(t, *brad, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
 
-func TestFire(t *testing.T) {
-	g := makeSampleGame()
-	jenny := getJenny(g)
-	oliver := getOliver(g)
-	anders := getAnders(g)
-	brad := getBrad(g)
+func TestAwaitRespawn(t *testing.T) {
+	// func (p *Player) awaitRespawn(game *Game)
+}
 
-	// no targets hit
-	brad.fire(g, SWORD,45)
-	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
-	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
-	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
-
-	// single target hit, non-fatal
-	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
-
-	// multiple targets available, hits closest
-	oliver.handleLoc(g, Location{100, 99}, 0)
-	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, *jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
-
-	// single target hit, fatal
-	jenny.fire(g, SWORD, 45)
-	anders.takeHit(g, SWORD)
-	checkPlayerVitals(t, *oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
-	checkPlayerVitals(t, *anders, anders.Health, anders.Armor, RESPAWNING, "TestFire", "jenny->anders")
-	checkPlayerVitals(t, *brad, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
+func TestRespawn(t *testing.T) {
+	// func (p *Player) respawn(game *Game)
 }

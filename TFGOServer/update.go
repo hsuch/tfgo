@@ -1,6 +1,6 @@
 package main
 
-// movement.go: functions for handling player movement
+// update.go: functions for handling updates
 
 import (
 	"time"
@@ -42,7 +42,7 @@ func inBounds(game *Game, loc Location) bool {
 
  // set player location, updating respawn, out-of-bounds, and control point
  // info as necessary
-func (p *Player) handleLoc(game *Game, loc Location, orientation float64) {
+func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 	p.Location = Location{X: degreeToMeter(loc.X), Y: degreeToMeter(loc.Y)}
 	p.Orientation = orientation
 
