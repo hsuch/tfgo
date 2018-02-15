@@ -9,7 +9,7 @@
 import Foundation
 import MapKit
 
-enum Gamemode: String{
+enum Gamemode: String {
     case cp = "Control Point"
     case payload = "Payload"
     case multi = "Multipoint"
@@ -104,6 +104,63 @@ class Player {
     }
 }
 
+public class Objective {
+    
+    private var xLoc: Double
+    private var yLoc: Double
+    private var radius: Double
+    private var occupants: [String]
+    private var owner: String
+    private var progress: Int
+    
+    func getXLoc() -> Double? {
+        return xLoc
+    }
+    
+    func getYLoc() -> Double? {
+        return yLoc
+    }
+    
+    func getRadius() -> Double? {
+        return radius
+    }
+    
+    func addOccupant(toGame name: String) {
+        occupants.append(name)
+    }
+    
+    func removeOccupant(index: Int) {
+        occupants.remove(at: index)
+    }
+    
+    func getOwner() -> String {
+        return owner
+    }
+    
+    func setOwner(to owner: String) {
+        self.owner = owner
+    }
+    
+    func getProgress() -> Int {
+        return progress
+    }
+    
+    func setProgress(to progress: Int) {
+        self.progress = progress
+    }
+    
+    
+    init(x: Double, y: Double, radius: Double) {
+        self.radius = radius
+        self.occupants = []
+        self.owner = "Neutral"
+        self.progress = 0
+        self.xLoc = x
+        self.yLoc = y
+    }
+    
+}
+
 public class Game {
     
     private var ID: String?
@@ -114,6 +171,7 @@ public class Game {
     private var maxPlayers: Int?
     private var description: String
     private var password: String?
+    private var objectives: [Objective]
     
     private var players: [Player]
     private var boundaries: [MKMapPoint]
@@ -218,6 +276,10 @@ public class Game {
         players.remove(at: index)
     }
     
+    func addObjective(toObjective objective: Player) {
+        players.append(objective)
+    }
+    
     func getBoundaries() -> [MKMapPoint] {
         return boundaries
     }
@@ -264,5 +326,6 @@ public class Game {
         description = ""
         players = []
         boundaries = []
+        objectives = []
     }
 }

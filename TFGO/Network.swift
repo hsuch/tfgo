@@ -129,7 +129,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                     if let name = game["Name"] as? String, let mode = game["Mode"] as? Gamemode {
                         let newGame = Game()
                         newGame.setID(to: id)
-                        !newGame.setName(to: name)   // these games will always give a valid name
+                        newGame.setName(to: name)   // these games will always give a valid name
                         newGame.setMode(to: mode)
                         gameState.addFoundGame(found: newGame)
                     }
@@ -149,6 +149,13 @@ func parseGameInfo(data: [String: Any]) -> Bool {
             gameState.getCurrentGame().setDescription(to: desc)
             gameState.getCurrentGame().setMaxPoints(to: pointLim)
             
+        }
+        if let players = info["PlayerList"] as? [[String: Any]] {
+            for player in players {
+                if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                    gameState.getCurrentGame().addPlayer(toGame: Player(name: name, icon: icon))
+                }
+            }
             return true
         }
     }
@@ -166,10 +173,11 @@ func parseJoinGameError(data: [String: Any]) -> Bool {
     }
     return false
 }
-//
-//func parseGameStartInfo(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
+
+func parseGameStartInfo(data: [String: Any]) -> Bool {
+    //TODO add bases for iteration 2
+    
+}
 
 //func parseGameUpdate(data: [String: Any]) -> Bool {
 //
