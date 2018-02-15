@@ -14,8 +14,8 @@ import MapKit
 var gameState = GameState()
 
 class Connection {
-    private var servadd: String = "10.152.35.37" // to be replaced with real server ip
-    private var servport: Int32 = 9566
+    private var servadd: String = "10.150.236.157" // to be replaced with real server ip
+    private var servport: Int32 = 9265
     private var client: TCPClient
 
     func sendData(data: Data) -> Result{
@@ -81,17 +81,15 @@ class MsgFromServer {
     init() {
         let conn = gameState.getConnection()
         var received: Data? = nil
-        while (received == nil) {
-            print("waiting for receive")
+        while(received == nil)
+        {
             received = conn.recvData()
-            if(received != nil)
-            {
-                self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-                let type = data.removeValue(forKey: "Type")
-                self.type = type as! String
-                print(type!)
-            }
         }
+        self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
+        let type = data.removeValue(forKey: "Type")
+        self.type = type as! String
+        print(self.type)
+        print(self.data)
     }
 }
 
@@ -257,7 +255,7 @@ func CreateGameMsg(game: Game) -> Data {
     let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
     let minutes = game.getTimeLimit()
     let timelimit = "0h" + "\(minutes)" + "m0s"
-    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": [], "Host": host] as [String: Any]
+    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": [["X": 12.3, "Y": 1.23], ["X": 23.4, "Y": 2.34]], "Host": host] as [String: Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
