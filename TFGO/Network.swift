@@ -28,13 +28,15 @@ class Connection {
         return Data.init(response)
     }
 
-    init(){
+    init() {
         client = TCPClient(address: servadd, port: servport)
-        switch client.connect(timeout: 10) {
-        case .failure:
-            print("Connection failed")
-        default:
-            print("Successful connection")
+        DispatchQueue.global(qos: .background).async {
+            switch self.client.connect(timeout: 10) {
+            case .failure:
+                print("Connection failed")
+            default:
+                print("Successful connection")
+            }
         }
     }
 }

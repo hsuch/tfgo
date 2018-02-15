@@ -1330,6 +1330,7 @@
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <state key="normal" title="Yup, that's me"/>
                                 <connections>
+                                    <action selector="playerAlert:" destination="xOP-Cs-MEl" eventType="touchUpInside" id="KaN-vW-u8z"/>
                                     <segue destination="WMc-iQ-wge" kind="show" id="4EM-d4-Ykc"/>
                                 </connections>
                             </button>
