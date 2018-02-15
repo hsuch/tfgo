@@ -56,9 +56,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     
     @IBAction func fireButton(_ sender: UIButton) {
-        //Get Location and heading
-        //Get Weapon information
-        //Send information to server
+        if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
+            //Put on Cooldown
+        }
     }
     
     
