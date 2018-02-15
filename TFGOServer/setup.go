@@ -4,6 +4,7 @@ package main
 
 import (
 	"time"
+	"math"
 	"math/rand"
 	"net"
 	"encoding/json"
@@ -129,7 +130,7 @@ func (g *Game) generateObjectives(numCP int) {
 	minX := math.MaxFloat64
 	maxX := -math.MaxFloat64
 	minY := math.MaxFloat64
-	maxY := -math.MathFloat64
+	maxY := -math.MaxFloat64
 	for _, val := range g.Boundaries {
 		if val.P.X < minX {
 			minX = val.P.X
@@ -208,13 +209,13 @@ func (g *Game) start() {
 
 	startTime := time.Now().Add(time.Minute)
 	sendGameStartInfo(g, startTime)
+	go sendGameUpdates(g)
 
 	time.Sleep(time.Until(startTime))
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
 	})
-	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
 		go cp.updateStatus(g)
 	}
