@@ -43,7 +43,7 @@ func inBounds(game *Game, loc Location) bool {
  // set player location, updating respawn, out-of-bounds, and control point
  // info as necessary
 func (p *Player) handleLoc(game *Game, loc Location, orientation float64) {
-	p.Location = loc
+	p.Location = Location{X: degreeToMeter(loc.X), Y: degreeToMeter(loc.Y)}
 	p.Orientation = orientation
 
 	// no information should be updated if the game has not yet started

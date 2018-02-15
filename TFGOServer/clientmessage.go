@@ -38,6 +38,8 @@ func (g *Game) getPlayerInfo(fields []string) []map[string]interface{} {
 		for _, field := range fields {
 			if field == "Team" {
 				playerInfo[field] = player.Team.Name
+			} else if field == "Location" {
+				playerInfo[field] = player.Location.locationToDegrees()
 			} else {
 				f := reflect.Indirect(r).FieldByName(field)
 				playerInfo[field] = f.Interface()
@@ -53,8 +55,8 @@ func (g *Game) getBoundaryVertices() []map[string]float64 {
 	var vertices []map[string]float64
 	for _, boundary := range g.Boundaries {
 		vertex := make(map[string]float64)
-		vertex["X"] = boundary.P.X
-		vertex["Y"] = boundary.P.Y
+		vertex["X"] = meterToDegree(boundary.P.X)
+		vertex["Y"] = meterToDegree(boundary.P.Y)
 		vertices = append(vertices, vertex)
 	}
 
@@ -63,15 +65,15 @@ func (g *Game) getBoundaryVertices() []map[string]float64 {
 
 func (t *Team) getLocInfo() map[string]interface{} {
 	return map[string]interface{} {
-		"Location" : t.Base,
-		"Radius" : t.BaseRadius,
+		"Location" : t.Base.locationToDegrees(),
+		"Radius" : t.BaseRadius, //in meters because the app team wants it that way
 	}
 }
 
 func (cp *ControlPoint) getLocInfo() map[string]interface{} {
 	return map[string]interface{} {
-		"Location" : cp.Location,
-		"Radius" : cp.Radius,
+		"Location" : cp.Location.locationToDegrees(),
+		"Radius" : cp.Radius, //also in meters
 	}
 }
 
@@ -87,7 +89,7 @@ func (g *Game) getObjectiveUpdate() []map[string]interface{} {
 	var cpList []map[string]interface{}
 	for _, cp := range g.ControlPoints {
 		cpInfo := make(map[string]interface{})
-		cpInfo["Location"] = cp.Location
+		cpInfo["Location"] = cp.Location.locationToDegrees()
 		cpInfo["Occupying"] = occupants[cp]
 		if cp.ControllingTeam == nil {
 			cpInfo["BelongsTo"] = "Neutral"
@@ -121,7 +123,7 @@ func sendAvailableGames(player *Player) {
 			gameInfo["ID"] = game.ID
 			gameInfo["Name"] = game.Name
 			gameInfo["Mode"] = modeToString[game.Mode]
-			gameInfo["Location"] = game.findCenter()
+			gameInfo["Location"] = game.findCenter().locationToDegrees()
 			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Icon"})
 			gameList = append(gameList, gameInfo)
 		}
