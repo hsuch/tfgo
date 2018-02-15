@@ -37,7 +37,6 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     private func randomColor() -> UIColor {
         let color = UIColor(red: CGFloat(6), green: CGFloat(96), blue: CGFloat(200), alpha: 1)
-        print(color)
         return color
     }
     
@@ -58,5 +57,18 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         return textField.resignFirstResponder()
     }
     
+    @IBAction func playerAlert(_ sender: UIButton) {
+        if gameState.getUserName() == "" {
+            let alertController = UIAlertController(title: "Invalid Username", message:
+                "Please input a username", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "I didn't mean it", style: UIAlertActionStyle.default,handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+        } else if gameState.getUserIcon() == "" {
+            let alertController = UIAlertController(title: "Invalid User Icon", message:
+                "Please select an icon", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "I will do better next time", style: UIAlertActionStyle.default,handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     
 }

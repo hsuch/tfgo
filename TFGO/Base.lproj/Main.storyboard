@@ -21,7 +21,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ouk-Mg-hHW">
-                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pDX-eO-ApH">
@@ -75,7 +75,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Caz-Jg-YC7">
-                                <rect key="frame" x="93.333333333333329" y="144" width="188.33333333333337" height="110"/>
+                                <rect key="frame" x="93.333333333333329" y="100" width="188.33333333333337" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TFGO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-qu-lXV">
                                         <rect key="frame" x="4.3333333333333428" y="0.0" width="180" height="86"/>
@@ -103,9 +103,8 @@
                                     <segue destination="OjP-k2-aXS" kind="show" identifier="temp" id="l98-lC-GIH"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="JOIN GAME ITERATION 1 TEMP" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZm-3j-sgj">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="JOIN GAME ITERATION 1 TEMP" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nZm-3j-sgj">
                                 <rect key="frame" x="16" y="613" width="343" height="165"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -119,8 +118,12 @@
                             <constraint firstItem="h6T-vy-hJt" firstAttribute="bottom" secondItem="pDX-eO-ApH" secondAttribute="bottom" constant="173" id="KfP-R8-SqT"/>
                             <constraint firstItem="ouk-Mg-hHW" firstAttribute="trailing" secondItem="h6T-vy-hJt" secondAttribute="trailing" id="SM4-hc-xRR"/>
                             <constraint firstItem="pDX-eO-ApH" firstAttribute="centerX" secondItem="h6T-vy-hJt" secondAttribute="centerX" id="Wwp-Gu-HQC"/>
+                            <constraint firstItem="nZm-3j-sgj" firstAttribute="bottom" secondItem="h6T-vy-hJt" secondAttribute="bottom" id="X4F-JU-l52"/>
                             <constraint firstItem="pDX-eO-ApH" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Caz-Jg-YC7" secondAttribute="bottom" constant="10" id="gjs-2G-vsW"/>
                             <constraint firstItem="Caz-Jg-YC7" firstAttribute="centerX" secondItem="h6T-vy-hJt" secondAttribute="centerX" id="ihs-g7-A1a"/>
+                            <constraint firstItem="h6T-vy-hJt" firstAttribute="trailing" secondItem="nZm-3j-sgj" secondAttribute="trailing" constant="16" id="iim-Hh-Gnf"/>
+                            <constraint firstItem="nZm-3j-sgj" firstAttribute="leading" secondItem="h6T-vy-hJt" secondAttribute="leading" constant="16" id="jBG-Lo-zV8"/>
+                            <constraint firstItem="nZm-3j-sgj" firstAttribute="top" secondItem="pDX-eO-ApH" secondAttribute="bottom" constant="8" id="miM-rI-jp3"/>
                             <constraint firstItem="ouk-Mg-hHW" firstAttribute="bottom" secondItem="h6T-vy-hJt" secondAttribute="bottom" id="nth-oS-hsl"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="h6T-vy-hJt"/>
@@ -519,6 +522,7 @@
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                     <state key="normal" title="Create Game"/>
                                                     <connections>
+                                                        <action selector="checkGame:" destination="ZEs-Lf-FFb" eventType="touchUpInside" id="y3F-8z-BZZ"/>
                                                         <segue destination="OjP-k2-aXS" kind="show" identifier="Create Game" id="FNE-Lr-RRh"/>
                                                     </connections>
                                                 </button>
@@ -565,7 +569,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bcI-As-hxd">
-                                <rect key="frame" x="127" y="106" width="121" height="29"/>
+                                <rect key="frame" x="127" y="62" width="121" height="29"/>
                                 <segments>
                                     <segment title="Public"/>
                                     <segment title="Private"/>
@@ -575,7 +579,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hvb-J6-vfC">
-                                <rect key="frame" x="16" y="152" width="343" height="626"/>
+                                <rect key="frame" x="16" y="108" width="343" height="670"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game" rowHeight="83" id="hCC-SO-bjg" customClass="LobbyCustomViewCell" customModule="TFGO" customModuleProvider="target">
@@ -701,11 +705,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8fy-c7-XPq">
-                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Jg-VT-jWz">
-                                <rect key="frame" x="67" y="218.66666666666663" width="240" height="454"/>
+                                <rect key="frame" x="67" y="174.66666666666663" width="240" height="498"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player" rowHeight="70" id="Nr3-n9-G5y" customClass="WaitingViewCell" customModule="TFGO" customModuleProvider="target">
@@ -761,7 +765,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting For Players..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jml-sc-ecP">
-                                <rect key="frame" x="67" y="127" width="240" height="83.666666666666686"/>
+                                <rect key="frame" x="67" y="83" width="240" height="83.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -848,6 +852,9 @@
                                                     <rect key="frame" x="117.66666666666669" y="-1" width="140" height="44"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                     <state key="normal" title="Leave Game"/>
+                                                    <connections>
+                                                        <segue destination="148-xb-tAK" kind="show" id="K1a-Ju-8Ff"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -1330,6 +1337,7 @@
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <state key="normal" title="Yup, that's me"/>
                                 <connections>
+                                    <action selector="playerAlert:" destination="xOP-Cs-MEl" eventType="touchUpInside" id="KaN-vW-u8z"/>
                                     <segue destination="WMc-iQ-wge" kind="show" id="4EM-d4-Ykc"/>
                                 </connections>
                             </button>
@@ -1393,8 +1401,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="xzX-Iq-bnB"/>
+        <segue reference="evh-x0-bHz"/>
         <segue reference="Th9-pw-b0x"/>
-        <segue reference="l98-lC-GIH"/>
+        <segue reference="FNE-Lr-RRh"/>
+        <segue reference="K1a-Ju-8Ff"/>
     </inferredMetricsTieBreakers>
 </document>
