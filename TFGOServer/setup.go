@@ -9,6 +9,7 @@ import (
 	"net"
 	"encoding/json"
 	"strconv"
+	"fmt"
 )
 
 // return the central position of a game
@@ -40,6 +41,8 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 	p.Armor = 0
 
 	go p.sender()
+
+	fmt.Printf("Player %s created.\n", p.Name)
 
 	return &p
 }
@@ -106,6 +109,10 @@ func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
 	g.Players = map[string]*Player{p.Name : p}
 
 	games[g.ID] = &g
+
+	fmt.Printf("Game %s with ID %s created.\n", g.Name, g.ID)
+	fmt.Printf("Player %s added to game %s.\n", p.Name, g.ID)
+
 	return &g, p
 }
 
@@ -121,6 +128,9 @@ func (p *Player) joinGame(gameID string) *Game {
 	} else {
 		target.Players[p.Name] = p
 		sendPlayerListUpdate(target)
+
+		fmt.Printf("Player %s added to game %s.\n", p.Name, gameID)
+
 		return target
 	}
 }

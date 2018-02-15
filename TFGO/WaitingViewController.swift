@@ -20,7 +20,6 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
 
         let game = gameState.getCurrentGame()
         table.numberOfRows(inSection: game.getPlayers().count)
-
         // Do any additional setup after loading the view.
     }
     
@@ -34,5 +33,14 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
 
     @IBOutlet weak var table: UITableView!
     
+//    private var playerTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updatePlayers), userInfo: nil, repeats: true)
+//    
+//    @objc private func updatePlayers() {
+//        table.reloadData()
+//    }
+//    
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        playerTimer.invalidate()
+//    }
 
 }
