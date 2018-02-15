@@ -14,8 +14,8 @@ import MapKit
 var gameState = GameState()
 
 class Connection {
-    private var servadd: String = "10.152.35.37" // to be replaced with real server ip
-    private var servport: Int32 = 9566
+    private var servadd: String = "128.135.175.185" // to be replaced with real server ip
+    private var servport: Int32 = 9265
     private var client: TCPClient
 
     func sendData(data: Data) -> Result{
