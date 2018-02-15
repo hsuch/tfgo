@@ -30,7 +30,12 @@ class Connection {
 
     init(){
         client = TCPClient(address: servadd, port: servport)
-        client.connect(timeout: 10) // this should probably have success and failure case but whatever
+        switch client.connect(timeout: 10) {
+        case .failure:
+            print("Connection failed")
+        default:
+            print("Successful connection")
+        }
     }
 }
 
