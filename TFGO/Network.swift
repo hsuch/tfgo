@@ -52,8 +52,8 @@ class MsgFromServer {
         case "PlayerListUpdate":
             parsePlayerListUpdate(data: data)
             return true
-//        case "AvailableGames":
-//            return parseAvailableGames(data: data)
+        case "AvailableGames":
+            return parseAvailableGames(data: data)
 //        case "GameInfo":
 //            return parseGameInfo(data: data)
         case "JoinGameError":
@@ -119,14 +119,42 @@ func parsePlayerListUpdate(data: [String: Any]) {
     }
 }
 
-//func parseAvailableGames(data: [String: Any]) -> Bool {
-//
-//}
-//
-//func parseGameInfo(data: [String: Any]) -> Bool {
-//    let json = JSON(data)
-//}
-//
+func parseAvailableGames(data: [String: Any]) -> Bool {
+
+    if let info = data["Data"] as? [[String: Any]] {
+        for game in info {
+            if let id = game["ID"] as? String {
+                if !gameState.hasGame(to: id) {
+                    //TODO also get the game location and player list
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? Gamemode {
+                        let newGame = Game()
+                        newGame.setID(to: id)
+                        !newGame.setName(to: name)   // these games will always give a valid name
+                        newGame.setMode(to: mode)
+                        gameState.addFoundGame(found: newGame)
+                    }
+                }
+            }
+        }
+        return true
+    }
+    return false
+}
+
+func parseGameInfo(data: [String: Any]) -> Bool {
+    
+    if let info = data["Data"] as? [String: Any] {
+        if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
+            gameState.getCurrentGame().setMaxPlayers(to: playerNum)
+            gameState.getCurrentGame().setDescription(to: desc)
+            gameState.getCurrentGame().setMaxPoints(to: pointLim)
+            
+            return true
+        }
+    }
+    return false
+}
+
 func parseJoinGameError(data: [String: Any]) -> Bool {
     if let error = data["Data"] as? String {
         let alert = UIAlertController(title: error, message: "Please join a different game", preferredStyle: .alert)
@@ -297,6 +325,14 @@ class GameState {
         foundGames.append(found)
     }
     
+    func hasGame(to id: String) -> Bool {
+        for game in foundGames {
+            if id == game.getID() {
+                return true
+            }
+        }
+        return false
+    }
     
     func setCurrentGame(to game: Game) -> Bool {
         let valid = game.isValid()
