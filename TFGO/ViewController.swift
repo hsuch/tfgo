@@ -22,11 +22,13 @@ class ViewController: UIViewController {
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "temp" {
-            if gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
+            let connection = gameState.getConnection()
+            if connection.sendData(data: ShowGamesMsg()).isSuccess {
                 while true {
-                    if MsgFromServer().parse() {
-                        if gameState.findPublicGames().count > 0 {
-                            return gameState.setCurrentGame(to: gameState.findPublicGames()[0])
+                    if MsgFromServer().parse(), gameState.findPublicGames().count > 0 {
+                        let game = gameState.findPublicGames()[0]
+                        if connection.sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
+                            return gameState.setCurrentGame(to: game)
                         }
                     }
                 }
