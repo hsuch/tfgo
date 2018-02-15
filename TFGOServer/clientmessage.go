@@ -10,11 +10,11 @@ import (
 // goroutine responsible for delivering messages to players
 func (p *Player) sender() {
 	for {
-		msg, closed := <-p.Chan
-		if closed {
-			return
-		} else {
+		msg, open := <-p.Chan
+		if open {
 			p.Encoder.Encode(msg)
+		} else {
+			return
 		}
 	}
 }
