@@ -28,6 +28,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         
         let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
         
+        gameState.getUser().setLocation(to: myLocation.latitude, to: myLocation.longitude)
+        
         if (initialized == false) {
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
             region = MKCoordinateRegionMake(myLocation, span)
@@ -41,6 +43,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
 
         game_map.setRegion(region, animated: false)
         self.game_map.showsUserLocation = true
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
     override func viewDidLoad() {
