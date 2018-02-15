@@ -96,8 +96,16 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // todo
     // THIS PART IS NOT DONE
-    let payload = "[\"Name\": game.getName(),\"Password\": game.getPassword(),\"Description\": game.getDescription(),\"PlayerLimit\": game.getMaxPlayers(),\"PointLimit\": game.getMaxPoints(),\"TimeLimit\": game.getTimeLimit(),\"Mode\": game.getMode(),\"Boundaries\": [0], \"Host\": {\"Name\": gameState.getUserName(), \"Icon\": gameState.getUserIcon()}]"
-    return payload.data(using: .utf8)!
+    /*let payload = ["Name": game.getName(),
+     "Password": game.getPassword(),
+     "Description": game.getDescription(),
+     "PlayerLimit": game.getMaxPlayers(),
+     "PointLimit": game.getMaxPoints(),
+     "TimeLimit": game.getTimeLimit(),
+     "Mode": game.getMode(),
+     "Boundaries": [0], // not done
+     "Host": {gameState.getUserName()}] // not done*/
+    return Data.init()
 }
 func ShowGamesMsg() -> Data {
     let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
@@ -114,12 +122,14 @@ func StartGameMsg() -> Data {
 }
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
-    return MsgToServer(action: "LocationUpdate", data: [:]).toJson()
+    let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
+    return payload.data(using: .utf8)!
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
-    return MsgToServer(action: "Fire", data: [:]).toJson()
-
+    let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
+    return payload.data(using: .utf8)!
+    //return MsgToServer(action: "Fire", data: [:]).toJson()
 }
 
 
