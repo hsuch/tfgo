@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        background.image = UIImage(named: "dark-triangles")
+        background.image = UIImage(named: "redblue")
         // Do any additional setup after loading the view, typically from a nib.
     }
     

@@ -9,18 +9,15 @@ import (
 	"flag"
 )
 
-const (
-	HOST = "128.135.175.185"
-	PORT = ":9265"
-)
-
 // the following server code is heavily inspired by the example at
 // https://astaxie.gitbooks.io/build-web-application-with-golang/en/08.1.html
 func main() {
 	flag.BoolVar(&verbose, "v", false, "print sent and received JSON")
+	var HOST = flag.String("h", "127.0.0.1", "ip address on which to run server")
+	var PORT = flag.String("p", "9265", "port on which to run server")
 	flag.Parse()
 
-	tcpAddr, err := net.ResolveTCPAddr("tcp", HOST+PORT)
+	tcpAddr, err := net.ResolveTCPAddr("tcp", *HOST+":"+*PORT)
 	checkError(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
 	checkError(err)
