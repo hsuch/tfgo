@@ -20,9 +20,15 @@ class Player {
     private var name: String
     private var icon: String
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
+    private var orientation: Float
+    private var weapon: String
     
     func getName() -> String {
         return name
+    }
+    
+    func getWeapon() -> String {
+        return weapon
     }
     
     func setName(to name: String) {
@@ -41,6 +47,10 @@ class Player {
         self.icon = icon
     }
     
+    func getOrientation() -> Float {
+        return orientation
+    }
+    
     func isValid() -> Bool {
         return name != "" && icon.count == 1
     }
@@ -49,6 +59,8 @@ class Player {
     init(name: String, icon: String) {
         self.name = name
         self.icon = icon
+        self.orientation = 0
+        self.weapon = "" // later
     }
 }
 
