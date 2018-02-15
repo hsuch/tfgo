@@ -8,6 +8,8 @@
 
 import Foundation
 import SwiftSocket
+import SwiftyJSON
+import MapKit
 
 var gameState = GameState()
 
@@ -45,10 +47,10 @@ class MsgFromServer {
     }
 
     /* parse(): convert data array into appropriate data struct depending on message type */
-    func parse() -> AnyObject {
+    func parse() {
         switch type {
         case "PlayerListUpdate":
-            return parsePlayerListUpdate(data: data)
+            parsePlayerListUpdate(data: data)
         default:
             break
         }
@@ -65,7 +67,7 @@ class MsgFromServer {
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 
-func parsePlayerListUpdate(data: [String: Any]) -> Player {
+func parsePlayerListUpdate(data: [String: Any]) {
     
 }
 
@@ -94,7 +96,7 @@ class MsgToServer {
 func CreateGameMsg(game: Game) -> Data {
     // todo
     // THIS PART IS NOT DONE
-    let payload = ["Name": game.getName(),
+    /*let payload = ["Name": game.getName(),
                    "Password": game.getPassword(),
                    "Description": game.getDescription(),
                    "PlayerLimit": game.getMaxPlayers(),
@@ -102,7 +104,7 @@ func CreateGameMsg(game: Game) -> Data {
                    "TimeLimit": game.getTimeLimit(),
                    "Mode": game.getMode(),
                    "Boundaries": [0], // not done
-                   "Host": {gameState.getUserName()}] // not done
+                   "Host": {gameState.getUserName()}] // not done*/
     return Data.init()
 }
 func ShowGamesMsg() -> Data {
@@ -121,12 +123,12 @@ func StartGameMsg() -> Data {
 func LocUpMsg() -> Data {
     // todo, take location from this client's player
     let payload = "{ \"Action\": \"LocationUpdate\", \"Data\": {\"Location\": gameState.getUserLocation(), \"Orientation\": gameState.getUserOrientation()} }" // Orientation is not done
-    return payload as Dat
+    return payload.data(using: .utf8)!
 }
 func FireMsg() -> Data {
     // todo, take orientation and weapon from this client's player
     let payload = "{\"Action\": \"Fire\":,\"Data\": { \"Weapon\": gameState.getUserWeapon(), \"Direction\": gameState.getUserOrientation()}}"
-    return payload as Data
+    return payload.data(using: .utf8)!
     //return MsgToServer(action: "Fire", data: [:]).toJson()
 
 }
@@ -154,17 +156,20 @@ class GameState {
     
     func setUserIcon(to icon: String) {
         user.setIcon(to: icon)
+    }
+    
     func getUserWeapon() -> String {
         return user.getWeapon()
     }
     
     func getUser() -> Player {
         return user
+    }
     func getUserLocation() -> CLLocation {
         return user.getLocation()
     }
     
-    func getUserOrientation() -> float {
+    func getUserOrientation() -> Float {
         return user.getOrientation()
     }
     
@@ -206,5 +211,4 @@ class GameState {
         
     }
 }
-}
-}
+
