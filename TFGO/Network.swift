@@ -98,10 +98,10 @@ func parsePlayerListUpdate(data: [String: Any]) {
     var current_players = gameState.getCurrentGame().getPlayers()
     var index = 0
     
-    for c_player in current_players {
-        let c_name = c_player.getName()
+    for current_player in current_players {
+        let current_name = current_player.getName()
         for player in players {
-            if c_name == player.getName() {
+            if current_name == player.getName() {
                 gameState.getCurrentGame().removePlayer(index: index)
                 index = index - 1
                 break
@@ -176,7 +176,20 @@ func parseJoinGameError(data: [String: Any]) -> Bool {
 
 func parseGameStartInfo(data: [String: Any]) -> Bool {
     //TODO add bases for iteration 2
-    
+    if let info = data["Data"] as? [String: Any] {
+        if let players = info["PlayerList"] as? [[String: Any]] {
+            for player in players {
+                if let name = player["Name"] as? String, let team = player["Team"] as? String {
+                    let index = gameState.getCurrentGame().findPlayerIndex(name: name)
+                    gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
+                }
+            }
+        }
+        if let objectives = info["Objectives"] as? [[String: Any]] {
+            
+        }
+    }
+    return false
 }
 
 //func parseGameUpdate(data: [String: Any]) -> Bool {

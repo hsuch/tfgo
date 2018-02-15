@@ -297,6 +297,17 @@ public class Game {
         return false
     }
     
+    func findPlayerIndex(name: String) -> Int {
+        var i = 0;
+        for player in players {
+            if name == player.getName() {
+                return i
+            }
+            i = i + 1
+        }
+        return -1
+    }
+    
     private func validName(_ name: String?) -> Bool {
         if let name = name, name != "", name.count < 30 {
             return true
