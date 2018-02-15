@@ -140,11 +140,11 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
                     //TODO also get the game location and player list
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? Gamemode {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String {
                         let newGame = Game()
                         newGame.setID(to: id)
                         newGame.setName(to: name)   // these games will always give a valid name
-                        newGame.setMode(to: mode)
+                        newGame.setMode(to: Gamemode(rawValue: mode)!)
                         gameState.addFoundGame(found: newGame)
                     }
                 }
