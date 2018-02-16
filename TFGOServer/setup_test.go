@@ -5,15 +5,20 @@ package main
 import "testing"
 
 func TestFindCenter(t *testing.T) {
-	// func (g *Game) findCenter() Location
+	g := makeSampleGame()
+	x := g.findCenter().X
+	y := g.findCenter().Y
+	if !isAcceptableError(x, 50, EPSILON) && isAcceptableError(y, 50, EPSILON) {
+		t.Errorf("TestFindCenter(1) failed, expected Location (50, 50), got Location (%d, %d)", x, y)
+	}
 }
 
 func TestCreatePlayer(t *testing.T) {
-	// func createPlayer(conn net.Conn, name, icon string) *Player
-}
-
-func TestCreateGameID(t *testing.T) {
-	// func createGameID() string
+	p := createPlayer(nil, "Alice", "testIcon")
+	checkPlayerVitals(t, p, 100, 0, NORMAL, "TestCreatePlayer", "Alice")
+	if p.Icon != "testIcon" {
+		t.Errorf("TestCreatePlayer(1) failed, expected Icon testIcon, got Icon %s", p.Icon)
+	}
 }
 
 func TestSetBoundaries(t *testing.T) {
@@ -22,24 +27,13 @@ func TestSetBoundaries(t *testing.T) {
 
 func TestCreateGame(t *testing.T) {
 	// func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player)
-}
 
-func TestJoinGame(t *testing.T) {
-	// func (p *Player) joinGame(gameID string) *Game
+	//map[string]interface{} {
+	//	"Name" : "Game 1",
+	//	"Password": "Game1Pass",
+	//}
 }
 
 func TestGenerateObjectives(t *testing.T) {
 	// func (g *Game) generateObjectives(numCP int)
-}
-
-func TestRandomizeTeams(t *testing.T) {
-	// func (g *Game) randomizeTeams()
-}
-
-func TestStart(t *testing.T) {
-	// func (g *Game) start()
-}
-
-func TestStop(t *testing.T) {
-	// func (g *Game) stop()
 }
