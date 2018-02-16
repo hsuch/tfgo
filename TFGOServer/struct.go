@@ -170,8 +170,8 @@ var weapons = map[string]Weapon {
 var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
-	Spread: 2*math.Pi,
-	Range: 1,
+	Spread: math.Pi,
+	Range: 50,
 	ClipSize: 500,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
@@ -180,8 +180,8 @@ var SWORD = Weapon {
 var SHOTGUN = Weapon {
 	Name: "Shotgun",
 	Damage: 25,
-	Spread: math.Pi/2,
-	Range: 3,
+	Spread: math.Pi/4,
+	Range: 5,
 	ClipSize: 2,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
