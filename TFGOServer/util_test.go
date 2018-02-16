@@ -20,7 +20,7 @@ func isAcceptableError(testValue float64, expectedValue float64, errorThreshold 
 }
 
 func makeJenny(team *Team) *Player {
-	return &Player {
+	jenny := Player {
 		Name: "Jenny",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -29,10 +29,12 @@ func makeJenny(team *Team) *Player {
 		Armor: 0,
 		Location: Location{49, 75},
 	}
+	go jenny.sender()
+	return &jenny
 }
 
 func makeBrad(team *Team) *Player {
-	return &Player {
+	brad := Player {
 		Name: "Brad",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -41,10 +43,12 @@ func makeBrad(team *Team) *Player {
 		Armor: 30,
 		Location: Location{49, 24},
 	}
+	go brad.sender()
+	return &brad
 }
 
 func makeAnders(team *Team) *Player {
-	return &Player {
+	anders := Player {
 		Name: "Anders",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -53,10 +57,12 @@ func makeAnders(team *Team) *Player {
 		Armor: 5,
 		Location: Location{49.5, 75},
 	}
+	go anders.sender()
+	return &anders
 }
 
 func makeOliver(team *Team) *Player {
-	return &Player {
+	oliver := Player {
 		Name: "Oliver",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -65,6 +71,8 @@ func makeOliver(team *Team) *Player {
 		Armor: 10,
 		Location: Location{50, 75},
 	}
+	go oliver.sender()
+	return &oliver
 }
 
 func makeRedTeam() *Team {
@@ -125,10 +133,10 @@ func makeSampleGame() *Game {
 			"anders" : makeAnders(blueTeam),
 		},
 		Boundaries: []Border{
-			{Location{0, 0}, Direction{1, 0}},
-			{Location{100, 0}, Direction{0, 1}},
-			{Location{100, 100}, Direction{-1, 0}},
-			{Location{0, 100}, Direction{0, -1}},
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 100}},
+			{Location{100, 100}, Direction{-100, 0}},
+			{Location{0, 100}, Direction{0, -100}},
 		},
 		ControlPoints: map[string]*ControlPoint {
 			"CP1" : makeCP1(),

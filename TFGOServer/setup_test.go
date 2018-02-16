@@ -28,11 +28,40 @@ func TestCreatePlayer(t *testing.T) {
 
 func TestSetBoundaries(t *testing.T) {
 	isTesting = true
-	// func (g *Game) setBoundaries(boundaries []interface{})
+	boundaries := []interface{} {
+		map[string]interface{} {"X": 0.0, "Y": 0.0},
+		map[string]interface{} {"X": meterToDegree(100.0), "Y": 0.0},
+		map[string]interface{} {"X": meterToDegree(100.0), "Y": meterToDegree(100.0)},
+		map[string]interface{} {"X": 0.0, "Y": meterToDegree(100.0)},
+	}
+	borders := []Border {
+		Border{Location{0.0,0.0}, Direction{100.0,0.0}},
+		Border{Location{100.0,0.0}, Direction{0.0,100.0}},
+		Border{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		Border{Location{0.0,100.0}, Direction{0.0,-100.0}},
+	}
+	g := &Game{Name: "TestGame"}
+	g.setBoundaries(boundaries)
+	if len(g.Boundaries) != 4 {
+		t.Errorf("TestSetBoundaries(1) failed, expected 4 borders, got %d", len(g.Boundaries))
+	}
+	for i, v := range borders {
+		if g.Boundaries[i] != v {
+			t.Errorf("TestSetBoundaries(2.%d) failed, expected Border{{%f, %f} {%f, %f}}, got Border{{%f, %f} {%f, %f}}",
+				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
+				g.Boundaries[i].P.X, g.Boundaries[i].P.Y, g.Boundaries[i].D.X, g.Boundaries[i].D.Y)
+		}
+	}
 }
 
 func TestCreateGame(t *testing.T) {
 	isTesting = true
+	borders := []Border {
+		Border{Location{0.0,0.0}, Direction{100.0,0.0}},
+		Border{Location{100.0,0.0}, Direction{0.0,100.0}},
+		Border{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		Border{Location{0.0,100.0}, Direction{0.0,-100.0}},
+	}
 	data := map[string]interface{} {
 		"Name" : "G1Name",
 		"Password" : "G1Password",
@@ -42,10 +71,10 @@ func TestCreateGame(t *testing.T) {
 		"TimeLimit" : "60m",
 		"Mode" : "SingleCapture",
 		"Boundaries" : []interface{} {
-			Border{Location{0, 0}, Direction{1, 0}},
-			Border{Location{100, 0}, Direction{0, 1}},
-			Border{Location{100, 100}, Direction{-1, 0}},
-			Border{Location{0, 100}, Direction{0, -1}},
+			map[string]interface{} {"X": 0.0, "Y": 0.0},
+			map[string]interface{} {"X": meterToDegree(100.0), "Y": 0.0},
+			map[string]interface{} {"X": meterToDegree(100.0), "Y": meterToDegree(100.0)},
+			map[string]interface{} {"X": 0.0, "Y": meterToDegree(100.0)},
 		},
 		"Host" : map[string]interface{} {
 			"Name" : "P1Name",
@@ -79,7 +108,7 @@ func TestCreateGame(t *testing.T) {
 	if g.Mode != SINGLECAP {
 		t.Errorf("TestCreateGame(8) failed, expected Mode %s, got Mode %s", "SINGLECAP", g.Mode)
 	}
-	for i, v := range data["Boundaries"].([]Border) {
+	for i, v := range borders {
 		if g.Boundaries[i] != v {
 			t.Errorf("TestCreateGame(9.%d) failed, expected Border{{%d, %d} {%d, %d}}, got Border{{%d, %d} {%d, %d}}",
 				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
