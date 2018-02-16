@@ -370,7 +370,7 @@ public class Game {
     }
     
     func isValid() -> Bool {
-        if validName(name), validNumber(of: maxTime), validNumber(of: maxPoints), validNumber(of: maxPlayers), validDescription(description) {
+        if validNumber(of: maxTime), validNumber(of: maxPoints), validNumber(of: maxPlayers), validDescription(description) {
             return true
         }
         return false
