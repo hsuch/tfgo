@@ -4,7 +4,6 @@ package main
 
 import (
 	"time"
-	"net"
 	"encoding/json"
 	"math"
 )
@@ -97,7 +96,6 @@ type Player struct {
 	Icon string
 	Team *Team
 
-	Conn net.Conn
 	Chan chan map[string]interface{} // used to synchronize sends
 	Encoder *json.Encoder
 
@@ -171,7 +169,7 @@ var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
 	Spread: 2*math.Pi,
-	Range: 1,
+	Range: 50,
 	ClipSize: 500,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
@@ -181,7 +179,7 @@ var SHOTGUN = Weapon {
 	Name: "Shotgun",
 	Damage: 25,
 	Spread: math.Pi/2,
-	Range: 3,
+	Range: 5,
 	ClipSize: 2,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,

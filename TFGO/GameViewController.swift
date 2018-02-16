@@ -28,6 +28,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         
         let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
         
+        gameState.getUser().setLocation(to: myLocation.latitude, to: myLocation.longitude)
+        
         if (initialized == false) {
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
             region = MKCoordinateRegionMake(myLocation, span)
@@ -43,6 +45,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         self.game_map.showsUserLocation = true
     }
     
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -52,6 +58,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
+        
+        runTimer()
     }
     
     
@@ -67,10 +75,29 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
     
+    private var currentHealth = 100
+    
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
+            DispatchQueue.global(qos: .background).async {
+                if MsgFromServer().parse() {
+                    if self.currentHealth != gameState.getUserHealth() {
+                        self.currentHealth = gameState.getUserHealth()
+                        let alertController = UIAlertController(title: "Temp", message:
+                            "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                    
+                }
+            }
+
         }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        updateTimer.invalidate()
     }
     
     /*

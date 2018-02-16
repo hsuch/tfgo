@@ -38,11 +38,13 @@ func serveClient(conn net.Conn) {
 
 			if p != nil {
 				fmt.Printf("Player %s disconnected.\n", p.Name)
-				if p.Chan != nil {
-					close(p.Chan)
-				}
 				if g != nil {
 					delete(g.Players, p.Name)
+					if len(g.Players) == 0 {
+						g.stop()
+					}
+				} else if p.Chan != nil {
+					close(p.Chan)
 				}
 			}
 			break

@@ -4,7 +4,9 @@ package main
 // (1) checking if a value is within a specified error
 // (2) creating instances of a sample game and its components
 
-import "math"
+import (
+	"math"
+)
 
 const EPSILON = 0.05
 
@@ -13,52 +15,64 @@ func isAcceptableError(testValue float64, expectedValue float64, errorThreshold 
 		return math.Abs(testValue) < 0.0001 // four decimal points should be sufficient for our purposes
 	}
 
-	error := math.Abs(expectedValue - testValue) / expectedValue
-	return error <= errorThreshold
+	err := math.Abs(expectedValue - testValue) / expectedValue
+	return err <= errorThreshold
 }
 
 func makeJenny(team *Team) *Player {
-	return &Player {
+	jenny := Player {
 		Name: "Jenny",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 100,
 		Armor: 0,
 		Location: Location{49, 75},
 	}
+	go jenny.sender()
+	return &jenny
 }
 
 func makeBrad(team *Team) *Player {
-	return &Player {
+	brad := Player {
 		Name: "Brad",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 80,
 		Armor: 30,
 		Location: Location{49, 24},
 	}
+	go brad.sender()
+	return &brad
 }
 
 func makeAnders(team *Team) *Player {
-	return &Player {
+	anders := Player {
 		Name: "Anders",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 10,
 		Armor: 5,
 		Location: Location{49.5, 75},
 	}
+	go anders.sender()
+	return &anders
 }
 
 func makeOliver(team *Team) *Player {
-	return &Player {
+	oliver := Player {
 		Name: "Oliver",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 95,
 		Armor: 10,
 		Location: Location{50, 75},
 	}
+	go oliver.sender()
+	return &oliver
 }
 
 func makeRedTeam() *Team {
