@@ -177,8 +177,9 @@ public class Game {
     private var bluePoints: Int = 0
     private var description: String
     private var password: String?
-    private var objectives: [Objective]
+    private var startTime: String = ""
     
+    private var objectives: [Objective]
     private var players: [Player]
     private var boundaries: [MKMapPoint]
     
@@ -252,6 +253,14 @@ public class Game {
     
     func getDescription() -> String {
         return description
+    }
+    
+    func getStartTime() -> String {
+        return startTime
+    }
+    
+    func setStartTime(to startTime: String) {
+        self.startTime = startTime
     }
     
     func setDescription(to description: String) -> Bool {
