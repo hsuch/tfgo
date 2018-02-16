@@ -54,6 +54,7 @@ Since the application is a multiplayer game, it would be a bit difficult to perf
 5. On one iPhone, tap “Host Game” and fill out the “Name” field; others have default values. After hitting “Create Game”, you should see the “Waiting for Players” screen.
 6. On the other iPhone, tap the big ugly pink button on the bottom. It should also bring you to the “Waiting for Players” screen. If you’re running the server in verbose mode, you should be able to see the server send PlayerListUpdate messages to both phones.
 7. Have the host phone tap “Start Game”. Both phones should begin transmitting LocationUpdate messages with their location and orientation. Pressing the red button will cause the app to transmit a Fire message. If you have been hit, you will receive a notification.
+
 Note that because out-of-bounds players have their weapons disabled and because we currently don't have the functionality to choose your own boundaries, instead using a set of very small default boundaries, chances are high that anyone running these acceptance tests will be out of bounds at all times. Thus, in order to see the effects of a weapon actually damaging an opponent within range, server code related to out of bounds testing must be disabled. In particular, the following lines must be commented out:
 1. Lines 34-36 in fire.go - fire()
 2. Line 95 in fire.go - awaitRespawn()
