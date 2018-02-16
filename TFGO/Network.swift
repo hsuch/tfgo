@@ -211,6 +211,9 @@ func parseGameStartInfo(data: [String: Any]) -> Bool {
                 }
             }
         }
+        if let startTime = info["StartTime"] as? String {
+            gameState.getCurrentGame().setStartTime(to: startTime)
+        }
         return true
     }
     return false

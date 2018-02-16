@@ -33,46 +33,59 @@ func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status Player
 }
 
 func TestDot(t *testing.T) {
-	// func dot(v, w Direction) float64
+	v := Direction{X : float64(-1), Y : float64(2)}
+	w := Direction{X : float64(-3), Y : float64(4)}
+	expect := float64 (11)
+	got := dot(v, w)
+	if (!isAcceptableError (got, expect, 0)) {
+		t.Errorf ("TestDot failed, expected %g, got %g", expect, got)
+	}
 }
 
 func TestMagnitude(t *testing.T) {
-	// func (v Direction) magnitude() float64
+	v := Direction{X : float64(1), Y : float64(2)}
+	got := v.magnitude ()
+	expect := math.Sqrt(float64(5))
+	if (!isAcceptableError(got, expect, 0)) {
+		t.Errorf ("TestMagnitude failed, expected %g, got %g", expect, got)
+	}
 }
 
 func TestCanHit(t *testing.T) {
 	// shot is left of target; within spread; within range
-	if testWeapon.canHit(Location{5, 5}, Location{4, 6}, Direction{-1, 1}) == math.MaxFloat64 {
-		t.Errorf("TestCanHit(1) failed, expected distance < math.MaxFloat64 (Can hit), got distance == math.MaxFloat64 (Can't hit).")
+	dist := testWeapon.canHit(Location{5, 5}, Location{4.5, 6}, Direction{-1, 1})
+	if dist == math.MaxFloat64 {
+		t.Errorf("TestCanHit(1) failed, expected CAN HIT, got CAN'T HIT. (Dist: math.MaxFloat64)")
 	}
 
 	// shot is right of target; within spread; within range
-	if testWeapon.canHit(Location{5, 5}, Location{6, 6}, Direction{1, 1}) == math.MaxFloat64 {
-		t.Errorf("TestCanHit(2) failed, expected distance < math.MaxFloat64 (Can hit), got distance == math.MaxFloat64 (Can't hit).")
+	dist = testWeapon.canHit(Location{5, 5}, Location{5.5, 6}, Direction{1, 1})
+	if dist == math.MaxFloat64 {
+		t.Errorf("TestCanHit(2) failed, expected CAN HIT, got CAN'T HIT. (Dist: math.MaxFloat64)")
 	}
 
 	// shot is left of target; outside spread; within range
-	dist := testWeapon.canHit(Location{5, 5}, Location{4, 4}, Direction{-1, 1})
+	dist = testWeapon.canHit(Location{5, 5}, Location{5.5, 6}, Direction{-1, 1})
 	if dist != math.MaxFloat64 {
-		t.Errorf("TestCanHit(3) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
+		t.Errorf("TestCanHit(3) failed, expected CAN'T HIT, got CAN HIT. (Dist: %d)", dist)
 	}
 
 	// shot is right of target; outside spread; within range
-	dist = testWeapon.canHit(Location{5, 5}, Location{6, 4}, Direction{1, 1})
+	dist = testWeapon.canHit(Location{5, 5}, Location{4.5, 6}, Direction{1, 1})
 	if dist != math.MaxFloat64 {
-		t.Errorf("TestCanHit(4) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
+		t.Errorf("TestCanHit(4) failed, expected CAN'T HIT, got CAN HIT. (Dist: %d)", dist)
 	}
 
 	// shot is within spread; outside range
-	dist = SWORD.canHit(Location{5, 5}, Location{10, 10}, Direction{1, 1})
+	dist = testWeapon.canHit(Location{5, 5}, Location{5, 11}, Direction{0, 1})
 	if dist != math.MaxFloat64 {
-		t.Errorf("TestCanHit(5) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
+		t.Errorf("TestCanHit(5) failed, expected CAN'T HIT, got CAN HIT. (Dist: %d)", dist)
 	}
 
 	// shot is outside spread; outside range
-	dist = testWeapon.canHit(Location{5, 5}, Location{20, 20}, Direction{-1, -1})
+	dist = testWeapon.canHit(Location{5, 5}, Location{20, 20}, Direction{0, -1})
 	if dist != math.MaxFloat64 {
-		t.Errorf("TestCanHit(6) failed, expected Distance math.MaxFloat64 (Can't hit), got Distance %d (Can hit).", dist)
+		t.Errorf("TestCanHit(6) failed, expected CAN'T HIT, got CAN HIT. (Dist: %d)", dist)
 	}
 }
 
