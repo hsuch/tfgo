@@ -77,13 +77,21 @@ Sam did pretty much all of the UI-related stuff, whether it came to building pag
  
 ## Changes from Earlier Milestones
 **Location struct**: Since Go is not strictly object-oriented and does not have public and private fields or functions, there was no reason to write a getter or setter function.
+
 **Direction struct**: To aid in some of the geometry/linear algebra-related calculations, we created the Direction struct, which contains two floats, X and Y, and represents a 2D direction vector.
+
 **Border struct**: To enable us to easily test whether a point is within the game boundaries even with an arbitrary number of boundaries that are not necessarily axis-aligned and don’t have to form any specific shape, we created the Border struct to represent game boundaries. It is the parametric representation of a line segment, and contains a Location (P) and a Direction (D). Because of the way in which D is calculated during setup, the line segment is always defined by t-values between 0 and 1.
+
 **Game struct**: We have added a Description, a PlayerLimit, a PointLimit, and a TimeLimit to the struct. We have moved StartPoints to the Team struct (they are the base locations). As described above, Boundaries is now a slice of Borders rather than Locations, and it need not be of length 4.
+
 **Player struct**: We have added the Conn, Chan, and Encoder fields to link a player with a specific client and enable message-sending between the server and that client. We have also added an Orientation field, which indicates the direction in which the player is currently facing, and an OccupyingPoint field, which is a pointer to the ControlPoint that the player is currently occupying, if any. The Player struct also no longer contains an ActiveWeapon field; that is left up to the client, so whenever a shot is fired, the client informs the server which weapon was used.
+
 **Team struct**: Teams no longer have a name, icon, or color; there are always exactly two and they are simply referred to as RedTeam and BlueTeam. They also no longer have a list of Players, because we found that Teams do not need to reference players, and this avoids mutual references. We also found that we did not need the getTeamLocs() function, which was intended as a helper for canHit(). And Team now includes a Base and BaseRadius, indicating the position and size of that team’s home base.
+
 **ControlPoint struct**: We have added a PayloadLoc field to indicate the payload’s current location.
+
 **Pickup interface**: We have decided to make Pickup an interface rather than a struct, and because of this it is only required to have a use() function, and we will not be implementing this until Iteration II.
+
 **Weapon struct**: We have added a Name field for ease of identification. Since `nearestHit()` would only have been a few lines of code and would only have been called once, we decided to remove it. `CanHit()` now returns a float64 (the distance to the target or MaxFloat64 if the shot does not hit the target) rather than a bool, because this was more useful to the `fire()` function.
  
 ## Testing Changes since Milestone 3a
