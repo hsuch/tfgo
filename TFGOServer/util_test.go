@@ -13,8 +13,8 @@ func isAcceptableError(testValue float64, expectedValue float64, errorThreshold 
 		return math.Abs(testValue) < 0.0001 // four decimal points should be sufficient for our purposes
 	}
 
-	error := math.Abs(expectedValue - testValue) / expectedValue
-	return error <= errorThreshold
+	err := math.Abs(expectedValue - testValue) / expectedValue
+	return err <= errorThreshold
 }
 
 func makeJenny(team *Team) *Player {

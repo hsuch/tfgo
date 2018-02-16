@@ -19,6 +19,7 @@ func prettyPrintJSON(rawJSON []byte) string {
 
 // goroutine responsible for delivering messages to players
 func (p *Player) sender() {
+	fmt.Println("hi")
 	for {
 		msg, open := <-p.Chan
 		if open {

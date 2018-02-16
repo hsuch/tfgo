@@ -89,6 +89,7 @@ func (g *Game) setBoundaries(boundaries []interface{}) {
 
 // register a new game instance, with the host as its first player
 func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
+
 	var g Game
 	g.ID = createGameID()
 	g.Name = data["Name"].(string)

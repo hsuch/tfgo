@@ -7,13 +7,13 @@ import "testing"
 func TestDistance(t *testing.T) {
 	// same point
 	dist := distance(Location{-5, 5}, Location{-5, 5})
-	if isAcceptableError(dist, 0, EPSILON) {
+	if !isAcceptableError(dist, 0, EPSILON) {
 		t.Errorf("TestDistance(1) failed, expected distance 0, got distance %d", dist)
 	}
 
 	// different points
 	dist = distance(Location{-4, -5}, Location{6, 5})
-	if isAcceptableError(dist, 14.1421356, EPSILON) {
+	if !isAcceptableError(dist, 14.1421356, EPSILON) {
 		t.Errorf("TestDistance(2) failed, expected distance 14.1421356, got distance %d", dist)
 	}
 }
