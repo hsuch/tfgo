@@ -43,7 +43,8 @@ func serveClient(conn net.Conn) {
 					if len(g.Players) == 0 {
 						g.stop()
 					}
-				} else if p.Chan != nil {
+				}
+				if p.Chan != nil {
 					close(p.Chan)
 				}
 			}

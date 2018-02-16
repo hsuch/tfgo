@@ -42,10 +42,10 @@ func TestCreateGame(t *testing.T) {
 		"TimeLimit" : "60m",
 		"Mode" : "SingleCapture",
 		"Boundaries" : []interface{} {
-			Border{Location{0, 0}, Direction{1, 0}},
-			Border{Location{100, 0}, Direction{0, 1}},
-			Border{Location{100, 100}, Direction{-1, 0}},
-			Border{Location{0, 100}, Direction{0, -1}},
+			map[string]interface{} {"X": 0.0, "Y": 0.0},
+			map[string]interface{} {"X": 100.0, "Y": 0.0},
+			map[string]interface{} {"X": 100.0, "Y": 100.0},
+			map[string]interface{} {"X": 0.0, "Y": 100.0},
 		},
 		"Host" : map[string]interface{} {
 			"Name" : "P1Name",

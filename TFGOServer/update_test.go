@@ -62,7 +62,6 @@ func TestInGameBounds(t *testing.T) {
 func TestUpdateLocation(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
-	cp := g.ControlPoints["CP2"]
 	oliver := getOliver(g)
 
 	// player moves out of bounds
@@ -70,6 +69,10 @@ func TestUpdateLocation(t *testing.T) {
 	if oliver.Status != OUTOFBOUNDS {
 		t.Errorf("TestUpdateLocation(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusToString[oliver.Status])
 	}
+
+	g = makeSampleGame()
+	cp := g.ControlPoints["CP2"]
+	oliver = getOliver(g)
 
 	// player exits control point
 	expBlueCount := cp.BlueCount - 1
