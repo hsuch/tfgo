@@ -7,6 +7,7 @@ import (
 )
 
 func TestDistance(t *testing.T) {
+	isTesting = true
 	// same point
 	dist := distance(Location{-5, 5}, Location{-5, 5})
 	if !isAcceptableError(dist, 0, EPSILON) {
@@ -21,6 +22,7 @@ func TestDistance(t *testing.T) {
 }
 
 func TestInRange(t *testing.T) {
+	isTesting = true
 	// in range
 	if inRange(Location{1, 0}, Location{0, 0}, 2) == false {
 		t.Errorf("TestInRange(1) failed, expected TRUE, got FALSE")
@@ -38,6 +40,7 @@ func TestInRange(t *testing.T) {
 }
 
 func TestInGameBounds(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 
 	// in bounds
@@ -57,6 +60,7 @@ func TestInGameBounds(t *testing.T) {
 }
 
 func TestUpdateLocation(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	cp := g.ControlPoints["CP2"]
 	oliver := getOliver(g)
@@ -83,6 +87,7 @@ func TestUpdateLocation(t *testing.T) {
 }
 
 func TestUpdateStatus(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	cp1 := g.ControlPoints["CP1"]
 	cp2 := g.ControlPoints["CP2"]

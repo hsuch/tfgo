@@ -8,6 +8,7 @@ import (
 )
 
 func TestFindCenter(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	x := g.findCenter().X
 	y := g.findCenter().Y
@@ -17,6 +18,7 @@ func TestFindCenter(t *testing.T) {
 }
 
 func TestCreatePlayer(t *testing.T) {
+	isTesting = true
 	p := createPlayer(nil, "Alice", "testIcon")
 	checkPlayerVitals(t, p, 100, 0, NORMAL, "TestCreatePlayer", "Alice")
 	if p.Icon != "testIcon" {
@@ -25,10 +27,12 @@ func TestCreatePlayer(t *testing.T) {
 }
 
 func TestSetBoundaries(t *testing.T) {
+	isTesting = true
 	// func (g *Game) setBoundaries(boundaries []interface{})
 }
 
 func TestCreateGame(t *testing.T) {
+	isTesting = true
 	data := map[string]interface{} {
 		"Name" : "G1Name",
 		"Password" : "G1Password",
@@ -103,5 +107,6 @@ func TestCreateGame(t *testing.T) {
 }
 
 func TestGenerateObjectives(t *testing.T) {
+	isTesting = true
 	// func (g *Game) generateObjectives(numCP int)
 }

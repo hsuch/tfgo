@@ -16,6 +16,7 @@ var testWeapon = Weapon {
  *                     and status to make sure the appropriate values are set
  */
 func checkPlayerVitals(t *testing.T, player *Player, hp, armor int, status PlayerStatus, fname, pname string) {
+	isTesting = true
 	if player.Health != hp {
 		t.Errorf("%s(%s) failed, expected (Health: %d), got (Health: %d)",
 			fname, pname, hp, player.Health)
@@ -33,6 +34,7 @@ func checkPlayerVitals(t *testing.T, player *Player, hp, armor int, status Playe
 }
 
 func TestDot(t *testing.T) {
+	isTesting = true
 	v := Direction{X : float64(-1), Y : float64(2)}
 	w := Direction{X : float64(-3), Y : float64(4)}
 	expect := float64 (11)
@@ -43,6 +45,7 @@ func TestDot(t *testing.T) {
 }
 
 func TestMagnitude(t *testing.T) {
+	isTesting = true
 	v := Direction{X : float64(1), Y : float64(2)}
 	got := v.magnitude ()
 	expect := math.Sqrt(float64(5))
@@ -52,6 +55,7 @@ func TestMagnitude(t *testing.T) {
 }
 
 func TestCanHit(t *testing.T) {
+	isTesting = true
 	// shot is left of target; within spread; within range
 	dist := testWeapon.canHit(Location{5, 5}, Location{4.5, 6}, Direction{-1, 1})
 	if dist == math.MaxFloat64 {
@@ -90,6 +94,7 @@ func TestCanHit(t *testing.T) {
 }
 
 func TestFire(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	jenny := getJenny(g) // (49, 75)
 	oliver := getOliver(g) // (50, 75)
@@ -126,6 +131,7 @@ func TestFire(t *testing.T) {
 }
 
 func TestTakeHit(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	jenny := getJenny(g) // 100 hp, 0 armor
 	oliver := getOliver(g) // 95 hp, 10 armor
@@ -150,9 +156,11 @@ func TestTakeHit(t *testing.T) {
 }
 
 func TestAwaitRespawn(t *testing.T) {
+	isTesting = true
 	// func (p *Player) awaitRespawn(game *Game)
 }
 
 func TestRespawn(t *testing.T) {
+	isTesting = true
 	// func (p *Player) respawn(game *Game)
 }
