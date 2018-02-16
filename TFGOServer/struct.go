@@ -97,7 +97,6 @@ type Player struct {
 	Icon string
 	Team *Team
 
-	Conn net.Conn
 	Chan chan map[string]interface{} // used to synchronize sends
 	Encoder *json.Encoder
 

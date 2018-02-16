@@ -4,7 +4,6 @@ package main
 
 import (
 	"testing"
-	"math"
 )
 
 func TestDistance(t *testing.T) {

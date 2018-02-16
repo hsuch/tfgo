@@ -4,7 +4,9 @@ package main
 // (1) checking if a value is within a specified error
 // (2) creating instances of a sample game and its components
 
-import "math"
+import (
+	"math"
+)
 
 const EPSILON = 0.05
 

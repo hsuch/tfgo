@@ -26,7 +26,9 @@ func (p *Player) sender() {
 				rawJSON, _ := json.Marshal(msg)
 				fmt.Printf("Sending to %s:\n%s\n", p.Name, prettyPrintJSON(rawJSON))
 			}
-			p.Encoder.Encode(msg)
+			if !isTesting {
+				p.Encoder.Encode(msg)
+			}
 		} else {
 			return
 		}
@@ -234,10 +236,10 @@ func sendTakeHit(player *Player) {
 }
 
 func sendGameOver(game *Game) {
-	var winner string
+	winner := "None"
 	if game.RedTeam.Points > game.BlueTeam.Points {
 		winner = game.RedTeam.Name
-	} else {
+	} else if game.RedTeam.Points < game.BlueTeam.Points {
 		winner = game.BlueTeam.Name
 	}
 
