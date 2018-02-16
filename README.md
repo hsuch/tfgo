@@ -96,6 +96,7 @@ Sam did pretty much all of the UI-related stuff, whether it came to building pag
  
 ## Testing Changes since Milestone 3a
 ### Server
+The server team has added unit tests for all of the major functions that do not involve server-client network interaction (such as those in `clienthandler.go` or `clientmessage.go`) or a random element (in `setup.go`). Our tests are written in the various `*_test.go` files. Network related and random element containing functions were purposefully excluded not only because it is difficult to test them, but also because they should be covered by the acceptance tests. Certain other functions, such as those in `struct.go`, were also not tested due to their straightforward nature (generally acting as constants or performing basic and arbitrary conversions that can’t really be tested for "correctness").
  
 ### Client
 There are two parts of the testing we did in the App team. The first part is to test the functionalities in the code and the second part is for UI Testing. As for the unit tests part for the functionalities, we have created tests to test setters such as “setID”, “setName”, “setMode”, “setTimeLimit”, “setMaxPoints”, “setMaxPlayers”, “setDescriptions”, as well as testing if the game is valid. We also test the functions that parser Server to Client JSONs by checking if they properly update the gameInfo or not. As for the UI Testing, since the whole UI suite is not completed yet, so we decided to postpone UI Testing to later iterations.
