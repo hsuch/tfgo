@@ -66,14 +66,14 @@ func (p *Player) fire(game *Game, wep Weapon, angle float64) {
 
 func (p *Player) takeHit(game *Game, wep Weapon) {
 	if wep.Damage <= p.Armor {
-		p.Armor -= wep.Damage
+		p.Armor = p.Armor - wep.Damage
 	} else {
 		splash := wep.Damage - p.Armor
 		p.Armor = 0
-		p.Health -= splash
+		p.Health = p.Health - splash
 	}
-
 	if p.Health <= 0 {
+		p.Health = 0 // this is required 
 		go p.awaitRespawn(game)
 	} else {
 		sendTakeHit(p)
@@ -91,8 +91,10 @@ func (p *Player) awaitRespawn(game *Game) {
 		p.OccupyingPoint = nil
 	}
 	sendStatusUpdate(p, "Respawn")
-	<- p.StatusTimer.C
-	p.respawn(game)
+	if (!isTesting) {
+		<- p.StatusTimer.C
+		p.respawn(game)
+	}
 }
 
 func (p *Player) respawn(game *Game) {
@@ -101,9 +103,11 @@ func (p *Player) respawn(game *Game) {
 	p.Health = 100
 	p.Armor = 0
 	p.Inventory = nil
-	if !inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
-		go p.awaitRespawn(game)
-	} else {
-		sendStatusUpdate(p, "Respawned")
+	if (!isTesting) {
+		if !inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
+			go p.awaitRespawn(game)
+		} else {
+			sendStatusUpdate(p, "Respawned")
+		}
 	}
 }

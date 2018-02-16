@@ -5,6 +5,7 @@ package main
 import (
 	"testing"
 	"math"
+	"time"
 )
 
 var testWeapon = Weapon {
@@ -134,25 +135,32 @@ func TestTakeHit(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
 	jenny := getJenny(g) // 100 hp, 0 armor
+	var jHP = jenny.Health
 	oliver := getOliver(g) // 95 hp, 10 armor
+	var oHP, oA = oliver.Health, oliver.Armor
 	anders := getAnders(g) // 10 hp, 5 armor
 	brad := getBrad(g) // 80 hp, 30 armor
+	var bHP, bA = brad.Health, brad.Armor
 
 	// no armor, hp > damage
 	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, jenny, jenny.Health - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
+	time.Sleep(10 * time.Millisecond) 
+	checkPlayerVitals(t, jenny, jHP - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
 
 	// armor < damage, hp + armor > damage
 	oliver.takeHit(g, SWORD)
-	checkPlayerVitals(t, oliver, oliver.Health + oliver.Armor - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
+	time.Sleep(10 * time.Millisecond) 
+	checkPlayerVitals(t, oliver, oHP + oA - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
 
 	// hp + armor < damage
 	anders.takeHit(g, SWORD)
+	time.Sleep(10 * time.Millisecond) 
 	checkPlayerVitals(t, anders, 0, 0, RESPAWNING, "TestTakeHit", "anders")
 
 	// armor > damage
 	brad.takeHit(g, SWORD)
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
+	time.Sleep(10 * time.Millisecond) 
+	checkPlayerVitals(t, brad, bHP, bA - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
 
 func TestAwaitRespawn(t *testing.T) {
