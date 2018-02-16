@@ -21,6 +21,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
         let game = gameState.getCurrentGame()
         table.numberOfRows(inSection: game.getPlayers().count)
         // Do any additional setup after loading the view.
+        runTimer()
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -33,15 +34,20 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
 
     @IBOutlet weak var table: UITableView!
     
-//    private var playerTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updatePlayers), userInfo: nil, repeats: true)
-//    
-//    @objc private func updatePlayers() {
-//        table.reloadData()
-//    }
-//    
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        playerTimer.invalidate()
-//    }
+    private var playersTimer = Timer()
+    
+    func runTimer() {
+        playersTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(checkPlayers)), userInfo: nil, repeats: true)
+    }
+    
+    @objc private func checkPlayers() {
+        print("help")
+        DispatchQueue.global(qos: .userInitiated).async {
+            if MsgFromServer().parse() {
+            }
+        }
+        self.table.reloadData()
+    }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
@@ -54,6 +60,10 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
             return true
         }
         return false
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        playersTimer.invalidate()
     }
 
 }
