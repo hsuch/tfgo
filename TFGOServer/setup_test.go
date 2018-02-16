@@ -57,10 +57,10 @@ func TestSetBoundaries(t *testing.T) {
 func TestCreateGame(t *testing.T) {
 	isTesting = true
 	borders := []Border {
-		Border{Location{0.0,0.0}, Direction{100.0,0.0}},
-		Border{Location{100.0,0.0}, Direction{0.0,100.0}},
-		Border{Location{100.0,100.0}, Direction{-100.0,0.0}},
-		Border{Location{0.0,100.0}, Direction{0.0,-100.0}},
+		{Location{0.0,0.0}, Direction{100.0,0.0}},
+		{Location{100.0,0.0}, Direction{0.0,100.0}},
+		{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		{Location{0.0,100.0}, Direction{0.0,-100.0}},
 	}
 	data := map[string]interface{} {
 		"Name" : "G1Name",

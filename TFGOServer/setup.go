@@ -231,7 +231,10 @@ func (g *Game) start() {
 	startTime := time.Now().Add(time.Minute)
 	sendGameStartInfo(g, startTime)
 	go sendGameUpdates(g)
+	go g.awaitStart(startTime)
+}
 
+func (g *Game) awaitStart(startTime time.Time) {
 	time.Sleep(time.Until(startTime))
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
