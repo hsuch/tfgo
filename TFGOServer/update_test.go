@@ -70,7 +70,7 @@ func TestUpdateLocation(t *testing.T) {
 	oliver := getOliver(g)
 
 	// player moves out of bounds
-	oliver.updateLocation(g, Location{420, 420}, 0)
+	oliver.updateLocation(g, Location{420, 420}.locationToDegrees(), 0)
 	if oliver.Status != OUTOFBOUNDS {
 		t.Errorf("TestUpdateLocation(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusToString[oliver.Status])
 	}
@@ -81,14 +81,14 @@ func TestUpdateLocation(t *testing.T) {
 
 	// player exits control point
 	expBlueCount := cp.BlueCount - 1
-	oliver.updateLocation(g, Location{0, 0}, 0)
+	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestUpdateLocation(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
 
 	// player enters control point
 	expBlueCount = cp.BlueCount + 1
-	oliver.updateLocation(g, cp.Location, 0)
+	oliver.updateLocation(g, cp.Location.locationToDegrees(), 0)
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestUpdateLocation(3) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
@@ -105,7 +105,7 @@ func TestUpdateStatus(t *testing.T) {
 
 	// equal players from each team; check capture progress
 	expCaptureProg := cp2.CaptureProgress
-	oliver.updateLocation(g, Location{0, 0}, 0)
+	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
@@ -113,7 +113,7 @@ func TestUpdateStatus(t *testing.T) {
 
 	// blue players exceed red by one; check capture progress
 	expCaptureProg = cp2.CaptureProgress + 1
-	oliver.updateLocation(g, cp2.Location, 0)
+	oliver.updateLocation(g, cp2.Location.locationToDegrees(), 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
