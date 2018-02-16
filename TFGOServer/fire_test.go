@@ -124,7 +124,7 @@ func TestFire(t *testing.T) {
 	// single target hit, fatal
 	jenny.fire(g, SWORD, 45)
 	anders.takeHit(g, SWORD)
-	time.Sleep(10 * time.Millisecond)
+	time.Sleep(10 * time.Millisecond) // must wait for awaitRespawn() to begin execution
 	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(4)", "jenny->oliver")
 	checkPlayerVitals(t, anders, anders.Health, anders.Armor, RESPAWNING, "TestFire(4)", "jenny->anders")
 	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(4)", "jenny->brad")
@@ -143,22 +143,19 @@ func TestTakeHit(t *testing.T) {
 
 	// no armor, hp > damage
 	jenny.takeHit(g, SWORD)
-	time.Sleep(10 * time.Millisecond) 
 	checkPlayerVitals(t, jenny, jHP - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
 
 	// armor < damage, hp + armor > damage
 	oliver.takeHit(g, SWORD)
-	time.Sleep(10 * time.Millisecond) 
 	checkPlayerVitals(t, oliver, oHP + oA - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
 
 	// hp + armor < damage
 	anders.takeHit(g, SWORD)
-	time.Sleep(10 * time.Millisecond) 
+	time.Sleep(10 * time.Millisecond) // must wait for awaitRespawn() to begin execution
 	checkPlayerVitals(t, anders, 0, 0, RESPAWNING, "TestTakeHit", "anders")
 
 	// armor > damage
 	brad.takeHit(g, SWORD)
-	time.Sleep(10 * time.Millisecond) 
 	checkPlayerVitals(t, brad, bHP, bA - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
 
