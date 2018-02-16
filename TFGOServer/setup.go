@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"strconv"
 	"fmt"
+	"sync"
 )
 
 // return the central position of a game
@@ -32,9 +33,10 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 	p.Name = name
 	p.Icon = icon
 
-	p.Conn = conn
 	p.Chan = make(chan map[string]interface{})
-	p.Encoder = json.NewEncoder(conn)
+	if !isTesting {
+		p.Encoder = json.NewEncoder(conn)
+	}
 
 	p.Status = NORMAL
 	p.Health = 100
@@ -51,13 +53,16 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 // example code at https://siongui.github.io/2015/04/13/go-generate-random-string/
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 const idChars = "abcdefghijklmnopqrstuvwxyz1234567890"
+var rLock sync.Mutex
 
 // generate a random unique game ID
 func createGameID() string {
+	rLock.Lock()
 	candidate := make([]byte, 16)
 	for i := range candidate {
 		candidate[i] = idChars[r.Intn(len(idChars))]
 	}
+	rLock.Unlock()
 
 	if _, exists := games[string(candidate)]; exists {
 		return createGameID()
@@ -183,6 +188,10 @@ func (g *Game) generateObjectives(numCP int) {
 	maxY = maxY - 2 * offset - cpRadius
 	xrange = maxX - minX
 	yrange = maxY - minY
+
+	g.ControlPoints = make(map[string]*ControlPoint)
+
+	rLock.Lock()
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
 		if inGameBounds(g, cpLoc) {
@@ -193,6 +202,7 @@ func (g *Game) generateObjectives(numCP int) {
 			i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
 		}
 	}
+	rLock.Unlock()
 }
 
 // assign players to teams at the start of a game

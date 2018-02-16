@@ -4,7 +4,9 @@ package main
 // (1) checking if a value is within a specified error
 // (2) creating instances of a sample game and its components
 
-import "math"
+import (
+	"math"
+)
 
 const EPSILON = 0.05
 
@@ -21,6 +23,7 @@ func makeJenny(team *Team) *Player {
 	return &Player {
 		Name: "Jenny",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 100,
 		Armor: 0,
@@ -32,6 +35,7 @@ func makeBrad(team *Team) *Player {
 	return &Player {
 		Name: "Brad",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 80,
 		Armor: 30,
@@ -43,6 +47,7 @@ func makeAnders(team *Team) *Player {
 	return &Player {
 		Name: "Anders",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 10,
 		Armor: 5,
@@ -54,6 +59,7 @@ func makeOliver(team *Team) *Player {
 	return &Player {
 		Name: "Oliver",
 		Team: team,
+		Chan: make(chan map[string]interface{}),
 		Status: NORMAL,
 		Health: 95,
 		Armor: 10,

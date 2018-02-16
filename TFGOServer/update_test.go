@@ -2,7 +2,9 @@ package main
 
 // update_test.go: tests for update functions in update.go
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestDistance(t *testing.T) {
 	// same point
