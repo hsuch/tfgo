@@ -195,7 +195,7 @@ func (g *Game) generateObjectives(numCP int) {
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
 		if inGameBounds(g, cpLoc) {
-			id := "CP" + strconv.Itoa(i)
+			id := "CP" + strconv.Itoa(i+1)
 			cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
 			g.ControlPoints[id] = cp
 		} else {
@@ -231,7 +231,10 @@ func (g *Game) start() {
 	startTime := time.Now().Add(time.Minute)
 	sendGameStartInfo(g, startTime)
 	go sendGameUpdates(g)
+	go g.awaitStart(startTime)
+}
 
+func (g *Game) awaitStart(startTime time.Time) {
 	time.Sleep(time.Until(startTime))
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
