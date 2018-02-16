@@ -67,6 +67,7 @@ func TestInGameBounds(t *testing.T) {
 func TestUpdateLocation(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
+	cp := g.ControlPoints["CP2"]
 	oliver := getOliver(g)
 
 	// player moves out of bounds
@@ -75,20 +76,16 @@ func TestUpdateLocation(t *testing.T) {
 		t.Errorf("TestUpdateLocation(1) failed, expected Status OUTOFBOUNDS, got Status %s", playerStatusToString[oliver.Status])
 	}
 
-	g = makeSampleGame()
-	cp := g.ControlPoints["CP2"]
-	oliver = getOliver(g)
-
-	// player exits control point
-	expBlueCount := cp.BlueCount - 1
-	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
+	// player enters control point
+	expBlueCount := cp.BlueCount + 1
+	oliver.updateLocation(g, cp.Location.locationToDegrees(), 0)
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestUpdateLocation(2) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
 
-	// player enters control point
-	expBlueCount = cp.BlueCount + 1
-	oliver.updateLocation(g, cp.Location.locationToDegrees(), 0)
+	// player exits control point
+	expBlueCount = cp.BlueCount - 1
+	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
 	if cp.BlueCount != expBlueCount {
 		t.Errorf("TestUpdateLocation(3) failed, expected BlueCount %d, got BlueCount %d", expBlueCount, cp.BlueCount)
 	}
@@ -102,26 +99,31 @@ func TestUpdateStatus(t *testing.T) {
 	redTeam := g.RedTeam
 	blueTeam := g.BlueTeam
 	oliver := getOliver(g)
+	jenny := getJenny(g)
+	anders := getAnders(g)
+	brad := getBrad(g)
 
-	// equal players from each team; check capture progress
-	expCaptureProg := cp2.CaptureProgress
-	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
+	// blue players exceed red by one; check capture progress
+	expCaptureProg := cp2.CaptureProgress + 1
+	//oliver.updateLocation(g, cp2.Location.locationToDegrees(), 0)
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(1) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
-	// blue players exceed red by one; check capture progress
-	expCaptureProg = cp2.CaptureProgress + 1
-	oliver.updateLocation(g, cp2.Location.locationToDegrees(), 0)
+	// equal players from each team; check capture progress
+	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
+	expCaptureProg = cp2.CaptureProgress
 	cp2.updateStatus(g)
 	if cp2.CaptureProgress != expCaptureProg {
 		t.Errorf("TestUpdateStatus(2) failed, expected CaptureProgress %d, got CaptureProgress %d", expCaptureProg, cp2.CaptureProgress)
 	}
 
 	// both control points uncontrolled; check team points
-	cp1.ControllingTeam = nil
-	cp2.ControllingTeam = nil
+	oliver.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
+	jenny.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
+	brad.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
+	anders.updateLocation(g, Location{0, 0}.locationToDegrees(), 0)
 	expRedPoints := redTeam.Points
 	expBluePoints := blueTeam.Points
 	cp1.updateStatus(g)
