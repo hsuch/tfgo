@@ -33,11 +33,22 @@ func checkPlayerVitals(t *testing.T, player Player, hp, armor int, status Player
 }
 
 func TestDot(t *testing.T) {
-	// func dot(v, w Direction) float64
+	v := Direction{X : float64(-1), Y : float64(2)}
+	w := Direction{X : float64(-3), Y : float64(4)}
+	expect := float64 (11)
+	got := dot(v, w)
+	if (!isAcceptableError (got, expect, 0)) {
+		t.Errorf ("TestDot failed, expected %g, got %g", expect, got)
+	}
 }
 
 func TestMagnitude(t *testing.T) {
-	// func (v Direction) magnitude() float64
+	v := Direction{X : float64(1), Y : float64(2)}
+	got := v.magnitude ()
+	expect := math.Sqrt(float64(5))
+	if (!isAcceptableError(got, expect, 0)) {
+		t.Errorf ("TestMagnitude failed, expected %g, got %g", expect, got)
+	}
 }
 
 func TestCanHit(t *testing.T) {
