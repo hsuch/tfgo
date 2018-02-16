@@ -42,5 +42,18 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
 //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 //        playerTimer.invalidate()
 //    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
+            if MsgFromServer().parse() {
+                if gameState.getCurrentGame().getStartTime() != "" {
+                    return true
+                }
+            }
+        } else {
+            return true
+        }
+        return false
+    }
 
 }

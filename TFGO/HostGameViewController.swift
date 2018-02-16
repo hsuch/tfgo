@@ -51,6 +51,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        gameState.getUser().makeHost()
 
         game.setMode(to: .cp)
         

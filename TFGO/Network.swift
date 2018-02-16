@@ -211,6 +211,9 @@ func parseGameStartInfo(data: [String: Any]) -> Bool {
                 }
             }
         }
+        if let startTime = info["StartTime"] as? String {
+            gameState.getCurrentGame().setStartTime(to: startTime)
+        }
         return true
     }
     return false
@@ -313,6 +316,15 @@ class MsgToServer {
     }
 }
 
+private func boundariesToArray(boundaries: [MKMapPoint]) -> [[String: Any]] {
+    let bound1 = ["X": boundaries[0].x, "Y": boundaries[0].y]
+    let bound2 = ["X": boundaries[1].x, "Y": boundaries[1].y]
+    let bound3 = ["X": boundaries[2].x, "Y": boundaries[2].y]
+    let bound4 = ["X": boundaries[3].x, "Y": boundaries[3].y]
+    let retval = [bound1, bound2, bound3, bound4]
+    return retval
+}
+
 /* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
 
 func CreateGameMsg(game: Game) -> Data {
@@ -320,7 +332,7 @@ func CreateGameMsg(game: Game) -> Data {
     let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
     let minutes = game.getTimeLimit()
     let timelimit = "0h" + "\(minutes)" + "m0s"
-    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": [["X": 12.3, "Y": 1.23], ["X": 23.4, "Y": 2.34]], "Host": host] as [String: Any]
+    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "Host": host] as [String : Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {

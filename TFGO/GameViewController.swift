@@ -80,12 +80,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
-            if currentHealth != gameState.getUserHealth() {
-                currentHealth = gameState.getUserHealth()
-                let alertController = UIAlertController(title: "Temp", message:
-                    "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-                alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-                self.present(alertController, animated: true, completion: nil)
+            if MsgFromServer().parse() {
+                if currentHealth != gameState.getUserHealth() {
+                    currentHealth = gameState.getUserHealth()
+                    let alertController = UIAlertController(title: "Temp", message:
+                        "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                
             }
         }
     }

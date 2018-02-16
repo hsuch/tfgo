@@ -26,6 +26,7 @@ class Player {
     private var status: String
     private var health: Int
     private var armor: Int
+    private var host: Bool = false
     
     func getName() -> String {
         return name
@@ -33,6 +34,14 @@ class Player {
     
     func getWeapon() -> String {
         return weapon
+    }
+    
+    func isHost() -> Bool {
+        return host
+    }
+    
+    func makeHost() {
+        host = true
     }
     
     func setName(to name: String) {
@@ -104,7 +113,7 @@ class Player {
         self.name = name
         self.icon = icon
         self.orientation = 0
-        self.weapon = "" // later
+        self.weapon = "Sword" // later
         self.status = "" // later
         self.health = 100 // later
         self.armor = 0 // later
@@ -177,8 +186,9 @@ public class Game {
     private var bluePoints: Int = 0
     private var description: String
     private var password: String?
-    private var objectives: [Objective]
+    private var startTime: String = ""
     
+    private var objectives: [Objective]
     private var players: [Player]
     private var boundaries: [MKMapPoint]
     
@@ -252,6 +262,14 @@ public class Game {
     
     func getDescription() -> String {
         return description
+    }
+    
+    func getStartTime() -> String {
+        return startTime
+    }
+    
+    func setStartTime(to startTime: String) {
+        self.startTime = startTime
     }
     
     func setDescription(to description: String) -> Bool {
