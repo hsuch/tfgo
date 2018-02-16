@@ -228,9 +228,8 @@ func (g *Game) start() {
 	g.generateObjectives(1)
 	g.randomizeTeams()
 
-	startTime := time.Now().Add(time.Minute)
+	startTime := time.Now().Add(time.Second * 5)
 	sendGameStartInfo(g, startTime)
-	go sendGameUpdates(g)
 	go g.awaitStart(startTime)
 }
 
@@ -240,6 +239,7 @@ func (g *Game) awaitStart(startTime time.Time) {
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
 	})
+	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
 		go cp.updateTicker(g)
 	}
