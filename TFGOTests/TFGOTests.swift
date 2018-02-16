@@ -88,7 +88,6 @@ class TFGOTests: XCTestCase {
         XCTAssertTrue(gameState.getCurrentGame().getDescription() == "Abc")
         XCTAssertTrue(gameState.getCurrentGame().getMaxPoints() == 100)
         XCTAssertTrue(gameState.getCurrentGame().getMaxPlayers() == 50)
-        XCTAssertTrue(gameState.getCurrentGame().getMaxPlayers() == 50)
         XCTAssertTrue(gameState.getCurrentGame().getObjectives()[0].getXLoc() == 1.23)
         XCTAssertTrue(gameState.getCurrentGame().getObjectives()[0].getYLoc() == 12.3)
         XCTAssertTrue(gameState.getCurrentGame().getObjectives()[0].getRadius() == 1.23)
