@@ -54,6 +54,12 @@ Since the application is a multiplayer game, it would be a bit difficult to perf
 5. On one iPhone, tap “Host Game” and fill out the “Name” field; others have default values. After hitting “Create Game”, you should see the “Waiting for Players” screen.
 6. On the other iPhone, tap the big ugly pink button on the bottom. It should also bring you to the “Waiting for Players” screen. If you’re running the server in verbose mode, you should be able to see the server send PlayerListUpdate messages to both phones.
 7. Have the host phone tap “Start Game”. Both phones should begin transmitting LocationUpdate messages with their location and orientation. Pressing the red button will cause the app to transmit a Fire message. If you have been hit, you will receive a notification.
+Note that because out-of-bounds players have their weapons disabled and because we currently don't have the functionality to choose your own boundaries, instead using a set of very small default boundaries, chances are high that anyone running these acceptance tests will be out of bounds at all times. Thus, in order to see the effects of a weapon actually damaging an opponent within range, server code related to out of bounds testing must be disabled. In particular, the following lines must be commented out:
+1. Lines 34-36 in fire.go - fire()
+2. Line 95 in fire.go - awaitRespawn()
+3. Lines 107-111 in fire.go - respawn()
+4. Lines 54-66 in update.go - updateLocation()
+Regardless of whether or not the above lines are commented out, you will still be able to see fire messages sent to the server.
  
  
 ## Text Description of What is Implemented
@@ -96,7 +102,7 @@ Sam did pretty much all of the UI-related stuff, whether it came to building pag
  
 ## Testing Changes since Milestone 3a
 ### Server
-The server team has added unit tests for all of the major functions that do not involve server-client network interaction (such as those in "clienthandler.go" or "clientmessage.go") or a random element (in "setup.go"). Our tests are written in the various "*_test.go" files. Network related and non-deterministic (reliant on random values) functions were purposefully excluded not only because it is difficult to test them with the current server-app infrastructure, but also because they should be covered by the acceptance tests. Certain other functions, such as those in `struct.go`, were also not tested due to their straightforward nature (generally acting as constants or performing basic and arbitrary conversions).
+The server team has added unit tests for all of the major functions that do not involve server-client network interaction (such as those in "clienthandler.go" or "clientmessage.go") or a random element (in "setup.go"). Our tests are written in the various "*_test.go" files. Network related and non-deterministic (reliant on random values) functions were purposefully excluded not only because it is difficult to test them with the current server-app infrastructure, but also because they should be covered by the acceptance tests. Certain other functions, such as those in `struct.go`, were also not tested due to their straightforward nature (generally acting as constants or performing basic and arbitrary conversions). We also changed the sample values used in our tests from global testing variables to functions that generated fresh copies of our original global variables, so that we can run tests independently, without having one test affect another test's state.
  
 ### Client
 There are two parts of the testing we did in the App team. The first part is to test the functionalities in the code and the second part is for UI Testing. As for the unit tests part for the functionalities, we have created tests to test setters such as “setID”, “setName”, “setMode”, “setTimeLimit”, “setMaxPoints”, “setMaxPlayers”, “setDescriptions”, as well as testing if the game is valid. We also test the functions that parser Server to Client JSONs by checking if they properly update the gameInfo or not. As for the UI Testing, since the whole UI suite is not completed yet, so we decided to postpone UI Testing to later iterations.
