@@ -124,6 +124,7 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 		if cp.ControllingTeam != nil {
 			cp.ControllingTeam.Points++
 			if cp.ControllingTeam.Points == game.PointLimit {
+				game.Timer.Stop()
 				game.stop()
 			}
 		}
