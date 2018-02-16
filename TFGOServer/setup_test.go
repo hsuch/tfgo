@@ -137,5 +137,70 @@ func TestCreateGame(t *testing.T) {
 
 func TestGenerateObjectives(t *testing.T) {
 	isTesting = true
-	// func (g *Game) generateObjectives(numCP int)
+	// a game arena that is a wide rectangle
+	// 1 control point
+	g1 := &Game{
+		Boundaries: []Border{
+			{Location{0, 0}, Direction{200, 0}},
+			{Location{200, 0}, Direction{0, 100}},
+			{Location{200, 100}, Direction{-200, 0}},
+			{Location{0, 100}, Direction{0, -100}},
+		},
+		RedTeam: &Team{Name:"RedTeam"},
+		BlueTeam: &Team{Name:"BlueTeam"},
+	}
+	g1.generateObjectives(1)
+	if (g1.RedTeam.Base != Location{195.0, 50.0}) {
+		t.Errorf("TestGenerateObjectives(1) failed, expected Location{195,50}, got Location{%f,%f}", g1.RedTeam.Base.X, g1.RedTeam.Base.Y)
+	}
+	if g1.RedTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(2) failed, expected BaseRadius 3, got BaseRadius %f", g1.RedTeam.BaseRadius)
+	}
+	if (g1.BlueTeam.Base != Location{5.0, 50.0}) {
+		t.Errorf("TestGenerateObjectives(3) failed, expected Location{5,50}, got Location{%f,%f}", g1.BlueTeam.Base.X, g1.BlueTeam.Base.Y)
+	}
+	if g1.BlueTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(4) failed, expected BaseRadius 3, got BaseRadius %f", g1.BlueTeam.BaseRadius)
+	}
+	if len(g1.ControlPoints) != 1 {
+		t.Errorf("TestGenerateObjectives(5) failed, expected 1 ControlPoint, got %d", len(g1.ControlPoints))
+	}
+	if !inGameBounds(g1, g1.ControlPoints["CP1"].Location) {
+		t.Errorf("TestGenerateObjectives(6) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
+
+	// a game arena that is a tall rectangle
+	// 2 control points
+	g2 := &Game{
+		Boundaries: []Border{
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 200}},
+			{Location{100, 200}, Direction{-100, 0}},
+			{Location{0, 200}, Direction{0, -200}},
+		},
+		RedTeam: &Team{Name:"RedTeam"},
+		BlueTeam: &Team{Name:"BlueTeam"},
+	}
+	g2.generateObjectives(2)
+	if (g2.RedTeam.Base != Location{50.0, 195.0}) {
+		t.Errorf("TestGenerateObjectives(7) failed, expected Location{50, 195}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
+	}
+	if g2.RedTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(8) failed, expected BaseRadius 3, got BaseRadius %f", g2.RedTeam.BaseRadius)
+	}
+	if (g2.BlueTeam.Base != Location{50.0, 5.0}) {
+		t.Errorf("TestGenerateObjectives(9) failed, expected Location{50,5}, got Location{%f,%f}", g2.BlueTeam.Base.X, g2.BlueTeam.Base.Y)
+	}
+	if g2.BlueTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(10) failed, expected BaseRadius 3, got BaseRadius %f", g2.BlueTeam.BaseRadius)
+	}
+	if len(g2.ControlPoints) != 2 {
+		t.Errorf("TestGenerateObjectives(11) failed, expected 1 ControlPoint, got %d", len(g2.ControlPoints))
+	}
+	if !inGameBounds(g2, g2.ControlPoints["CP1"].Location) {
+		t.Errorf("TestGenerateObjectives(12) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
+	if !inGameBounds(g2, g2.ControlPoints["CP2"].Location) {
+		t.Errorf("TestGenerateObjectives(13) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
 }
