@@ -2,23 +2,27 @@ package main
 
 // update_test.go: tests for update functions in update.go
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestDistance(t *testing.T) {
+	isTesting = true
 	// same point
 	dist := distance(Location{-5, 5}, Location{-5, 5})
-	if isAcceptableError(dist, 0, EPSILON) {
+	if !isAcceptableError(dist, 0, EPSILON) {
 		t.Errorf("TestDistance(1) failed, expected distance 0, got distance %d", dist)
 	}
 
 	// different points
 	dist = distance(Location{-4, -5}, Location{6, 5})
-	if isAcceptableError(dist, 14.1421356, EPSILON) {
+	if !isAcceptableError(dist, 14.1421356, EPSILON) {
 		t.Errorf("TestDistance(2) failed, expected distance 14.1421356, got distance %d", dist)
 	}
 }
 
 func TestInRange(t *testing.T) {
+	isTesting = true
 	// in range
 	if inRange(Location{1, 0}, Location{0, 0}, 2) == false {
 		t.Errorf("TestInRange(1) failed, expected TRUE, got FALSE")
@@ -36,6 +40,7 @@ func TestInRange(t *testing.T) {
 }
 
 func TestInGameBounds(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 
 	// in bounds
@@ -55,6 +60,7 @@ func TestInGameBounds(t *testing.T) {
 }
 
 func TestUpdateLocation(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	cp := g.ControlPoints["CP2"]
 	oliver := getOliver(g)
@@ -81,6 +87,7 @@ func TestUpdateLocation(t *testing.T) {
 }
 
 func TestUpdateStatus(t *testing.T) {
+	isTesting = true
 	g := makeSampleGame()
 	cp1 := g.ControlPoints["CP1"]
 	cp2 := g.ControlPoints["CP2"]

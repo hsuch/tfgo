@@ -2,7 +2,9 @@ package main
 
 // fire.go: functions for handling firing weapon
 
-import "math"
+import (
+	"math"
+)
 
 // returns the dot product of two Direction vectors
 func dot(v, w Direction) float64 {
@@ -32,7 +34,6 @@ func (p *Player) fire(game *Game, wep Weapon, angle float64) {
 	if p.Status != NORMAL {
 		return
 	}
-
 	//calculate direction vector of shot
 	var dir Direction
 	if angle == 0 || angle == 180 {
@@ -45,10 +46,8 @@ func (p *Player) fire(game *Game, wep Weapon, angle float64) {
 		dir.X *= -1
 		dir.Y *= -1
 	}
-
 	minDist := math.MaxFloat64
 	var closestP *Player
-
 	// loop through list of enemies and find nearest hit
 	for _, other := range game.Players {
 		if p.Team != other.Team && other.Status != RESPAWNING {
@@ -59,7 +58,6 @@ func (p *Player) fire(game *Game, wep Weapon, angle float64) {
 			}
 		}
 	}
-
 	// if an enemy is hit, take the appropriate action
 	if closestP != nil {
 		closestP.takeHit(game, wep)
