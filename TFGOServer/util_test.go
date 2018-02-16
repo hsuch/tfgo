@@ -133,10 +133,10 @@ func makeSampleGame() *Game {
 			"anders" : makeAnders(blueTeam),
 		},
 		Boundaries: []Border{
-			{Location{0, 0}, Direction{1, 0}},
-			{Location{100, 0}, Direction{0, 1}},
-			{Location{100, 100}, Direction{-1, 0}},
-			{Location{0, 100}, Direction{0, -1}},
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 100}},
+			{Location{100, 100}, Direction{-100, 0}},
+			{Location{0, 100}, Direction{0, -100}},
 		},
 		ControlPoints: map[string]*ControlPoint {
 			"CP1" : makeCP1(),

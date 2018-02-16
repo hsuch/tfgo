@@ -48,14 +48,19 @@ func TestInGameBounds(t *testing.T) {
 		t.Errorf("TestInGameBounds(1) failed, expected TRUE, got FALSE")
 	}
 
-	// on border
+	// on corner
 	if inGameBounds(g, Location{0, 0}) == false {
 		t.Errorf("TestInGameBounds(2) failed, expected TRUE, got FALSE")
 	}
 
+	// on edge
+	if inGameBounds(g, Location{0,50}) == false {
+		t.Errorf("TestInGameBounds(3) failed, expected TRUE, got FALSE")
+	}
+
 	// out of bounds
 	if inGameBounds(g, Location{420, 420}) == true {
-		t.Errorf("TestInGameBounds(3) failed, expected FALSE, got TRUE")
+		t.Errorf("TestInGameBounds(4) failed, expected FALSE, got TRUE")
 	}
 }
 
