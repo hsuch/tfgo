@@ -8,7 +8,7 @@ import (
 )
 
 var testWeapon = Weapon {
-	Spread: math.Pi/4, // 45 degrees, but 90 degree spread (45 deg on each side)
+	Spread: math.Pi/2,
 	Range: 5,
 }
 

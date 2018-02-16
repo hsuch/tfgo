@@ -20,7 +20,7 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	target := Direction{dst.X - src.X, dst.Y - src.Y}
 	dist := target.magnitude()
 	angle := math.Acos(dot(target, dir) / (dist * dir.magnitude()))
-	if angle <= w.Spread && dist <= w.Range {
+	if angle <= w.Spread / 2 && dist <= w.Range {
 		return dist
 	} else {
 		return math.MaxFloat64
