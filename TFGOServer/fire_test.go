@@ -110,7 +110,6 @@ func TestFire(t *testing.T) {
 
 	// single target hit, non-fatal
 	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
 	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(2)", "anders->jenny")
 	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(2)", "anders->oliver")
 	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(2)", "anders->brad")
@@ -118,7 +117,6 @@ func TestFire(t *testing.T) {
 	// multiple targets available, hits closest
 	oliver.updateLocation(g, Location{100, 99}.locationToDegrees(), 0)
 	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
 	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(3)", "anders->jenny")
 	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(3)", "anders->oliver")
 	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(3)", "anders->brad")

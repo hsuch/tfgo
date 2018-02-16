@@ -91,7 +91,9 @@ func (p *Player) awaitRespawn(game *Game) {
 		p.OccupyingPoint = nil
 	}
 	sendStatusUpdate(p, "Respawn")
-	<- p.StatusTimer.C
+	if !isTesting {
+		<-p.StatusTimer.C
+	}
 	p.respawn(game)
 }
 
