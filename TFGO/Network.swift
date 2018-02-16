@@ -163,6 +163,9 @@ func parseGameInfo(data: [String: Any]) -> Bool {
             newGame.setMaxPlayers(to: playerNum)
             newGame.setDescription(to: desc)
             newGame.setMaxPoints(to: pointLim)
+            
+            // we hard code the name here because we will only have 1 game for iteration 1
+            newGame.setName(to: "Test Game")
             gameState.setCurrentGame(to: newGame)
             
             

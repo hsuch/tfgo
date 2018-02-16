@@ -104,31 +104,30 @@ func TestFire(t *testing.T) {
 
 	// no targets hit
 	brad.fire(g, SWORD,45)
-	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
-	checkPlayerVitals(t, anders, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
+	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(1)", "brad->jenny")
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(1)", "brad->oliver")
+	checkPlayerVitals(t, anders, anders.Health, anders.Armor, NORMAL, "TestFire(1)", "brad->anders")
 
 	// single target hit, non-fatal
 	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(2)", "anders->jenny")
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(2)", "anders->oliver")
+	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(2)", "anders->brad")
 
 	// multiple targets available, hits closest
-	oliver.updateLocation(g, Location{100, 99}, 0)
+	oliver.updateLocation(g, Location{100, 99}.locationToDegrees(), 0)
 	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(3)", "anders->jenny")
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(3)", "anders->oliver")
+	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(3)", "anders->brad")
 
 	// single target hit, fatal
 	jenny.fire(g, SWORD, 45)
 	anders.takeHit(g, SWORD)
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
-	checkPlayerVitals(t, anders, anders.Health, anders.Armor, RESPAWNING, "TestFire", "jenny->anders")
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
+	time.Sleep(10 * time.Millisecond)
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(4)", "jenny->oliver")
+	checkPlayerVitals(t, anders, anders.Health, anders.Armor, RESPAWNING, "TestFire(4)", "jenny->anders")
+	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(4)", "jenny->brad")
 }
 
 func TestTakeHit(t *testing.T) {

@@ -23,13 +23,16 @@ func inRange(l1, l2 Location, dist float64) bool {
 func inGameBounds(game *Game, loc Location) bool {
 	intersections := 0.0
 	for _, val := range game.Boundaries {
-		t := val.P.Y + val.D.Y * (loc.X - val.P.X) / val.D.X - loc.Y
+		if loc.X == val.P.X && loc.Y == val.P.Y {
+			return true
+		}
+		t := val.P.Y + (val.D.Y * (loc.X - val.P.X) / val.D.X) - loc.Y
 		s := (loc.X - val.P.X) / val.D.X
-		if t >= 0 && s >= 0 && s <= 1 {
-			intersections++
+		if t > 0 && s >= 0 && s <= 1 {
+			intersections += 1
 		}
 	}
-	return math.Mod(intersections, 2) == 1
+	return math.Mod(intersections, 2.0) == 1.0
 }
 
  // set player location, updating respawn, out-of-bounds, and control point
