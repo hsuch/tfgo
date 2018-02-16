@@ -9,6 +9,9 @@ import (
 	"flag"
 )
 
+// used to suppress sends to clients while testing
+var isTesting = false
+
 // the following server code is heavily inspired by the example at
 // https://astaxie.gitbooks.io/build-web-application-with-golang/en/08.1.html
 func main() {
