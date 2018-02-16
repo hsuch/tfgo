@@ -60,6 +60,7 @@ Note that because out-of-bounds players have their weapons disabled and because 
 2. Line 95 in fire.go - awaitRespawn()
 3. Lines 107-111 in fire.go - respawn()
 4. Lines 54-66 in update.go - updateLocation()
+
 Regardless of whether or not the above lines are commented out, you will still be able to see fire messages sent to the server.
  
  
