@@ -59,6 +59,20 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
         
+        let game = gameState.getCurrentGame()
+        let annotation = MKPointAnnotation()
+        
+        var objectiveNumber = 1
+        
+        for objective in game.getObjectives() {
+            annotation.coordinate = CLLocationCoordinate2D(latitude: objective.getXLoc(), longitude: objective.getYLoc())
+            annotation.title = "OBJECTIVE"
+            annotation.subtitle = String(objectiveNumber)
+            game_map.addAnnotation(annotation)
+            
+            objectiveNumber = objectiveNumber + 1
+        }
+        
         runTimer()
     }
     
