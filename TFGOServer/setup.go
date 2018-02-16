@@ -238,7 +238,7 @@ func (g *Game) start() {
 		g.stop()
 	})
 	for _, cp := range g.ControlPoints {
-		go cp.updateStatus(g)
+		go cp.updateTicker(g)
 	}
 }
 
