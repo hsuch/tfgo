@@ -23,13 +23,16 @@ func inRange(l1, l2 Location, dist float64) bool {
 func inGameBounds(game *Game, loc Location) bool {
 	intersections := 0.0
 	for _, val := range game.Boundaries {
-		t := val.P.Y + val.D.Y * (loc.X - val.P.X) / val.D.X - loc.Y
+		if loc.X == val.P.X && loc.Y == val.P.Y {
+			return true
+		}
+		t := val.P.Y + (val.D.Y * (loc.X - val.P.X) / val.D.X) - loc.Y
 		s := (loc.X - val.P.X) / val.D.X
-		if t >= 0 && s >= 0 && s <= 1 {
-			intersections++
+		if t > 0 && s >= 0 && s <= 1 {
+			intersections += 1
 		}
 	}
-	return math.Mod(intersections, 2) == 1
+	return math.Mod(intersections, 2.0) == 1.0
 }
 
  // set player location, updating respawn, out-of-bounds, and control point
@@ -93,41 +96,46 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 
 // updates control point capture progress, controlling team, and team points
 func (cp *ControlPoint) updateStatus(game *Game) {
+	// update capture progress
+	oldCaptureProgress := cp.CaptureProgress
+	delta := cp.BlueCount - cp.RedCount
+	if delta > 3 {
+		delta = 3
+	} else if delta < -3 {
+		delta = -3
+	}
+	cp.CaptureProgress += delta
+
+	// remove ControllingTeam if either
+	// (1) CaptureProgress hits 0 OR
+	// (2) sign of CaptureProgress changes
+	if cp.CaptureProgress == 0 || oldCaptureProgress * cp.CaptureProgress < 0  {
+		cp.ControllingTeam = nil
+	}
+
+	// set appropriate ControllingTeam
+	if cp.CaptureProgress >= 7 {
+		cp.ControllingTeam = game.BlueTeam
+		cp.CaptureProgress = 7
+	} else if cp.CaptureProgress <= -7 {
+		cp.ControllingTeam = game.RedTeam
+		cp.CaptureProgress = -7
+	}
+
+	// add a point to the team controlling this control point
+	if cp.ControllingTeam != nil {
+		cp.ControllingTeam.Points++
+		if cp.ControllingTeam.Points == game.PointLimit {
+			game.Timer.Stop()
+			game.stop()
+		}
+	}
+}
+
+// repeatedly calls updateStatus
+func (cp *ControlPoint) updateTicker(game *Game) {
 	for game.Status == PLAYING {
-		// update capture progress
-		oldCaptureProgress := cp.CaptureProgress
-		delta := cp.BlueCount - cp.RedCount
-		if delta > 3 {
-			delta = 3
-		} else if delta < -3 {
-			delta = -3
-		}
-		cp.CaptureProgress += delta
-
-		// remove ControllingTeam if either
-		// (1) CaptureProgress hits 0 OR
-		// (2) sign of CaptureProgress changes
-		if cp.CaptureProgress == 0 || oldCaptureProgress * cp.CaptureProgress < 0  {
-			cp.ControllingTeam = nil
-		}
-
-		// set appropriate ControllingTeam
-		if cp.CaptureProgress >= 7 {
-			cp.ControllingTeam = game.BlueTeam
-			cp.CaptureProgress = 7
-		} else if cp.CaptureProgress <= -7 {
-			cp.ControllingTeam = game.RedTeam
-			cp.CaptureProgress = -7
-		}
-
-		// add a point to the team controlling this control point
-		if cp.ControllingTeam != nil {
-			cp.ControllingTeam.Points++
-			if cp.ControllingTeam.Points == game.PointLimit {
-				game.stop()
-			}
-		}
-
+		cp.updateStatus(game)
 		time.Sleep(time.Second)
 	}
 }

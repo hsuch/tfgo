@@ -15,13 +15,21 @@ class WaitingViewCell: UITableViewCell {
 
 class WaitingViewController: UIViewController, UITableViewDelegate {
     
+    private var startGame = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         let game = gameState.getCurrentGame()
         table.numberOfRows(inSection: game.getPlayers().count)
         // Do any additional setup after loading the view.
-        runTimer()
+        print("sdfsadfsdfadsfadsfsadfasdf")
+         DispatchQueue.global(qos: .background).async {
+            while !self.startGame {
+                if MsgFromServer().parse() { }
+            }
+            //self.table.reloadData()
+        }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -42,21 +50,29 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
     
     @objc private func checkPlayers() {
         print("help")
-        DispatchQueue.global(qos: .userInitiated).async {
-            if MsgFromServer().parse() {
-            }
-        }
+//        DispatchQueue.global(qos: .background).async {
+//            if MsgFromServer().parse() {
+//            }
+//        }
         self.table.reloadData()
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
+           // DispatchQueue.global(qos: .background).async {
+                //while gameState.getCurrentGame().getStartTime() == "" {
             if MsgFromServer().parse() {
                 if gameState.getCurrentGame().getStartTime() != "" {
+                    startGame = true
                     return true
                 }
+                
             }
+                //}
+            //}
+            
         } else {
+            startGame = true
             return true
         }
         return false

@@ -83,6 +83,21 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         runTimer()
+        DispatchQueue.global(qos: .userInitiated).async {
+            while true {
+                if MsgFromServer().parse() {
+                    DispatchQueue.main.async {
+                        print("fuck")
+                        if self.currentHealth != gameState.getUserHealth() {
+                            self.currentHealth = gameState.getUserHealth()
+                            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+                            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     
@@ -101,20 +116,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     private var currentHealth = 100
     
     @objc func update() {
+        print("why")
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
-            DispatchQueue.global(qos: .background).async {
-                if MsgFromServer().parse() {
-                    if self.currentHealth != gameState.getUserHealth() {
-                        self.currentHealth = gameState.getUserHealth()
-                        let alertController = UIAlertController(title: "Temp", message:
-                            "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-                        alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-                        self.present(alertController, animated: true, completion: nil)
-                    }
-                    
-                }
-            }
 
         }
     }

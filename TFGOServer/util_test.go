@@ -19,8 +19,8 @@ func isAcceptableError(testValue float64, expectedValue float64, errorThreshold 
 	return err <= errorThreshold
 }
 
-func makeJenny(team *Team) *Player {
-	return &Player {
+func makeJenny(team *Team, cp *ControlPoint) *Player {
+	jenny := Player {
 		Name: "Jenny",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -28,11 +28,14 @@ func makeJenny(team *Team) *Player {
 		Health: 100,
 		Armor: 0,
 		Location: Location{49, 75},
+		OccupyingPoint: cp,
 	}
+	go jenny.sender()
+	return &jenny
 }
 
-func makeBrad(team *Team) *Player {
-	return &Player {
+func makeBrad(team *Team, cp *ControlPoint) *Player {
+	brad := Player {
 		Name: "Brad",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -40,11 +43,14 @@ func makeBrad(team *Team) *Player {
 		Health: 80,
 		Armor: 30,
 		Location: Location{49, 24},
+		OccupyingPoint: cp,
 	}
+	go brad.sender()
+	return &brad
 }
 
-func makeAnders(team *Team) *Player {
-	return &Player {
+func makeAnders(team *Team, cp *ControlPoint) *Player {
+	anders := Player {
 		Name: "Anders",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -52,11 +58,14 @@ func makeAnders(team *Team) *Player {
 		Health: 10,
 		Armor: 5,
 		Location: Location{49.5, 75},
+		OccupyingPoint: cp,
 	}
+	go anders.sender()
+	return &anders
 }
 
-func makeOliver(team *Team) *Player {
-	return &Player {
+func makeOliver(team *Team, cp *ControlPoint) *Player {
+	oliver := Player {
 		Name: "Oliver",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -64,7 +73,10 @@ func makeOliver(team *Team) *Player {
 		Health: 95,
 		Armor: 10,
 		Location: Location{50, 75},
+		OccupyingPoint: cp,
 	}
+	go oliver.sender()
+	return &oliver
 }
 
 func makeRedTeam() *Team {
@@ -110,6 +122,8 @@ func makeCP2() *ControlPoint {
 func makeSampleGame() *Game {
 	redTeam := makeRedTeam()
 	blueTeam := makeBlueTeam()
+	cp1 := makeCP1()
+	cp2 := makeCP2()
 	return &Game {
 		ID: "G1",
 		Name: "Test Game",
@@ -119,20 +133,20 @@ func makeSampleGame() *Game {
 		RedTeam: redTeam,
 		BlueTeam: blueTeam,
 		Players: map[string]*Player{
-			"jenny" : makeJenny(redTeam),
-			"brad" : makeBrad(redTeam),
-			"oliver" : makeOliver(blueTeam),
-			"anders" : makeAnders(blueTeam),
+			"jenny" : makeJenny(redTeam, cp2),
+			"brad" : makeBrad(redTeam, cp1),
+			"oliver" : makeOliver(blueTeam, cp2),
+			"anders" : makeAnders(blueTeam, cp2),
 		},
 		Boundaries: []Border{
-			{Location{0, 0}, Direction{1, 0}},
-			{Location{100, 0}, Direction{0, 1}},
-			{Location{100, 100}, Direction{-1, 0}},
-			{Location{0, 100}, Direction{0, -1}},
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 100}},
+			{Location{100, 100}, Direction{-100, 0}},
+			{Location{0, 100}, Direction{0, -100}},
 		},
 		ControlPoints: map[string]*ControlPoint {
-			"CP1" : makeCP1(),
-			"CP2" : makeCP2(),
+			"CP1" : cp1,
+			"CP2" : cp2,
 		},
 	}
 }

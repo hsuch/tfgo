@@ -5,6 +5,7 @@ package main
 import (
 	"testing"
 	"math"
+	"time"
 )
 
 var testWeapon = Weapon {
@@ -103,56 +104,59 @@ func TestFire(t *testing.T) {
 
 	// no targets hit
 	brad.fire(g, SWORD,45)
-	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "brad->jenny")
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "brad->oliver")
-	checkPlayerVitals(t, anders, anders.Health, anders.Armor, NORMAL, "TestFire", "brad->anders")
+	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(1)", "brad->jenny")
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(1)", "brad->oliver")
+	checkPlayerVitals(t, anders, anders.Health, anders.Armor, NORMAL, "TestFire(1)", "brad->anders")
 
 	// single target hit, non-fatal
 	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(2)", "anders->jenny")
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(2)", "anders->oliver")
+	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(2)", "anders->brad")
 
 	// multiple targets available, hits closest
-	oliver.updateLocation(g, Location{100, 99}, 0)
+	oliver.updateLocation(g, Location{100, 99}.locationToDegrees(), 0)
 	anders.fire(g, SWORD, 45)
-	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire", "anders->jenny")
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "anders->oliver")
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire", "anders->brad")
+	checkPlayerVitals(t, jenny, jenny.Health, jenny.Armor, NORMAL, "TestFire(3)", "anders->jenny")
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(3)", "anders->oliver")
+	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(3)", "anders->brad")
 
 	// single target hit, fatal
 	jenny.fire(g, SWORD, 45)
 	anders.takeHit(g, SWORD)
-	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire", "jenny->oliver")
-	checkPlayerVitals(t, anders, anders.Health, anders.Armor, RESPAWNING, "TestFire", "jenny->anders")
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire", "jenny->brad")
+	time.Sleep(10 * time.Millisecond) // must wait for awaitRespawn() to begin execution
+	checkPlayerVitals(t, oliver, oliver.Health, oliver.Armor, NORMAL, "TestFire(4)", "jenny->oliver")
+	checkPlayerVitals(t, anders, anders.Health, anders.Armor, RESPAWNING, "TestFire(4)", "jenny->anders")
+	checkPlayerVitals(t, brad, brad.Health, brad.Armor, NORMAL, "TestFire(4)", "jenny->brad")
 }
 
 func TestTakeHit(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
 	jenny := getJenny(g) // 100 hp, 0 armor
+	var jHP = jenny.Health
 	oliver := getOliver(g) // 95 hp, 10 armor
+	var oHP, oA = oliver.Health, oliver.Armor
 	anders := getAnders(g) // 10 hp, 5 armor
 	brad := getBrad(g) // 80 hp, 30 armor
+	var bHP, bA = brad.Health, brad.Armor
 
 	// no armor, hp > damage
 	jenny.takeHit(g, SWORD)
-	checkPlayerVitals(t, jenny, jenny.Health - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
+	checkPlayerVitals(t, jenny, jHP - SWORD.Damage, 0, NORMAL, "TestTakeHit", "jenny")
 
 	// armor < damage, hp + armor > damage
 	oliver.takeHit(g, SWORD)
-	checkPlayerVitals(t, oliver, oliver.Health + oliver.Armor - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
+	checkPlayerVitals(t, oliver, oHP + oA - SWORD.Damage, 0, NORMAL, "TestTakeHit", "oliver")
 
 	// hp + armor < damage
 	anders.takeHit(g, SWORD)
+	time.Sleep(10 * time.Millisecond) // must wait for awaitRespawn() to begin execution
 	checkPlayerVitals(t, anders, 0, 0, RESPAWNING, "TestTakeHit", "anders")
 
 	// armor > damage
 	brad.takeHit(g, SWORD)
-	checkPlayerVitals(t, brad, brad.Health, brad.Armor - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
+	checkPlayerVitals(t, brad, bHP, bA - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
 
 func TestAwaitRespawn(t *testing.T) {

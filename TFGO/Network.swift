@@ -164,9 +164,15 @@ func parseGameInfo(data: [String: Any]) -> Bool {
     
     if let info = data["Data"] as? [String: Any] {
         if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
-            gameState.getCurrentGame().setMaxPlayers(to: playerNum)
-            gameState.getCurrentGame().setDescription(to: desc)
-            gameState.getCurrentGame().setMaxPoints(to: pointLim)
+            let newGame = Game()
+            newGame.setMaxPlayers(to: playerNum)
+            newGame.setDescription(to: desc)
+            newGame.setMaxPoints(to: pointLim)
+            
+            // we hard code the name here because we will only have 1 game for iteration 1
+            newGame.setName(to: "Test Game")
+            gameState.setCurrentGame(to: newGame)
+            
             
         }
         if let players = info["PlayerList"] as? [[String: Any]] {
@@ -481,6 +487,11 @@ class GameState {
             }
         }
         return privateGames
+    }
+    
+    // This function is purely for testing purposes
+    func getFoundGames() -> [Game] {
+        return foundGames
     }
     
     init() {

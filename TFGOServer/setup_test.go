@@ -28,11 +28,40 @@ func TestCreatePlayer(t *testing.T) {
 
 func TestSetBoundaries(t *testing.T) {
 	isTesting = true
-	// func (g *Game) setBoundaries(boundaries []interface{})
+	boundaries := []interface{} {
+		map[string]interface{} {"X": 0.0, "Y": 0.0},
+		map[string]interface{} {"X": meterToDegree(100.0), "Y": 0.0},
+		map[string]interface{} {"X": meterToDegree(100.0), "Y": meterToDegree(100.0)},
+		map[string]interface{} {"X": 0.0, "Y": meterToDegree(100.0)},
+	}
+	borders := []Border {
+		Border{Location{0.0,0.0}, Direction{100.0,0.0}},
+		Border{Location{100.0,0.0}, Direction{0.0,100.0}},
+		Border{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		Border{Location{0.0,100.0}, Direction{0.0,-100.0}},
+	}
+	g := &Game{Name: "TestGame"}
+	g.setBoundaries(boundaries)
+	if len(g.Boundaries) != 4 {
+		t.Errorf("TestSetBoundaries(1) failed, expected 4 borders, got %d", len(g.Boundaries))
+	}
+	for i, v := range borders {
+		if g.Boundaries[i] != v {
+			t.Errorf("TestSetBoundaries(2.%d) failed, expected Border{{%f, %f} {%f, %f}}, got Border{{%f, %f} {%f, %f}}",
+				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
+				g.Boundaries[i].P.X, g.Boundaries[i].P.Y, g.Boundaries[i].D.X, g.Boundaries[i].D.Y)
+		}
+	}
 }
 
 func TestCreateGame(t *testing.T) {
 	isTesting = true
+	borders := []Border {
+		{Location{0.0,0.0}, Direction{100.0,0.0}},
+		{Location{100.0,0.0}, Direction{0.0,100.0}},
+		{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		{Location{0.0,100.0}, Direction{0.0,-100.0}},
+	}
 	data := map[string]interface{} {
 		"Name" : "G1Name",
 		"Password" : "G1Password",
@@ -42,10 +71,10 @@ func TestCreateGame(t *testing.T) {
 		"TimeLimit" : "60m",
 		"Mode" : "SingleCapture",
 		"Boundaries" : []interface{} {
-			Border{Location{0, 0}, Direction{1, 0}},
-			Border{Location{100, 0}, Direction{0, 1}},
-			Border{Location{100, 100}, Direction{-1, 0}},
-			Border{Location{0, 100}, Direction{0, -1}},
+			map[string]interface{} {"X": 0.0, "Y": 0.0},
+			map[string]interface{} {"X": meterToDegree(100.0), "Y": 0.0},
+			map[string]interface{} {"X": meterToDegree(100.0), "Y": meterToDegree(100.0)},
+			map[string]interface{} {"X": 0.0, "Y": meterToDegree(100.0)},
 		},
 		"Host" : map[string]interface{} {
 			"Name" : "P1Name",
@@ -79,7 +108,7 @@ func TestCreateGame(t *testing.T) {
 	if g.Mode != SINGLECAP {
 		t.Errorf("TestCreateGame(8) failed, expected Mode %s, got Mode %s", "SINGLECAP", g.Mode)
 	}
-	for i, v := range data["Boundaries"].([]Border) {
+	for i, v := range borders {
 		if g.Boundaries[i] != v {
 			t.Errorf("TestCreateGame(9.%d) failed, expected Border{{%d, %d} {%d, %d}}, got Border{{%d, %d} {%d, %d}}",
 				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
@@ -108,5 +137,70 @@ func TestCreateGame(t *testing.T) {
 
 func TestGenerateObjectives(t *testing.T) {
 	isTesting = true
-	// func (g *Game) generateObjectives(numCP int)
+	// a game arena that is a wide rectangle
+	// 1 control point
+	g1 := &Game{
+		Boundaries: []Border{
+			{Location{0, 0}, Direction{200, 0}},
+			{Location{200, 0}, Direction{0, 100}},
+			{Location{200, 100}, Direction{-200, 0}},
+			{Location{0, 100}, Direction{0, -100}},
+		},
+		RedTeam: &Team{Name:"RedTeam"},
+		BlueTeam: &Team{Name:"BlueTeam"},
+	}
+	g1.generateObjectives(1)
+	if (g1.RedTeam.Base != Location{195.0, 50.0}) {
+		t.Errorf("TestGenerateObjectives(1) failed, expected Location{195,50}, got Location{%f,%f}", g1.RedTeam.Base.X, g1.RedTeam.Base.Y)
+	}
+	if g1.RedTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(2) failed, expected BaseRadius 3, got BaseRadius %f", g1.RedTeam.BaseRadius)
+	}
+	if (g1.BlueTeam.Base != Location{5.0, 50.0}) {
+		t.Errorf("TestGenerateObjectives(3) failed, expected Location{5,50}, got Location{%f,%f}", g1.BlueTeam.Base.X, g1.BlueTeam.Base.Y)
+	}
+	if g1.BlueTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(4) failed, expected BaseRadius 3, got BaseRadius %f", g1.BlueTeam.BaseRadius)
+	}
+	if len(g1.ControlPoints) != 1 {
+		t.Errorf("TestGenerateObjectives(5) failed, expected 1 ControlPoint, got %d", len(g1.ControlPoints))
+	}
+	if !inGameBounds(g1, g1.ControlPoints["CP1"].Location) {
+		t.Errorf("TestGenerateObjectives(6) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
+
+	// a game arena that is a tall rectangle
+	// 2 control points
+	g2 := &Game{
+		Boundaries: []Border{
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 200}},
+			{Location{100, 200}, Direction{-100, 0}},
+			{Location{0, 200}, Direction{0, -200}},
+		},
+		RedTeam: &Team{Name:"RedTeam"},
+		BlueTeam: &Team{Name:"BlueTeam"},
+	}
+	g2.generateObjectives(2)
+	if (g2.RedTeam.Base != Location{50.0, 195.0}) {
+		t.Errorf("TestGenerateObjectives(7) failed, expected Location{50, 195}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
+	}
+	if g2.RedTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(8) failed, expected BaseRadius 3, got BaseRadius %f", g2.RedTeam.BaseRadius)
+	}
+	if (g2.BlueTeam.Base != Location{50.0, 5.0}) {
+		t.Errorf("TestGenerateObjectives(9) failed, expected Location{50,5}, got Location{%f,%f}", g2.BlueTeam.Base.X, g2.BlueTeam.Base.Y)
+	}
+	if g2.BlueTeam.BaseRadius != 3.0 {
+		t.Errorf("TestGenerateObjectives(10) failed, expected BaseRadius 3, got BaseRadius %f", g2.BlueTeam.BaseRadius)
+	}
+	if len(g2.ControlPoints) != 2 {
+		t.Errorf("TestGenerateObjectives(11) failed, expected 1 ControlPoint, got %d", len(g2.ControlPoints))
+	}
+	if !inGameBounds(g2, g2.ControlPoints["CP1"].Location) {
+		t.Errorf("TestGenerateObjectives(12) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
+	if !inGameBounds(g2, g2.ControlPoints["CP2"].Location) {
+		t.Errorf("TestGenerateObjectives(13) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
 }
