@@ -96,6 +96,8 @@ class MsgFromServer {
 }
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
+/* The structure of each of the messages can be found in the Wiki section of the project github */
+/* URL for the structure of the messages : https://github.com/hsuch/tfgo/wiki/Network-Messages */
 
 func parsePlayerListUpdate(data: [String: Any]) {
     
@@ -104,6 +106,7 @@ func parsePlayerListUpdate(data: [String: Any]) {
     if let info = data["Data"] as? [[String: Any]] {
         for player in info {
             if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                // build a list of the passed in players
                 players.append(Player(name: name, icon: icon))
             }
         }
@@ -112,6 +115,7 @@ func parsePlayerListUpdate(data: [String: Any]) {
     var current_players = gameState.getCurrentGame().getPlayers()
     var index = 0
     
+    // if there are players in the current game that are not in the passed in list, remove them
     for current_player in current_players {
         let current_name = current_player.getName()
         for player in players {
@@ -126,6 +130,7 @@ func parsePlayerListUpdate(data: [String: Any]) {
     
     current_players = gameState.getCurrentGame().getPlayers()
     
+    // if there are players in the passed in list that are not in the current game, add them
     for player in players {
         if gameState.getCurrentGame().hasPlayer(name: player.getName()) {
             gameState.getCurrentGame().addPlayer(toGame: player)
@@ -139,7 +144,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    //TODO also get the game location and player list
+                    //TODO also get the game location and player list. Not necessary for Iteration 1
                     if let name = game["Name"] as? String, let mode = game["Mode"] as? String {
                         let newGame = Game()
                         newGame.setID(to: id)

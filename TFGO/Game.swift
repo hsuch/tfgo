@@ -130,15 +130,15 @@ public class Objective {
     private var owner: String
     private var progress: Int
     
-    func getXLoc() -> Double? {
+    func getXLoc() -> Double {
         return xLoc
     }
     
-    func getYLoc() -> Double? {
+    func getYLoc() -> Double {
         return yLoc
     }
     
-    func getRadius() -> Double? {
+    func getRadius() -> Double {
         return radius
     }
     

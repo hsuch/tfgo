@@ -15,7 +15,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet weak var game_map: MKMapView!
     
-    let manager = CLLocationManager()
+    let manager = CLLocationManager() // used to track the user's location
     
     var initialized = false  // boolean set to true after the first tracking of user's position
     
@@ -28,8 +28,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         
         let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
         
+        // update the user's location information
         gameState.getUser().setLocation(to: myLocation.latitude, to: myLocation.longitude)
         
+        // we only want to set the span the first time we locate the user;
+        // we want to keep the current span otherwise
         if (initialized == false) {
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
             region = MKCoordinateRegionMake(myLocation, span)
@@ -41,11 +44,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
             region.center = myLocation
         }
 
+        // update the region of the map with the appropriate information
         game_map.setRegion(region, animated: false)
         self.game_map.showsUserLocation = true
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        //update the user's orientation with respect to North every time it changes
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
@@ -58,6 +64,23 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
+        
+        // we want to mark objective locations with pins
+        let game = gameState.getCurrentGame()
+        let annotation = MKPointAnnotation()
+        
+        // used to differentiate between objectives if we have more than one
+        var objectiveNumber = 1
+        
+        // now we make a pin on the map for each objective
+        for objective in game.getObjectives() {
+            annotation.coordinate = CLLocationCoordinate2D(latitude: objective.getXLoc(), longitude: objective.getYLoc())
+            annotation.title = "OBJECTIVE"
+            annotation.subtitle = String(objectiveNumber)
+            game_map.addAnnotation(annotation)
+            
+            objectiveNumber = objectiveNumber + 1
+        }
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
@@ -80,7 +103,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBAction func fireButton(_ sender: UIButton) {
         if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
-            //Put on Cooldown
+            //Put on Cooldown. Not necessary for Iteration 1
         }
     }
     
