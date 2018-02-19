@@ -211,8 +211,16 @@ func (l Location) locationToDegrees() Location {
 	return Location{X: meterToDegree(l.X), Y: meterToDegree(l.Y)}
 }
 
-func BASERADIUS() float64 {
-	return 3.0
+// returns the baseRadius given the games x and y dimensions
+// default is 3m, but size is adjusted down if dimensions are too small
+func BASERADIUS(x, y float64) float64 {
+	if x < 10 || y < 10 {
+		return math.Min(x, y) * 3 / 10
+	} else if x < 20 && y < 20 {
+		return math.Max(x, y) * 3 / 20
+	} else {
+		return 3.0
+	}
 }
 
 func CPRADIUS() float64 {

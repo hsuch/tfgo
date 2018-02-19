@@ -171,7 +171,7 @@ func (g *Game) generateObjectives(numCP int) {
 	yrange := maxY - minY
 
 	// set up base locations for the two teams
-	baseRadius := BASERADIUS()
+	baseRadius := BASERADIUS(xrange, yrange)
 	g.RedTeam.BaseRadius = baseRadius
 	g.BlueTeam.BaseRadius = baseRadius
 	xoffset := baseRadius + 2
