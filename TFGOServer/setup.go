@@ -141,6 +141,12 @@ func (p *Player) joinGame(gameID string) *Game {
 	}
 }
 
+// determines whether a CP or pickup with the given location and radius
+// intersects with any existing CPs or pickups
+func noIntersections(g *Game, loc Location, r float64) bool {
+	return true
+}
+
 // determine locations and radii of bases and control points
 func (g *Game) generateObjectives(numCP int) {
 	minX := math.MaxFloat64
@@ -168,24 +174,31 @@ func (g *Game) generateObjectives(numCP int) {
 	baseRadius := BASERADIUS()
 	g.RedTeam.BaseRadius = baseRadius
 	g.BlueTeam.BaseRadius = baseRadius
-	offset := baseRadius + 2
+	xoffset := baseRadius + 2
+	yoffset := baseRadius + 2
+	if xrange < 20 {
+		xoffset = (xrange - baseRadius * 2) / 4 + baseRadius
+	}
+	if yrange < 20 {
+		yoffset = (yrange - baseRadius * 2) / 4 + baseRadius
+	}
 	if xrange > yrange {
 		mid := yrange / 2
-		g.RedTeam.Base = Location{maxX - offset, mid}
-		g.BlueTeam.Base = Location{minX + offset, mid}
+		g.RedTeam.Base = Location{maxX - xoffset, mid}
+		g.BlueTeam.Base = Location{minX + xoffset, mid}
 	} else {
 		mid := xrange / 2
-		g.RedTeam.Base = Location{mid, maxY - offset}
-		g.BlueTeam.Base = Location{mid, minY + offset}
+		g.RedTeam.Base = Location{mid, maxY - yoffset}
+		g.BlueTeam.Base = Location{mid, minY + yoffset}
 	}
 
 	// set up control points
 	cpRadius := CPRADIUS()
 	// make sure that control points don't intersect bases
-	minX = minX + 2 * offset + cpRadius
-	maxX = maxX - 2 * offset - cpRadius
-	minY = minY + 2 * offset + cpRadius
-	maxY = maxY - 2 * offset - cpRadius
+	minX = minX + 2 * xoffset + cpRadius
+	maxX = maxX - 2 * xoffset - cpRadius
+	minY = minY + 2 * yoffset + cpRadius
+	maxY = maxY - 2 * yoffset - cpRadius
 	xrange = maxX - minX
 	yrange = maxY - minY
 
@@ -194,7 +207,7 @@ func (g *Game) generateObjectives(numCP int) {
 	rLock.Lock()
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
-		if inGameBounds(g, cpLoc) {
+		if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
 			id := "CP" + strconv.Itoa(i+1)
 			cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
 			g.ControlPoints[id] = cp
