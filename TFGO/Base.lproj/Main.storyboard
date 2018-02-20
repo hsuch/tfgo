@@ -1062,14 +1062,27 @@
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgV-af-J7s">
                                                     <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctr-Br-SKN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
+                                                    <connections>
+                                                        <action selector="selectItem:" destination="Wa6-Ia-L1j" eventType="touchUpInside" id="T9d-H7-x7P"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="ctr-Br-SKN" secondAttribute="bottom" id="8YK-JQ-G9R"/>
+                                            <constraint firstItem="ctr-Br-SKN" firstAttribute="leading" secondItem="RFh-be-Mkn" secondAttribute="leading" id="ASr-oM-eRs"/>
+                                            <constraint firstItem="ctr-Br-SKN" firstAttribute="top" secondItem="RFh-be-Mkn" secondAttribute="top" id="GDH-Ql-NaZ"/>
                                             <constraint firstAttribute="trailing" secondItem="CgV-af-J7s" secondAttribute="trailing" id="ZJj-Jt-btV"/>
                                             <constraint firstAttribute="bottom" secondItem="CgV-af-J7s" secondAttribute="bottom" id="fWU-kL-kOJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="ctr-Br-SKN" secondAttribute="trailing" id="glV-ON-HHN"/>
                                             <constraint firstItem="CgV-af-J7s" firstAttribute="leading" secondItem="RFh-be-Mkn" secondAttribute="leading" id="mUb-5N-7xj"/>
                                             <constraint firstItem="CgV-af-J7s" firstAttribute="top" secondItem="RFh-be-Mkn" secondAttribute="top" id="vOq-WT-WWH"/>
                                         </constraints>
+                                        <connections>
+                                            <outlet property="image" destination="CgV-af-J7s" id="GDA-z6-m8M"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
