@@ -144,12 +144,28 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    //TODO also get the game location and player list. Not necessary for Iteration 1
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = info["Location"] as? [String: Any], let players = info["PlayerList"] as? [[Sring: Any]] {
+                        
                         let newGame = Game()
                         newGame.setID(to: id)
                         if newGame.setName(to: name) {}  // these games will always give a valid name
                         newGame.setMode(to: Gamemode(rawValue: mode)!)
+                        
+                        if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                            newGame.setLocation(to: MKMapPointMake(x, y))
+                        }
+                        
+                        for player in players {
+                            if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                                // add the player to the game's list of players
+                                newGame.addPlayer(toGame: Player(name: name, icon: icon))
+                            }
+                        }
+                        
+                        // we hard code the name here because we will only have 1 game for iteration 1
+                        newGame.setName(to: "Test Game")
+                        gameState.setCurrentGame(to: newGame)
+                        
                         gameState.addFoundGame(found: newGame)
                     }
                 }
@@ -164,15 +180,11 @@ func parseGameInfo(data: [String: Any]) -> Bool {
     
     if let info = data["Data"] as? [String: Any] {
         if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
+            
             let newGame = Game()
             newGame.setMaxPlayers(to: playerNum)
             newGame.setDescription(to: desc)
             newGame.setMaxPoints(to: pointLim)
-            
-            // we hard code the name here because we will only have 1 game for iteration 1
-            newGame.setName(to: "Test Game")
-            gameState.setCurrentGame(to: newGame)
-            
             
         }
         if let players = info["PlayerList"] as? [[String: Any]] {
