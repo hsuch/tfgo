@@ -21,10 +21,6 @@ class GameInfoViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
-    private func getGameInfo() {
-        
-    }
-
     // MARK: - Table view data source
 
     /*
