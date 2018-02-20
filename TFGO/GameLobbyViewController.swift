@@ -8,10 +8,6 @@
 
 import UIKit
 
-//class UserListCustomCell: UICollectionViewCell {
-//
-//}
-
 class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var gamemodeLabel: UILabel!
     @IBOutlet weak var gameNameLabel: UILabel!
@@ -19,132 +15,87 @@ class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var userCollection: UICollectionView!
 }
 
-class GameLobbyViewController: UIViewController {
+class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    private var hasChosenGame = false
+    private var showPublic = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateGames()
+        
+        runTimer()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-    }
-    
-    private enum Privacy {
-        case isPublic
-        case isPrivate
-    }
-    
-    private var gamesPrivate: [Game] = []
-    private var gamesPublic: [Game] = []
-    private var activeType = Privacy.isPublic
-    private var gamesList: [Game] {
-        get {
-            if activeType == Privacy.isPublic {
-                return gamesPublic
-            } else {
-                return gamesPrivate
+        DispatchQueue.global(qos: .background).async {
+            if  gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
+                while !self.hasChosenGame {
+                    if MsgFromServer().parse() { }
+                }
             }
         }
     }
     
-    private func updateGames() {
-        //Get games from server
-        //gamesPrivate =
-        //gamesPublic =
-    }
-
-    @IBAction func segmentButtonPress(_ sender: UISegmentedControl) {
-        if activeType == .isPublic {
-            activeType = .isPrivate
-        } else {
-            activeType = .isPublic
+    private var gamesPrivate: [Game] = []
+    private var gamesPublic: [Game] = []
+    private var gamesList: [Game] {
+        get {
+            return showPublic ? gamesPublic : gamesPrivate
         }
     }
     
-    // MARK: - Table view data source
-
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        return 0
-//    }
-//
-//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if activeType == .isPublic {
-//            return gamesPublic.count
-//        }
-//        return gamesPrivate.count
-//    }
-//
-//    
-//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
-//
-//        // Configure the cell...
-//        var chosenGame: Game
-//        if activeType == .isPublic {
-//            chosenGame = (state?.findPublicGames()[indexPath.row])!
-//        } else {
-//            chosenGame = (state?.findPrivateGames()[indexPath.row])!
-//        }
-//        switch chosenGame.getMode()! {
-//        case .cp:
-//            cell.gamemodeLabel?.text = "◆"
-//        case .payload:
-//            cell.gamemodeLabel?.text = "⇥"
-//        case .multi:
-//            cell.gamemodeLabel?.text = "❖"
-//        }
-//        cell.gameNameLabel.text = chosenGame.getName()
-//        cell.gameDistanceLabel.text = "\(0) Miles Away"
-//        return cell
-//    }
+    @IBAction func segmentButtonPress(_ sender: UISegmentedControl) {
+        showPublic = !showPublic
+    }
     
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    private var updateTimer = Timer()
+    
+    private func runTimer() {
+        updateTimer = Timer.scheduledTimer(timeInterval: 3, target: self,   selector: (#selector(GameLobbyViewController.updateGames)), userInfo: nil, repeats: true)
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    @IBOutlet weak var table: UITableView!
+    
+    @objc private func updateGames() {
+        gamesPrivate = []
+        gamesPublic = []
+        for game in gameState.getFoundGames() {
+            if game.getPassword() == nil {
+                gamesPublic.append(game)
+            } else {
+                gamesPrivate.append(game)
+            }
+        }
+        
+        table.numberOfRows(inSection: gamesList.count)
+        table.reloadData()
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    private var currentGame: Game?
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
+        let game = gamesList[indexPath.row]
+        currentGame = game
+        switch game.getMode() {
+        case .cp:
+            cell.gamemodeLabel.text = "◆"
+        case .multi:
+            cell.gamemodeLabel.text = "⇥"
+        case .payload:
+            cell.gamemodeLabel.text = "❖"
+        }
+        cell.gameNameLabel.text = game.getName()!
+        cell.gameDistanceLabel.text = "\(gameState.getDistanceFromGame(game: game)) units away"
+        cell.userCollection.reloadData()
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return currentGame!.getPlayers().count
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
+        cell.label.text = currentGame!.getPlayers()[indexPath.row].getIcon()
+        return cell
     }
-    */
 
 }

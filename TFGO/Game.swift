@@ -191,6 +191,7 @@ public class Game {
     private var objectives: [Objective]
     private var players: [Player]
     private var boundaries: [MKMapPoint]
+    private var location: MKMapPoint
     
     func getID() -> String? {
         return ID
@@ -351,6 +352,14 @@ public class Game {
         return -1
     }
     
+    func setLocation(to loc: MKMapPoint) {
+        location = loc
+    }
+    
+    func getLocation() -> MKMapPoint {
+        return location
+    }
+    
     private func validName(_ name: String?) -> Bool {
         if let name = name, name != "", name.count < 30 {
             return true
@@ -381,5 +390,6 @@ public class Game {
         players = []
         boundaries = []
         objectives = []
+        location = MKMapPoint()
     }
 }

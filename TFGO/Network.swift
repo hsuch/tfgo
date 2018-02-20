@@ -148,7 +148,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                     if let name = game["Name"] as? String, let mode = game["Mode"] as? String {
                         let newGame = Game()
                         newGame.setID(to: id)
-                        newGame.setName(to: name)   // these games will always give a valid name
+                        if newGame.setName(to: name) {}  // these games will always give a valid name
                         newGame.setMode(to: Gamemode(rawValue: mode)!)
                         gameState.addFoundGame(found: newGame)
                     }
@@ -469,7 +469,7 @@ class GameState {
         return connection
     }
     
-    func findPublicGames() -> [Game]{
+    func findPublicGames() -> [Game] {
         var publicGames: [Game] = []
         for game in foundGames {
             if game.getPassword() == nil {
@@ -479,7 +479,7 @@ class GameState {
         return publicGames
     }
     
-    func findPrivateGames() -> [Game]{
+    func findPrivateGames() -> [Game] {
         var privateGames: [Game] = []
         for game in foundGames {
             if game.getPassword() != nil {
@@ -488,10 +488,13 @@ class GameState {
         }
         return privateGames
     }
-    
-    // This function is purely for testing purposes
+
     func getFoundGames() -> [Game] {
         return foundGames
+    }
+    
+    func getDistanceFromGame(game: Game) -> Float {
+        return 0.0
     }
     
     init() {
