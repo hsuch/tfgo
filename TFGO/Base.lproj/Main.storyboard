@@ -1022,17 +1022,16 @@
             </objects>
             <point key="canvasLocation" x="941.60000000000002" y="1656.6502463054187"/>
         </scene>
-        <!--View Controller-->
+        <!--Inventory View Controller-->
         <scene sceneID="311-bV-JzE">
             <objects>
-                <viewController id="Wa6-Ia-L1j" sceneMemberID="viewController">
+                <viewController id="Wa6-Ia-L1j" customClass="InventoryViewController" customModule="TFGO" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1zT-H4-O7e">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aIB-sK-8jF">
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aIB-sK-8jF">
                                 <rect key="frame" x="0.0" y="44" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Inventory" id="07j-va-lxH">
                                         <barButtonItem key="leftBarButtonItem" title="Back" id="gy1-An-GqB">
@@ -1043,9 +1042,8 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="e0l-aH-1fW">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="e0l-aH-1fW">
                                 <rect key="frame" x="16" y="88" width="343" height="690"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="afJ-z6-9nL">
                                     <size key="itemSize" width="85" height="85"/>
@@ -1054,18 +1052,42 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Item" id="RFh-be-Mkn">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Item" id="RFh-be-Mkn" customClass="PickupViewCell" customModule="TFGO" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgV-af-J7s">
+                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
+                                                </imageView>
+                                            </subviews>
                                         </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="CgV-af-J7s" secondAttribute="trailing" id="ZJj-Jt-btV"/>
+                                            <constraint firstAttribute="bottom" secondItem="CgV-af-J7s" secondAttribute="bottom" id="fWU-kL-kOJ"/>
+                                            <constraint firstItem="CgV-af-J7s" firstAttribute="leading" secondItem="RFh-be-Mkn" secondAttribute="leading" id="mUb-5N-7xj"/>
+                                            <constraint firstItem="CgV-af-J7s" firstAttribute="top" secondItem="RFh-be-Mkn" secondAttribute="top" id="vOq-WT-WWH"/>
+                                        </constraints>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Wa6-Ia-L1j" id="Phd-Ai-oHV"/>
+                                    <outlet property="delegate" destination="Wa6-Ia-L1j" id="kjK-L7-e5a"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hMv-mX-BNz" firstAttribute="trailing" secondItem="e0l-aH-1fW" secondAttribute="trailing" constant="16" id="AIZ-hZ-J3p"/>
+                            <constraint firstItem="e0l-aH-1fW" firstAttribute="top" secondItem="aIB-sK-8jF" secondAttribute="bottom" id="G9R-oD-8UP"/>
+                            <constraint firstItem="e0l-aH-1fW" firstAttribute="bottom" secondItem="hMv-mX-BNz" secondAttribute="bottom" id="M0L-HP-uAG"/>
+                            <constraint firstItem="aIB-sK-8jF" firstAttribute="leading" secondItem="1zT-H4-O7e" secondAttribute="leading" id="ZQ3-7f-IDy"/>
+                            <constraint firstItem="aIB-sK-8jF" firstAttribute="centerX" secondItem="e0l-aH-1fW" secondAttribute="centerX" id="kc9-sD-iWK"/>
+                            <constraint firstItem="e0l-aH-1fW" firstAttribute="leading" secondItem="hMv-mX-BNz" secondAttribute="leading" constant="16" id="lK8-LJ-7xo"/>
+                            <constraint firstItem="aIB-sK-8jF" firstAttribute="top" secondItem="hMv-mX-BNz" secondAttribute="top" id="qTL-bW-YVG"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="hMv-mX-BNz"/>
                     </view>
                 </viewController>
