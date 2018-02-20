@@ -107,7 +107,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    private var updateTimer = Timer()
+    var updateTimer = Timer()
     
     func runTimer() {
         updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)

@@ -650,6 +650,10 @@
                                                                     </connections>
                                                                 </collectionViewCell>
                                                             </cells>
+                                                            <connections>
+                                                                <outlet property="dataSource" destination="mDp-nZ-Q9M" id="X4U-iO-a3Y"/>
+                                                                <outlet property="delegate" destination="mDp-nZ-Q9M" id="cf5-df-szo"/>
+                                                            </connections>
                                                         </collectionView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iF1-9T-8oz">
                                                             <rect key="frame" x="134" y="0.0" width="30" height="57"/>
@@ -690,10 +694,13 @@
                                             <outlet property="gameNameLabel" destination="XTo-AQ-S1t" id="Gnn-zA-tRz"/>
                                             <outlet property="gamemodeLabel" destination="3HA-QH-34K" id="fkF-AM-8ya"/>
                                             <outlet property="userCollection" destination="5Po-MA-6Zt" id="v9B-My-EmX"/>
-                                            <segue destination="fl4-6m-JGR" kind="show" id="3zx-im-TYb"/>
+                                            <segue destination="fl4-6m-JGR" kind="show" identifier="gameSelect" id="3zx-im-TYb"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="delegate" destination="mDp-nZ-Q9M" id="dIQ-VC-UQR"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1159,8 +1166,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BH5-To-4Tg">
-                                                    <rect key="frame" x="16" y="49.333333333333329" width="78.666666666666671" height="18"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BH5-To-4Tg">
+                                                    <rect key="frame" x="15.999999999999996" y="49.333333333333329" width="52.666666666666664" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <nil key="textColor"/>
@@ -1208,32 +1215,37 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="147"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hLz-Zp-9n1">
-                                                        <size key="itemSize" width="70" height="70"/>
+                                                        <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Icon" id="zme-zy-zts">
-                                                            <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Icon" id="zme-zy-zts" customClass="IconViewCell" customModule="TFGO" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                                <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LAH-AM-RM3">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
-                                                                    </imageView>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🦄" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhf-Un-FCH">
+                                                                        <rect key="frame" x="10" y="9.3333333333333339" width="30" height="31.333333333333329"/>
+                                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
                                                                 </subviews>
                                                             </view>
                                                             <constraints>
-                                                                <constraint firstAttribute="trailing" secondItem="LAH-AM-RM3" secondAttribute="trailing" id="bOq-0c-IGh"/>
-                                                                <constraint firstItem="LAH-AM-RM3" firstAttribute="leading" secondItem="zme-zy-zts" secondAttribute="leading" id="fAk-OU-TA4"/>
-                                                                <constraint firstAttribute="bottom" secondItem="LAH-AM-RM3" secondAttribute="bottom" id="kPE-L5-jEF"/>
-                                                                <constraint firstItem="LAH-AM-RM3" firstAttribute="top" secondItem="zme-zy-zts" secondAttribute="top" id="pwd-VK-O5d"/>
+                                                                <constraint firstItem="dhf-Un-FCH" firstAttribute="centerX" secondItem="zme-zy-zts" secondAttribute="centerX" id="J3r-9e-7DI"/>
+                                                                <constraint firstItem="dhf-Un-FCH" firstAttribute="centerY" secondItem="zme-zy-zts" secondAttribute="centerY" id="dSk-je-uVD"/>
                                                             </constraints>
                                                         </collectionViewCell>
                                                     </cells>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="fl4-6m-JGR" id="eYK-Jz-A4c"/>
+                                                        <outlet property="delegate" destination="fl4-6m-JGR" id="2gW-Pn-4cq"/>
+                                                    </connections>
                                                 </collectionView>
                                             </subviews>
                                             <constraints>
@@ -1255,10 +1267,16 @@
                     <navigationItem key="navigationItem" title="Game Info" id="od4-6r-NtM">
                         <barButtonItem key="rightBarButtonItem" title="Join" id="F7v-DI-B9u">
                             <connections>
-                                <segue destination="OjP-k2-aXS" kind="show" id="XJj-c5-6F9"/>
+                                <segue destination="OjP-k2-aXS" kind="show" identifier="infoToWaiting" id="XJj-c5-6F9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="descriptionLbl" destination="BH5-To-4Tg" id="VUC-x7-Qwh"/>
+                        <outlet property="gameNameLbl" destination="ZZz-9f-GYc" id="I6b-Hh-Moc"/>
+                        <outlet property="gamemodeLbl" destination="bTE-6P-LNw" id="f62-sW-9R2"/>
+                        <outlet property="statusLbl" destination="2Sj-Qc-4TH" id="Kek-Q9-hTR"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fxd-YY-R0M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

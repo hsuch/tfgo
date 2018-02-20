@@ -166,12 +166,12 @@ func parseGameInfo(data: [String: Any]) -> Bool {
         if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
             let newGame = Game()
             newGame.setMaxPlayers(to: playerNum)
-            newGame.setDescription(to: desc)
+            if newGame.setDescription(to: desc) {}
             newGame.setMaxPoints(to: pointLim)
             
             // we hard code the name here because we will only have 1 game for iteration 1
-            newGame.setName(to: "Test Game")
-            gameState.setCurrentGame(to: newGame)
+            if newGame.setName(to: "Test Game") {}
+            if gameState.setCurrentGame(to: newGame) {}
             
             
         }
@@ -189,10 +189,7 @@ func parseGameInfo(data: [String: Any]) -> Bool {
 
 func parseJoinGameError(data: [String: Any]) -> Bool {
     if let error = data["Data"] as? String {
-        let alert = UIAlertController(title: error, message: "Please join a different game", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Return", style: .cancel, handler: nil))
         
-        //self.present(alert, animated: true)  TODO figure out how to send message without extension UIViewController
         
         return true
     }

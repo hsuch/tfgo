@@ -105,15 +105,19 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
     
     @IBAction func selectGame(_ sender: UIButton) {
         if let cell = sender.superview?.superview as? LobbyCustomViewCell {
-            gameState.getConnection().sendData(ShowGameInfoMsg(IDtoShow: cell.game.getID()))
-            DispatchQueue.global(qos: .userInitiated).async {
-                MsgFromServer().parse()
+            if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: cell.game.getID()!)).isSuccess {
+                if gameState.setCurrentGame(to: cell.game) {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        if MsgFromServer().parse() {}
+                    }
+                }
             }
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         updateTimer.invalidate()
+        hasChosenGame = true
     }
 
 }
