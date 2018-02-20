@@ -104,6 +104,7 @@ type Player struct {
 
 	Health int
 	Armor int
+	Weapons map[string]Weapon
 	Inventory map[string]Pickup
 	Location Location
 	Orientation float64
@@ -143,7 +144,19 @@ type ControlPoint struct {
 // since pickups can vary wildly, we use an interface rather than
 // a type and only require them to implement a use() method
 type Pickup interface {
-	use(game *Game, player *Player)
+	use(game *Game, player *Player, location *Location)
+}
+
+type ArmorPickup struct {
+	AP int
+}
+
+type HealthPickup struct {
+	HP int
+}
+
+type WeaponPickup struct {
+	WP Weapon
 }
 
 type Weapon struct {
