@@ -13,6 +13,8 @@ class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var gameNameLabel: UILabel!
     @IBOutlet weak var gameDistanceLabel: UILabel!
     @IBOutlet weak var userCollection: UICollectionView!
+    
+    var game: Game
 }
 
 class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -69,12 +71,9 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
         table.reloadData()
     }
     
-    private var currentGame: Game?
-    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
         let game = gamesList[indexPath.row]
-        currentGame = game
         switch game.getMode() {
         case .cp:
             cell.gamemodeLabel.text = "◆"
@@ -85,17 +84,36 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
         }
         cell.gameNameLabel.text = game.getName()!
         cell.gameDistanceLabel.text = "\(gameState.getDistanceFromGame(game: game)) units away"
+        cell.game = game
         cell.userCollection.reloadData()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return currentGame!.getPlayers().count
+        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
+            return lobbyCell.game.getPlayers().count
+        }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
-        cell.label.text = currentGame!.getPlayers()[indexPath.row].getIcon()
+        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
+            cell.label.text = lobbyCell.game.getPlayers()[indexPath.row].getIcon()
+        }
         return cell
+    }
+    
+    @IBAction func selectGame(_ sender: UIButton) {
+        if let cell = sender.superview?.superview as? LobbyCustomViewCell {
+            gameState.getConnection().sendData(ShowGameInfoMsg(IDtoShow: cell.game.getID()))
+            DispatchQueue.global(qos: .userInitiated).async {
+                MsgFromServer().parse()
+            }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        updateTimer.invalidate()
     }
 
 }
