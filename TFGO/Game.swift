@@ -301,6 +301,10 @@ public class Game {
         return objectives
     }
     
+    func setPlayers(toGame players: [Player]) {
+        self.players = players
+    }
+    
     func addPlayer(toGame player: Player) {
         players.append(player)
     }
