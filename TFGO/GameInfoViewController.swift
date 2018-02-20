@@ -47,9 +47,17 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         if identifier == "infoToWaiting" {
             if gameState.getConnection().sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
                 if MsgFromServer().parse() {
-                    
+                    if game.isValid() {
+                        return true
+                    } else {
+                        let alertController = UIAlertController(title: "This game is no longer valid", message:
+                            "Please select a different game", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "It was hubris to try and join", style: UIAlertActionStyle.default,handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
                 }
             }
+            return false
         }
         return true
     }

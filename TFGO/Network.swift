@@ -11,8 +11,6 @@ import SwiftSocket
 import SwiftyJSON
 import MapKit
 
-var gameState = GameState()
-
 class Connection {
     private var servadd: String = "128.135.175.185" // to be replaced with real server ip
     private var servport: Int32 = 9265
@@ -215,12 +213,7 @@ func parseGameInfo(data: [String: Any]) -> Bool {
 }
 
 func parseJoinGameError(data: [String: Any]) -> Bool {
-    if let error = data["Data"] as? String {
-        
-        
-        return true
-    }
-    return false
+    return gameState.setCurrentGame(to: Game())
 }
 
 func parseGameStartInfo(data: [String: Any]) -> Bool {
@@ -396,137 +389,3 @@ func FireMsg() -> Data {
     return MsgToServer(action: "Fire", data: payload).toJson()
 
 }
-
-
-
-class GameState {
-    
-    private var currentGame: Game?
-    private var foundGames: [Game] = []
-    private var user: Player = Player(name: "", icon:"")
-    private var connection = Connection()
-    
-    
-    func getUserName() -> String {
-        return user.getName()
-    }
-    
-    func setUserName(to name: String) {
-        user.setName(to: name)
-    }
-    
-    func getUserIcon() -> String {
-        return user.getIcon()
-    }
-    
-    func setUserIcon(to icon: String) {
-        user.setIcon(to: icon)
-    }
-    
-    func getUserStatus() -> String {
-        return user.getStatus()
-    }
-    
-    func setUserStatus(to status: String) {
-        user.setStatus(to: status)
-    }
-    
-    func getUserHealth() -> Int {
-        return user.getHealth()
-    }
-    
-    func setUserHealth(to health: Int) {
-        user.setHealth(to: health)
-    }
-    
-    func getUserArmor() -> Int {
-        return user.getArmor()
-    }
-    
-    func setUserArmor(to armor: Int) {
-        user.setArmor(to: armor)
-    }
-    
-    func getUserWeapon() -> String {
-        return user.getWeapon()
-    }
-    
-    func getUser() -> Player {
-        return user
-    }
-    
-    func getUserLocation() -> CLLocation {
-        return user.getLocation()
-    }
-    
-    func getUserOrientation() -> Float {
-        return user.getOrientation()
-    }
-    
-    /* Do not call unless a game exists!!! */
-    func getCurrentGame() -> Game {
-        return currentGame!
-    }
-    
-    func addFoundGame(found: Game) {
-        foundGames.append(found)
-    }
-    
-    func hasGame(to id: String) -> Bool {
-        for game in foundGames {
-            if id == game.getID() {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func setFoundGames(to games: [Game]) {
-        self.foundGames = games
-    }
-    
-    func setCurrentGame(to game: Game) -> Bool {
-        let valid = game.isValid()
-        if valid {
-            currentGame = game
-        }
-        return valid
-    }
-    
-    func getConnection() -> Connection {
-        return connection
-    }
-    
-    func findPublicGames() -> [Game] {
-        var publicGames: [Game] = []
-        for game in foundGames {
-            if game.getPassword() == nil {
-                publicGames.append(game)
-            }
-        }
-        return publicGames
-    }
-    
-    func findPrivateGames() -> [Game] {
-        var privateGames: [Game] = []
-        for game in foundGames {
-            if game.getPassword() != nil {
-                privateGames.append(game)
-            }
-        }
-        return privateGames
-    }
-
-    func getFoundGames() -> [Game] {
-        return foundGames
-    }
-    
-    func getDistanceFromGame(game: Game) -> Float {
-        return 0.0
-    }
-    
-    init() {
-        
-    }
-}
-
