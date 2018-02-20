@@ -58,7 +58,6 @@ class MsgFromServer {
         switch type {
         case "PlayerListUpdate":
             parsePlayerListUpdate(data: data)
-            return true
         case "AvailableGames":
             return parseAvailableGames(data: data)
         case "GameInfo":
@@ -99,7 +98,7 @@ class MsgFromServer {
 /* The structure of each of the messages can be found in the Wiki section of the project github */
 /* URL for the structure of the messages : https://github.com/hsuch/tfgo/wiki/Network-Messages */
 
-func parsePlayerListUpdate(data: [String: Any]) {
+func parsePlayerListUpdate(data: [String: Any]) -> Bool {
     
     var players = [Player]()
     
@@ -110,51 +109,78 @@ func parsePlayerListUpdate(data: [String: Any]) {
                 players.append(Player(name: name, icon: icon))
             }
         }
+        gameState.getCurrentGame().setPlayers(toGame: players)
+        return true
     }
     
-    var current_players = gameState.getCurrentGame().getPlayers()
-    var index = 0
+    return false
     
-    // if there are players in the current game that are not in the passed in list, remove them
-    for current_player in current_players {
-        let current_name = current_player.getName()
-        for player in players {
-            if current_name == player.getName() {
-                gameState.getCurrentGame().removePlayer(index: index)
-                index = index - 1
-                break
-            }
-        }
-        index = index + 1
-    }
+//    gameState.getCurrentGame().setPlayers(toGame: players)
+//
+//    var current_players = gameState.getCurrentGame().getPlayers()
+//    var index = 0
+//
+//    // if there are players in the current game that are not in the passed in list, remove them
+//    for current_player in current_players {
+//        let current_name = current_player.getName()
+//        for player in players {
+//            if current_name == player.getName() {
+//                gameState.getCurrentGame().removePlayer(index: index)
+//                index = index - 1
+//                break
+//            }
+//        }
+//        index = index + 1
+//    }
+//
+//    current_players = gameState.getCurrentGame().getPlayers()
+//
+//    // if there are players in the passed in list that are not in the current game, add them
+//    for player in players {
+//        if gameState.getCurrentGame().hasPlayer(name: player.getName()) {
+//            gameState.getCurrentGame().addPlayer(toGame: player)
+//        }
+//    }
     
-    current_players = gameState.getCurrentGame().getPlayers()
-    
-    // if there are players in the passed in list that are not in the current game, add them
-    for player in players {
-        if gameState.getCurrentGame().hasPlayer(name: player.getName()) {
-            gameState.getCurrentGame().addPlayer(toGame: player)
-        }
-    }
 }
 
 func parseAvailableGames(data: [String: Any]) -> Bool {
+    
+    var games = [Games]()
 
     if let info = data["Data"] as? [[String: Any]] {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    //TODO also get the game location and player list. Not necessary for Iteration 1
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = info["Location"] as? [String: Any], let players = info["PlayerList"] as? [[Sring: Any]] {
+                        
                         let newGame = Game()
                         newGame.setID(to: id)
                         if newGame.setName(to: name) {}  // these games will always give a valid name
                         newGame.setMode(to: Gamemode(rawValue: mode)!)
-                        gameState.addFoundGame(found: newGame)
+                        
+                        if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                            newGame.setLocation(to: MKMapPointMake(x, y))
+                        }
+                        
+                        for player in players {
+                            if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                                // add the player to the game's list of players
+                                newGame.addPlayer(toGame: Player(name: name, icon: icon))
+                            }
+                        }
+                        
+                        // we hard code the name here because we will only have 1 game for iteration 1
+                        newGame.setName(to: "Test Game")
+                        gameState.setCurrentGame(to: newGame)  //TODO DELETE THE SHIT OUT OF THIS
+                        
+                        games.append(newGame)
                     }
                 }
             }
         }
+        
+        gameState.setFoundGames(to: games)
         return true
     }
     return false
@@ -164,6 +190,7 @@ func parseGameInfo(data: [String: Any]) -> Bool {
     
     if let info = data["Data"] as? [String: Any] {
         if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
+            
             let newGame = Game()
             newGame.setMaxPlayers(to: playerNum)
             if newGame.setDescription(to: desc) {}
@@ -452,6 +479,10 @@ class GameState {
             }
         }
         return false
+    }
+    
+    func setFoundGames(to games: [Game]) {
+        self.foundGames = games
     }
     
     func setCurrentGame(to game: Game) -> Bool {
