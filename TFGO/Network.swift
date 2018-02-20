@@ -57,7 +57,7 @@ class MsgFromServer {
     func parse() -> Bool {
         switch type {
         case "PlayerListUpdate":
-            parsePlayerListUpdate(data: data)
+            return parsePlayerListUpdate(data: data)
         case "AvailableGames":
             return parseAvailableGames(data: data)
         case "GameInfo":
@@ -146,13 +146,13 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
 
 func parseAvailableGames(data: [String: Any]) -> Bool {
     
-    var games = [Games]()
+    var games = [Game]()
 
     if let info = data["Data"] as? [[String: Any]] {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = info["Location"] as? [String: Any], let players = info["PlayerList"] as? [[Sring: Any]] {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]] {
                         
                         let newGame = Game()
                         newGame.setID(to: id)
@@ -171,8 +171,8 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                         }
                         
                         // we hard code the name here because we will only have 1 game for iteration 1
-                        newGame.setName(to: "Test Game")
-                        gameState.setCurrentGame(to: newGame)  //TODO DELETE THE SHIT OUT OF THIS
+                        if newGame.setName(to: "Test Game") {}
+                        if gameState.setCurrentGame(to: newGame) {} //TODO DELETE THE SHIT OUT OF THIS
                         
                         games.append(newGame)
                     }

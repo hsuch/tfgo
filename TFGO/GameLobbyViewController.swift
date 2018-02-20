@@ -14,7 +14,7 @@ class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var gameDistanceLabel: UILabel!
     @IBOutlet weak var userCollection: UICollectionView!
     
-    var game: Game
+    var game: Game?
 }
 
 class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -90,7 +90,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
-            return lobbyCell.game.getPlayers().count
+            return lobbyCell.game!.getPlayers().count
         }
         return 0
     }
@@ -98,15 +98,15 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
         if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
-            cell.label.text = lobbyCell.game.getPlayers()[indexPath.row].getIcon()
+            cell.label.text = lobbyCell.game?.getPlayers()[indexPath.row].getIcon()
         }
         return cell
     }
     
     @IBAction func selectGame(_ sender: UIButton) {
         if let cell = sender.superview?.superview as? LobbyCustomViewCell {
-            if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: cell.game.getID()!)).isSuccess {
-                if gameState.setCurrentGame(to: cell.game) {
+            if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: cell.game!.getID()!)).isSuccess {
+                if gameState.setCurrentGame(to: cell.game!) {
                     DispatchQueue.global(qos: .userInitiated).async {
                         if MsgFromServer().parse() {}
                     }
