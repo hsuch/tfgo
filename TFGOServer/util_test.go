@@ -151,15 +151,15 @@ func makeSampleGame() *Game {
 	}
 }
 
-func makeArmorPickup () *Pickup {
-	return &ArmorPickup {AP: 50}
-}
-func makeHealthPickup () *Pickup {
-	return &HealthPickup {HP: 100}
-}
-func makeWeaponPickup () *Pickup {
-	return &WeaponPickup {WP: SHOTGUN}
-}
+// func makeArmorPickup () *Pickup {
+// 	return &ArmorPickup {AP: 50}
+// }
+// func makeHealthPickup () *Pickup {
+// 	return &HealthPickup {HP: 100}
+// }
+// func makeWeaponPickup () *Pickup {
+// 	return &WeaponPickup {WP: SHOTGUN}
+// }
 
 // functions used to retrieve a specific player from the sample game
 // defined above. used for testing.
