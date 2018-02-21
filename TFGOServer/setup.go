@@ -39,7 +39,7 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 	}
 
 	p.Status = NORMAL
-	p.Health = 100
+	p.Health = MAXHEALTH()
 	p.Armor = 0
 
 	go p.sender()

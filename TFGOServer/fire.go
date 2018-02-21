@@ -100,7 +100,7 @@ func (p *Player) awaitRespawn(game *Game) {
 func (p *Player) respawn(game *Game) {
 	p.Status = NORMAL
 	p.StatusTimer = nil
-	p.Health = 100
+	p.Health = MAXHEALTH()
 	p.Armor = 0
 	p.Inventory = nil
 

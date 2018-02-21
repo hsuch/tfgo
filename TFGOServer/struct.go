@@ -144,19 +144,22 @@ type ControlPoint struct {
 // since pickups can vary wildly, we use an interface rather than
 // a type and only require them to implement a use() method
 type Pickup interface {
-	use(game *Game, player *Player, location *Location)
+	use(game *Game, player *Player)
 }
 
 type ArmorPickup struct {
 	AP int
+	Location Location
 }
 
 type HealthPickup struct {
 	HP int
+	Location Location
 }
 
 type WeaponPickup struct {
 	WP Weapon
+	Location Location
 }
 
 type Weapon struct {
@@ -198,6 +201,26 @@ var SHOTGUN = Weapon {
 	ClipReload: time.Second * 3,
 }
 
+// Helper functions, mostly for conversions
+func meterToDegree(m float64) float64 {
+	return m * 9 / 1000000
+}
+
+func degreeToMeter(d float64) float64 {
+	return d * 1000000 / 9
+}
+
+func (l Location) locationToDegrees() Location {
+	return Location{X: meterToDegree(l.X), Y: meterToDegree(l.Y)}
+}
+
+func intMin(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
+}
+
 // constants defined via functions, as Go does not allow
 // for non-primitive constants
 func TICK() time.Duration {
@@ -210,18 +233,6 @@ func OUTOFBOUNDSTIME() time.Duration {
 
 func RESPAWNTIME() time.Duration {
 	return 15 * time.Millisecond
-}
-
-func meterToDegree(m float64) float64 {
-	return m * 9 / 1000000
-}
-
-func degreeToMeter(d float64) float64 {
-	return d * 1000000 / 9
-}
-
-func (l Location) locationToDegrees() Location {
-	return Location{X: meterToDegree(l.X), Y: meterToDegree(l.Y)}
 }
 
 // returns the baseRadius given the games x and y dimensions
@@ -238,4 +249,12 @@ func BASERADIUS(x, y float64) float64 {
 
 func CPRADIUS() float64 {
 	return 1.0
+}
+
+func MAXHEALTH() int {
+	return 100
+}
+
+func MAXARMOR() int {
+	return 100
 }
