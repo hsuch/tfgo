@@ -141,6 +141,20 @@ type ControlPoint struct {
 	ControllingTeam *Team
 }
 
+
+type PickupSpotStatus int
+const (
+	pNORMAL PickupSpotStatus = iota
+	pRESPAWNING
+)
+
+type PickupSpot struct {
+	Location Location
+	Pickup Pickup
+	Status PickupSpotStatus
+	StatusTimer *time.Timer // duration until respawn
+}
+
 // since pickups can vary wildly, we use an interface rather than
 // a type and only require them to implement a use() method
 type Pickup interface {
@@ -149,17 +163,14 @@ type Pickup interface {
 
 type ArmorPickup struct {
 	AP int
-	Location Location
 }
 
 type HealthPickup struct {
 	HP int
-	Location Location
 }
 
 type WeaponPickup struct {
 	WP Weapon
-	Location Location
 }
 
 type Weapon struct {
@@ -234,6 +245,11 @@ func OUTOFBOUNDSTIME() time.Duration {
 func RESPAWNTIME() time.Duration {
 	return 15 * time.Millisecond
 }
+
+func PICKUPRESPAWNTIME() time.Duration {
+	return 15 * time.Millisecond
+}
+
 
 // returns the baseRadius given the games x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small

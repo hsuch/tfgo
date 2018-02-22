@@ -1,5 +1,29 @@
 package main
 
+// consume a pickup, set status to respawning, call use () on it
+func (p *PickupSpot) consumePickup (game *Game, player *Player) {
+	if (p.Status == pRESPAWNING) {
+		return
+	}
+	p.Pickup.use (game, player)
+	go p.awaitRespawn (game)
+}
+
+func (p *PickupSpot) awaitRespawn (game *Game) {
+	p.Status = pRESPAWNING
+	if (!isTesting) {
+		<- p.StatusTimer.C
+		p.respawn (game)
+	}
+	// send status update? 
+}
+
+func (p *PickupSpot) respawn (game *Game) {
+	p.Status = pNORMAL
+	p.StatusTimer = nil
+	// send status update? 
+}
+
 // Interface implementations
 func (p ArmorPickup) use(game *Game, player *Player) {
 	player.Armor = intMin(MAXARMOR(), player.Armor + p.AP)
@@ -15,15 +39,15 @@ func (p WeaponPickup) use(game *Game, player *Player) {
 
 
 // Functions for spawning pickups
-func makeArmorPickup(loc Location) Pickup {
-	return &ArmorPickup {50, loc}
+func makeArmorPickup(val int) Pickup {
+	return &ArmorPickup {val}
 }
 
-func makeHealthPickup(loc Location) Pickup {
-	return &HealthPickup {50, loc}
+func makeHealthPickup(val int) Pickup {
+	return &HealthPickup {val}
 }
 
-func makeWeaponPickup(wp Weapon, loc Location) Pickup {
+func makeWeaponPickup(wp Weapon) Pickup {
 	// we may want this to be random
-	return &WeaponPickup {wp, loc}
+	return &WeaponPickup {wp}
 }

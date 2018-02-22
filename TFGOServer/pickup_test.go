@@ -5,7 +5,7 @@ import "testing"
 func TestPickupArmor(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
-	p := makeArmorPickup(Location{1, 1});
+	p := makeArmorPickup(50);
 	brad := getBrad(g) // (HP 80, AP 30)
 	bradAP := brad.Armor
 	p.use(g, brad)
@@ -23,7 +23,7 @@ func TestPickupArmor(t *testing.T) {
 func TestPickupHealth(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
-	p := makeHealthPickup(Location{1, 1});
+	p := makeHealthPickup(50);
 	anders := getAnders(g) // (HP 10, AP 5)
 	andersHP := anders.Health
 	p.use(g, anders)
@@ -41,7 +41,7 @@ func TestPickupHealth(t *testing.T) {
 func TestPickupWeapon(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
-	p := makeWeaponPickup(SHOTGUN, Location{1, 1});
+	p := makeWeaponPickup(SHOTGUN);
 	anders := getAnders(g) // (HP 10, AP 5)
 	if _, ok := anders.Weapons["Shotgun"]; ok {
 		t.Errorf("TestPickupWeapon(1) failed, expected Shotgun to NOT be in Weapons list, got otherwise")
