@@ -1,29 +1,29 @@
 package main
 
 // Interface implementations
-func (p ArmorPickup) use(game *Game, player *Player) {
+func (p ArmorPickup) use(player *Player) {
 	player.Armor = intMin(MAXARMOR(), player.Armor + p.AP)
 }
 
-func (p HealthPickup) use(game *Game, player *Player) {
+func (p HealthPickup) use(player *Player) {
 	player.Health = intMin(MAXHEALTH(), player.Health + p.HP)
 }
 
-func (p WeaponPickup) use(game *Game, player *Player) {
+func (p WeaponPickup) use(player *Player) {
 	player.Weapons[p.WP.Name] = p.WP
 }
 
 
 // Functions for spawning pickups
-func makeArmorPickup(loc Location) Pickup {
-	return &ArmorPickup {50, loc}
+func makeArmorPickup() Pickup {
+	return &ArmorPickup {50}
 }
 
-func makeHealthPickup(loc Location) Pickup {
-	return &HealthPickup {50, loc}
+func makeHealthPickup() Pickup {
+	return &HealthPickup {50}
 }
 
-func makeWeaponPickup(wp Weapon, loc Location) Pickup {
+func makeWeaponPickup(wp Weapon) Pickup {
 	// we may want this to be random
-	return &WeaponPickup {wp, loc}
+	return &WeaponPickup {wp}
 }
