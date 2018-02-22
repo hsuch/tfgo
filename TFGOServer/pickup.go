@@ -2,6 +2,7 @@ package main
 
 import (
 	"time"
+	"math"
 	)
 
 // consume a pickup, set status to respawning, call use () on it
@@ -64,8 +65,8 @@ func chooseArmorHealth(g *Game, loc Location, grange float64) int {
 	rLock.Lock()
 	base_ah := r.Intn(2 * MAXARMOR())
 	rLock.Unlock()
-	loc_adj := (int)math.floor(distance(g.findCenter(), loc) * MAXARMOR()/grange)
-	armor_health := intMax(base_a - loc_adj, 10)
+	loc_adj := (int)(math.Floor(distance(g.findCenter(), loc) * (float64)(MAXARMOR())/grange))
+	armor_health := intMax(base_ah - loc_adj, 10)
 	armor_health = intMin(armor_health, MAXARMOR())
 	return armor_health
 }

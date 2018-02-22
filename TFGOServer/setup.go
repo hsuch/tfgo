@@ -150,7 +150,7 @@ func noIntersections(g *Game, loc Location, r float64) bool {
 		}
 	}
 	for _, val := range g.Pickups {
-		if distance(loc, val.Location <= (r + PICKUPRADIUS()) {
+		if distance(loc, val.Location) <= (r + PICKUPRADIUS()) {
 			return false
 		}
 	}
@@ -227,12 +227,12 @@ func (g *Game) generateObjectives(numCP int) {
 	}
 	rLock.Unlock()
 	// generate pickups
-	xSpread := (int)math.Floor(xrange / PICKUPDISTRIBUTION())
-	ySpread := (int)math.Floor(yrange / PICKUPDISTRIBUTION())
+	xSpread := (int)(math.Floor(xrange / PICKUPDISTRIBUTION()))
+	ySpread := (int)(math.Floor(yrange / PICKUPDISTRIBUTION()))
 	half_range := math.Min(xrange, yrange)/2
-	for i = 0; i < xSpread; i ++ {
+	for i := 0; i < xSpread; i ++ {
 		for j := 0; j < ySpread; j ++ {
-			generatePickup(g, i * PICKUPDISTRIBUTION(), j * PICKUPDISTRIBUTION(), half_range)
+			generatePickup(g, (float64)(i) * PICKUPDISTRIBUTION(), (float64)(j) * PICKUPDISTRIBUTION(), half_range)
 		}
 	}
 }
@@ -280,7 +280,7 @@ func generatePickup(g *Game, minX, minY, half_range float64) {
 		Pickup: newPickup,
 		Available: true,
 	}
-	append(g.Pickups, newPickupSpot)
+	g.Pickups = append(g.Pickups, newPickupSpot)
 	return
 }
 

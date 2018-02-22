@@ -252,6 +252,10 @@ func RESPAWNTIME() time.Duration {
 	return 15 * time.Millisecond
 }
 
+func PICKUPRESPAWNTIME() time.Duration {
+	return 15 * time.Millisecond
+}
+
 // returns the baseRadius given the games x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small
 func BASERADIUS(x, y float64) float64 {
@@ -280,6 +284,6 @@ func PICKUPRADIUS() float64 {
 	return 1.0
 }
 
-func PICKUPDISTRIBUTION() int {
-	return 10
+func PICKUPDISTRIBUTION() float64 {
+	return 10.0
 }
