@@ -1,7 +1,7 @@
 # TFGO: The Fun Game Online
  
 ## How to Compile
-To compile the server, make sure that Go is installed on your computer. Create a folder go/src, and clone the Git repository there. Navigate to the TFGOServer directory, then run “go build” from the command line to compile.
+To compile the server, make sure that Go (ver 1.8 or higher) is installed on your computer. Create a folder go/src, and clone the Git repository there. Navigate to the TFGOServer directory, then run “go build” from the command line to compile.
  
 To compile the xcode project, you must have cocoapods installed (instructions can be found online). After installing cocoapods and cloning the Git repository, navigate to the “tfgo” folder and run “pod install”. Then open the xcode project via TFGO.xcworkspace; opening it via TFGO.xcodeproj won’t work.
  
