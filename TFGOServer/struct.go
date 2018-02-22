@@ -141,24 +141,17 @@ type ControlPoint struct {
 	ControllingTeam *Team
 }
 
-
-type PickupSpotStatus int
-const (
-	pNORMAL PickupSpotStatus = iota
-	pRESPAWNING
-)
-
 type PickupSpot struct {
 	Location Location
 	Pickup Pickup
-	Status PickupSpotStatus
-	StatusTimer *time.Timer // duration until respawn
+	Available bool
+	SpawnTimer *time.Timer // duration until respawn
 }
 
 // since pickups can vary wildly, we use an interface rather than
 // a type and only require them to implement a use() method
 type Pickup interface {
-	use(game *Game, player *Player)
+	use(player *Player)
 }
 
 type ArmorPickup struct {
@@ -195,9 +188,9 @@ var weapons = map[string]Weapon {
 var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
-	Spread: 2*math.Pi,
+	Spread: math.Pi,
 	Range: 50,
-	ClipSize: 500,
+	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
 }

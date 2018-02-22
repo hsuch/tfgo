@@ -1,39 +1,46 @@
 package main
 
+import (
+	"time"
+	)
+
 // consume a pickup, set status to respawning, call use () on it
 func (p *PickupSpot) consumePickup (game *Game, player *Player) {
-	if (p.Status == pRESPAWNING) {
-		return
+	// if (!p.Available) // pickup not active / live, already used
+		// return 
+
+	// }
+	// else {
+	if (p.Available) {	
+		p.Pickup.use (player)
+		go p.awaitRespawn (game)
 	}
-	p.Pickup.use (game, player)
-	go p.awaitRespawn (game)
 }
 
 func (p *PickupSpot) awaitRespawn (game *Game) {
-	p.Status = pRESPAWNING
+	p.Available = false
 	if (!isTesting) {
-		<- p.StatusTimer.C
+		p.SpawnTimer = time.AfterFunc(PICKUPRESPAWNTIME (), 
+			func() {p.Available = true })
 		p.respawn (game)
 	}
-	// send status update? 
 }
 
 func (p *PickupSpot) respawn (game *Game) {
-	p.Status = pNORMAL
-	p.StatusTimer = nil
-	// send status update? 
+	p.Available = true
+	p.SpawnTimer = nil
 }
 
 // Interface implementations
-func (p ArmorPickup) use(game *Game, player *Player) {
+func (p ArmorPickup) use(player *Player) {
 	player.Armor = intMin(MAXARMOR(), player.Armor + p.AP)
 }
 
-func (p HealthPickup) use(game *Game, player *Player) {
+func (p HealthPickup) use(player *Player) {
 	player.Health = intMin(MAXHEALTH(), player.Health + p.HP)
 }
 
-func (p WeaponPickup) use(game *Game, player *Player) {
+func (p WeaponPickup) use(player *Player) {
 	player.Weapons[p.WP.Name] = p.WP
 }
 
