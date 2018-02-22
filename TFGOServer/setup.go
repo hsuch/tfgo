@@ -41,6 +41,9 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 	p.Status = NORMAL
 	p.Health = MAXHEALTH()
 	p.Armor = 0
+	p.SelectedWeapon = SWORD
+	p.Weapons = make(map[string]Weapon)
+	p.Weapons["Sword"] = SWORD
 
 	go p.sender()
 

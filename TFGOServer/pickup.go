@@ -13,6 +13,7 @@ func (p WeaponPickup) use(game *Game, player *Player) {
 	player.Weapons[p.WP.Name] = p.WP
 }
 
+
 // Functions for spawning pickups
 func makeArmorPickup(loc Location) Pickup {
 	return &ArmorPickup {50, loc}

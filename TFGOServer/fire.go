@@ -102,7 +102,6 @@ func (p *Player) respawn(game *Game) {
 	p.StatusTimer = nil
 	p.Health = MAXHEALTH()
 	p.Armor = 0
-	p.Inventory = nil
 
 	if !inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
 		go p.awaitRespawn(game)

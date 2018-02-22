@@ -104,8 +104,8 @@ type Player struct {
 
 	Health int
 	Armor int
+	SelectedWeapon Weapon
 	Weapons map[string]Weapon
-	Inventory map[string]Pickup
 	Location Location
 	Orientation float64
 	OccupyingPoint *ControlPoint // control point player is currently in
