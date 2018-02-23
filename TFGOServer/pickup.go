@@ -7,10 +7,8 @@ import (
 
 // consume a pickup, set status to respawning, call use () on it
 func (p *PickupSpot) consumePickup(player *Player) {
-	if (p.Available) {
-		p.Pickup.use(player)
-		go p.awaitRespawn()
-	}
+	p.Pickup.use(player)
+	go p.awaitRespawn()
 }
 
 func (p *PickupSpot) awaitRespawn() {
