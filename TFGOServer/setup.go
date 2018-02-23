@@ -140,6 +140,11 @@ func (p *Player) joinGame(gameID string) *Game {
 	}
 }
 
+// remove a player from a game
+func (p *Player) leaveGame(game *Game) *Game {
+	return nil
+}
+
 // determines whether a CP or pickup with the given location and radius
 // intersects with any existing CPs or pickups
 func noIntersections(g *Game, loc Location, r float64) bool {
