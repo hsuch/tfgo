@@ -5,18 +5,14 @@ import "testing"
 func TestConsumePickup(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()
-	p := makeArmorPickup(50);
-	brad := getBrad(g) // (HP 80, AP 30)
-	bradAP := brad.Armor
+	brad := getBrad (g)
+	bradAP := brad.Armor // (HP 80, AP 30)
+	p := PickupSpot {Location {0.0, 0.0}, makeArmorPickup (50), true, nil}
+	am := p.Pickup
 	p.consumePickup(brad)
-	if brad.Armor != bradAP + p.(*ArmorPickup).AP {
+	if brad.Armor != bradAP + am.(*ArmorPickup).AP {
 		t.Errorf("TestPickupArmor(1) failed, expected (Armor: %d), got (Armor: %d)",
-			bradAP + p.(*ArmorPickup).AP, brad.Armor)
-	}
-	p.use(brad)
-	if brad.Armor != MAXARMOR() {
-		t.Errorf("%TestPickupArmor(2) failed, expected (Armor: %d), got (Armor: %d)",
-			MAXARMOR(), brad.Armor)
+			bradAP + am.(*ArmorPickup).AP, brad.Armor)
 	}
 }
 
