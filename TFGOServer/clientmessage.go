@@ -224,13 +224,21 @@ func sendStatusUpdate(player *Player, status string) {
 	player.Chan <- msg
 }
 
-func sendTakeHit(player *Player) {
+func sendVitalStats(player *Player) {
 	msg := map[string]interface{} {
-		"Type" : "TakeHit",
+		"Type" : "VitalStats",
 		"Data" : map[string]int {
 			"Health" : player.Health,
 			"Armor" : player.Armor,
 		},
+	}
+	player.Chan <- msg
+}
+
+func sendWeaponAcquire(player *Player, weapon Weapon) {
+	msg := map[string]interface{} {
+		"Type" : "WeaponAcquire",
+		"Data" : weaponToString[weapon],
 	}
 	player.Chan <- msg
 }

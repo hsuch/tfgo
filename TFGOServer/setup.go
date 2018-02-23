@@ -39,7 +39,7 @@ func createPlayer(conn net.Conn, name, icon string) *Player {
 	}
 
 	p.Status = NORMAL
-	p.Health = 100
+	p.Health = MAXHEALTH()
 	p.Armor = 0
 
 	go p.sender()
@@ -94,7 +94,6 @@ func (g *Game) setBoundaries(boundaries []interface{}) {
 
 // register a new game instance, with the host as its first player
 func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
-
 	var g Game
 	g.ID = createGameID()
 	g.Name = data["Name"].(string)
@@ -141,9 +140,24 @@ func (p *Player) joinGame(gameID string) *Game {
 	}
 }
 
+// remove a player from a game
+func (p *Player) leaveGame(game *Game) *Game {
+	return nil
+}
+
 // determines whether a CP or pickup with the given location and radius
 // intersects with any existing CPs or pickups
 func noIntersections(g *Game, loc Location, r float64) bool {
+	for _, val := range g.ControlPoints {
+		if distance(loc, val.Location) <= (r + val.Radius) {
+			return false
+		}
+	}
+	for _, val := range g.Pickups {
+		if distance(loc, val.Location) <= (r + PICKUPRADIUS()) {
+			return false
+		}
+	}
 	return true
 }
 
@@ -167,55 +181,119 @@ func (g *Game) generateObjectives(numCP int) {
 			maxY = val.P.Y
 		}
 	}
-	xrange := maxX - minX
-	yrange := maxY - minY
+	xRange := maxX - minX
+	yRange := maxY - minY
 
 	// set up base locations for the two teams
-	baseRadius := BASERADIUS(xrange, yrange)
+	baseRadius := BASERADIUS(xRange, yRange)
 	g.RedTeam.BaseRadius = baseRadius
 	g.BlueTeam.BaseRadius = baseRadius
-	xoffset := baseRadius + 2
-	yoffset := baseRadius + 2
-	if xrange < 20 {
-		xoffset = (xrange - baseRadius * 2) / 4 + baseRadius
+	xOffset := baseRadius + 2
+	yOffset := baseRadius + 2
+	if xRange < 20 {
+		xOffset = (xRange- baseRadius * 2) / 4 + baseRadius
 	}
-	if yrange < 20 {
-		yoffset = (yrange - baseRadius * 2) / 4 + baseRadius
+	if yRange < 20 {
+		yOffset = (yRange- baseRadius * 2) / 4 + baseRadius
 	}
-	if xrange > yrange {
-		mid := yrange / 2
-		g.RedTeam.Base = Location{maxX - xoffset, mid}
-		g.BlueTeam.Base = Location{minX + xoffset, mid}
+	if xRange > yRange {
+		mid := yRange / 2
+		g.RedTeam.Base = Location{maxX - xOffset, mid}
+		g.BlueTeam.Base = Location{minX + xOffset, mid}
 	} else {
-		mid := xrange / 2
-		g.RedTeam.Base = Location{mid, maxY - yoffset}
-		g.BlueTeam.Base = Location{mid, minY + yoffset}
+		mid := xRange / 2
+		g.RedTeam.Base = Location{mid, maxY - yOffset}
+		g.BlueTeam.Base = Location{mid, minY + yOffset}
 	}
 
 	// set up control points
 	cpRadius := CPRADIUS()
-	// make sure that control points don't intersect bases
-	minX = minX + 2 * xoffset + cpRadius
-	maxX = maxX - 2 * xoffset - cpRadius
-	minY = minY + 2 * yoffset + cpRadius
-	maxY = maxY - 2 * yoffset - cpRadius
-	xrange = maxX - minX
-	yrange = maxY - minY
-
 	g.ControlPoints = make(map[string]*ControlPoint)
+	if g.Mode == MULTICAP {
+		// make sure that control points don't intersect bases
+		minX = minX + 2 *xOffset + cpRadius
+		maxX = maxX - 2 *xOffset - cpRadius
+		minY = minY + 2 *yOffset + cpRadius
+		maxY = maxY - 2 *yOffset - cpRadius
+		xRange = maxX - minX
+		yRange = maxY - minY
 
-	rLock.Lock()
-	for i := 0; i < numCP; i++ {
-		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
-		if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
-			id := "CP" + strconv.Itoa(i+1)
-			cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
-			g.ControlPoints[id] = cp
-		} else {
-			i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
+		// generate control points
+		rLock.Lock()
+		for i := 0; i < numCP; i++ {
+			cpLoc := Location{minX + r.Float64() *xRange, minY + r.Float64() *yRange}
+			if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
+				id := "CP" + strconv.Itoa(i+1)
+				cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
+				g.ControlPoints[id] = cp
+			} else {
+				i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
+			}
+		}
+		rLock.Unlock()
+	} else if g.Mode == SINGLECAP {
+		g.ControlPoints["CP1"] = &ControlPoint{ID: "CP1", Location: g.findCenter(), Radius: cpRadius}
+	} else {
+		cpLoc := Location{(g.RedTeam.Base.X + g.BlueTeam.Base.X) / 2, (g.RedTeam.Base.Y + g.BlueTeam.Base.Y) / 2}
+		g.ControlPoints["Payload"] = &ControlPoint{ID: "Payload", Location: cpLoc, Radius: cpRadius}
+	}
+
+	// generate pickups
+	xSpread := (int)(math.Floor(xRange / PICKUPDISTRIBUTION()))
+	ySpread := (int)(math.Floor(yRange / PICKUPDISTRIBUTION()))
+	halfRange := math.Min(xRange, yRange)/2
+	for i := 0; i < xSpread; i++ {
+		for j := 0; j < ySpread; j++ {
+			generatePickup(g, (float64)(i) * PICKUPDISTRIBUTION(), (float64)(j) * PICKUPDISTRIBUTION(), halfRange)
 		}
 	}
+}
+
+// semi-randomly places a pickup in the game
+func generatePickup(g *Game, minX, minY, halfRange float64) {
+	rLock.Lock()
+	xOff := r.Float64() * PICKUPDISTRIBUTION()
+	yOff := r.Float64() * PICKUPDISTRIBUTION()
 	rLock.Unlock()
+	loc := Location{minX + xOff, minY + yOff}
+	if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
+		rLock.Lock()
+		xOff = r.Float64() * PICKUPDISTRIBUTION()
+		yOff = r.Float64() * PICKUPDISTRIBUTION()
+		rLock.Unlock()
+		loc = Location{minX + xOff, minY + yOff}
+		if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
+			return
+		}
+	}
+	dist := distance(g.findCenter(), loc)
+	healthProb := 50 * dist/ halfRange
+	armorProb := 50 - 25 * dist/halfRange
+	weaponProb := 50 - 10 * dist/halfRange
+	totalProb := healthProb + armorProb + weaponProb
+	healthProb = healthProb / totalProb
+	armorProb = armorProb/totalProb + healthProb
+	rLock.Lock()
+	choice := r.Float64()
+	rLock.Unlock()
+	var newPickup Pickup
+	if choice < healthProb {
+		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2)}
+	} else if choice < armorProb {
+		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2)}
+	} else {
+		for _, weapon := range weapons {
+			newPickup = WeaponPickup{weapon}
+			break
+		}
+	}
+	newPickupSpot := PickupSpot{
+		Location: loc,
+		Pickup: newPickup,
+		Available: true,
+	}
+	g.Pickups = append(g.Pickups, &newPickupSpot)
+	return
 }
 
 // assign players to teams at the start of a game

@@ -76,7 +76,7 @@ func (p *Player) takeHit(game *Game, wep Weapon) {
 		p.Health = 0
 		go p.awaitRespawn(game)
 	} else {
-		sendTakeHit(p)
+		sendVitalStats(p)
 	}
 }
 
@@ -91,7 +91,7 @@ func (p *Player) awaitRespawn(game *Game) {
 		p.OccupyingPoint = nil
 	}
 	sendStatusUpdate(p, "Respawn")
-	if (!isTesting) {
+	if !isTesting {
 		<- p.StatusTimer.C
 		p.respawn(game)
 	}
@@ -100,9 +100,8 @@ func (p *Player) awaitRespawn(game *Game) {
 func (p *Player) respawn(game *Game) {
 	p.Status = NORMAL
 	p.StatusTimer = nil
-	p.Health = 100
+	p.Health = MAXHEALTH()
 	p.Armor = 0
-	p.Inventory = nil
 
 	if !inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
 		go p.awaitRespawn(game)

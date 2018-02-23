@@ -76,6 +76,7 @@ type Game struct {
 
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
+	Pickups		  []*PickupSpot
 }
 
 type PlayerStatus int
@@ -104,7 +105,6 @@ type Player struct {
 
 	Health int
 	Armor int
-	Inventory map[string]Pickup
 	Location Location
 	Orientation float64
 	OccupyingPoint *ControlPoint // control point player is currently in
@@ -124,10 +124,6 @@ type ControlPoint struct {
 	Location Location
 	Radius float64
 
-	// only used for payload games
-	PayloadPath [2]Location // start, end
-	PayloadLoc Location
-
 	// number of currently occupying players from each team
 	RedCount int
 	BlueCount int
@@ -140,10 +136,29 @@ type ControlPoint struct {
 	ControllingTeam *Team
 }
 
+type PickupSpot struct {
+	Location Location
+	Pickup Pickup
+	Available bool
+	SpawnTimer *time.Timer // duration until respawn
+}
+
 // since pickups can vary wildly, we use an interface rather than
 // a type and only require them to implement a use() method
 type Pickup interface {
-	use(game *Game, player *Player)
+	use(player *Player)
+}
+
+type ArmorPickup struct {
+	AP int
+}
+
+type HealthPickup struct {
+	HP int
+}
+
+type WeaponPickup struct {
+	WP Weapon
 }
 
 type Weapon struct {
@@ -163,14 +178,19 @@ var weapons = map[string]Weapon {
 	"Shotgun" : SHOTGUN,
 }
 
+var weaponToString = map[Weapon]string {
+	SWORD : "Sword",
+	SHOTGUN : "Shotgun",
+}
+
 // each of the available weapons is defined as a globally
 // accessible variable
 var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
-	Spread: 2*math.Pi,
+	Spread: math.Pi,
 	Range: 50,
-	ClipSize: 500,
+	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
 }
@@ -185,20 +205,7 @@ var SHOTGUN = Weapon {
 	ClipReload: time.Second * 3,
 }
 
-// constants defined via functions, as Go does not allow
-// for non-primitive constants
-func TICK() time.Duration {
-	return 200 * time.Millisecond
-}
-
-func OUTOFBOUNDSTIME() time.Duration {
-	return 10 * time.Millisecond
-}
-
-func RESPAWNTIME() time.Duration {
-	return 15 * time.Millisecond
-}
-
+// Helper functions, mostly for conversions
 func meterToDegree(m float64) float64 {
 	return m * 9 / 1000000
 }
@@ -211,18 +218,66 @@ func (l Location) locationToDegrees() Location {
 	return Location{X: meterToDegree(l.X), Y: meterToDegree(l.Y)}
 }
 
+func intMin(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
+}
+
+func intMax(a, b int) int {
+	if a <= b {
+		return b
+	}
+	return a
+}
+
+// constants defined via functions, as Go does not allow
+// for non-primitive constants
+func TICK() time.Duration {
+	return 200 * time.Millisecond
+}
+
+func OUTOFBOUNDSTIME() time.Duration {
+	return 10 * time.Second
+}
+
+func RESPAWNTIME() time.Duration {
+	return 15 * time.Second
+}
+
+func PICKUPRESPAWNTIME() time.Duration {
+	return 15 * time.Second
+}
+
 // returns the baseRadius given the games x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small
 func BASERADIUS(x, y float64) float64 {
-	if x < 10 || y < 10 {
-		return math.Min(x, y) * 3 / 10
-	} else if x < 20 && y < 20 {
-		return math.Max(x, y) * 3 / 20
+	if x < 14 || y < 14 {
+		return math.Min(x, y) * 5 / 14
+	} else if x < 28 && y < 28 {
+		return math.Max(x, y) * 5 / 28
 	} else {
-		return 3.0
+		return 5.0
 	}
 }
 
 func CPRADIUS() float64 {
+	return 3.0
+}
+
+func PICKUPRADIUS() float64 {
 	return 1.0
+}
+
+func PICKUPDISTRIBUTION() float64 {
+	return 10.0
+}
+
+func MAXHEALTH() int {
+	return 100
+}
+
+func MAXARMOR() int {
+	return 100
 }

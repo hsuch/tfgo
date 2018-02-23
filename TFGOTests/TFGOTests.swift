@@ -85,6 +85,8 @@ class TFGOTests: XCTestCase {
         XCTAssertFalse(gameState.getFoundGames()[0].getID() == "BCD")
         XCTAssertTrue(gameState.getFoundGames()[0].getName() == "DEF")
         XCTAssertTrue(gameState.getFoundGames()[0].getMode().rawValue == "SingleCapture")
+        XCTAssertTrue(gameState.getFoundGames()[0].getLocation().x == 1.23)
+        XCTAssertTrue(gameState.getFoundGames()[0].getLocation().x == 12.3)
         XCTAssertTrue(gameState.getCurrentGame().getDescription() == "Abc")
         XCTAssertTrue(gameState.getCurrentGame().getMaxPoints() == 100)
         XCTAssertTrue(gameState.getCurrentGame().getMaxPlayers() == 50)
