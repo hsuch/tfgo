@@ -10,6 +10,15 @@ import UIKit
 
 class IconViewCell: UICollectionViewCell {
     @IBOutlet weak var label: UILabel!
+    override var isSelected: Bool {
+        didSet {
+            if self.isSelected {
+                self.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+            } else {
+                self.transform = CGAffineTransform.identity
+            }
+        }
+    }
 }
 
 class StartViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate {
@@ -25,6 +34,8 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         
         cell.label.backgroundColor = randomColor()
         cell.label.text = icons[indexPath.row]
+        cell.layer.cornerRadius = 8.0
+        cell.clipsToBounds = true
         return cell
     }
     
@@ -36,7 +47,7 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     }
     
     private func randomColor() -> UIColor {
-        let color = UIColor(red: CGFloat(6), green: CGFloat(96), blue: CGFloat(200), alpha: 1)
+        let color = UIColor(red: CGFloat(arc4random_uniform(100))/200.0 + 0.5, green: CGFloat(arc4random_uniform(100))/200.0 + 0.5, blue: CGFloat(arc4random_uniform(100))/200.0 + 0.5, alpha: 1)
         return color
     }
     
