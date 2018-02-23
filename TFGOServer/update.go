@@ -70,6 +70,16 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 		sendStatusUpdate(p, "BackInBounds")
 	}
 
+	// check if player if on a pickup
+	if p.Status == NORMAL {
+		for _, pickup := range game.Pickups {
+			if inRange(p.Location, pickup.Location, PICKUPRADIUS()) {
+				pickup.consumePickup(p)
+				break
+			}
+		}
+	}
+
 	// get player's new control point (player status MUST be NORMAL)
 	var newCP *ControlPoint = nil
 	if p.Status == NORMAL {

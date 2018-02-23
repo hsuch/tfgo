@@ -76,7 +76,7 @@ func (p *Player) takeHit(game *Game, wep Weapon) {
 		p.Health = 0
 		go p.awaitRespawn(game)
 	} else {
-		sendTakeHit(p)
+		sendVitalStats(p)
 	}
 }
 
@@ -91,7 +91,7 @@ func (p *Player) awaitRespawn(game *Game) {
 		p.OccupyingPoint = nil
 	}
 	sendStatusUpdate(p, "Respawn")
-	if (!isTesting) {
+	if !isTesting {
 		<- p.StatusTimer.C
 		p.respawn(game)
 	}

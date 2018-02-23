@@ -178,9 +178,9 @@ var weapons = map[string]Weapon {
 	"Shotgun" : SHOTGUN,
 }
 
-var weaponsSlice = []Weapon {
-	SWORD,
-	SHOTGUN,
+var weaponToString = map[Weapon]string {
+	SWORD : "Sword",
+	SHOTGUN : "Shotgun",
 }
 
 // each of the available weapons is defined as a globally
@@ -266,18 +266,18 @@ func CPRADIUS() float64 {
 	return 3.0
 }
 
-func MAXHEALTH() int {
-	return 100
-}
-
-func MAXARMOR() int {
-	return 100
-}
-
 func PICKUPRADIUS() float64 {
 	return 1.0
 }
 
 func PICKUPDISTRIBUTION() float64 {
 	return 10.0
+}
+
+func MAXHEALTH() int {
+	return 100
+}
+
+func MAXARMOR() int {
+	return 100
 }

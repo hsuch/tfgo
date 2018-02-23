@@ -35,10 +35,10 @@ func TestSetBoundaries(t *testing.T) {
 		map[string]interface{} {"X": 0.0, "Y": meterToDegree(100.0)},
 	}
 	borders := []Border {
-		Border{Location{0.0,0.0}, Direction{100.0,0.0}},
-		Border{Location{100.0,0.0}, Direction{0.0,100.0}},
-		Border{Location{100.0,100.0}, Direction{-100.0,0.0}},
-		Border{Location{0.0,100.0}, Direction{0.0,-100.0}},
+		{Location{0.0,0.0}, Direction{100.0,0.0}},
+		{Location{100.0,0.0}, Direction{0.0,100.0}},
+		{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		{Location{0.0,100.0}, Direction{0.0,-100.0}},
 	}
 	g := &Game{Name: "TestGame"}
 	g.setBoundaries(boundaries)
@@ -254,7 +254,7 @@ func TestNoIntersections(t *testing.T) {
 	CP1 := ControlPoint{Location: Location{10.0,10.0}, Radius: 3.0}
 	Pickup1 := PickupSpot{Location: Location{20.0,30.0}}
 	g.ControlPoints["CP1"] = &CP1
-	g.Pickups = append(g.Pickups, Pickup1)
+	g.Pickups = append(g.Pickups, &Pickup1)
 	loc1 := Location{14.0,10.0}
 	loc2 := Location{20.0, 32.0}
 	loc3 := Location{50.0,50.0}

@@ -29,7 +29,6 @@ func makeJenny(team *Team, cp *ControlPoint) *Player {
 		Armor: 0,
 		Location: Location{49, 75},
 		OccupyingPoint: cp,
-		Weapons: make(map[string]Weapon),
 	}
 	go jenny.sender()
 	return &jenny
@@ -45,7 +44,6 @@ func makeBrad(team *Team, cp *ControlPoint) *Player {
 		Armor: 30,
 		Location: Location{49, 24},
 		OccupyingPoint: cp,
-		Weapons: make(map[string]Weapon),
 	}
 	go brad.sender()
 	return &brad
@@ -61,7 +59,6 @@ func makeAnders(team *Team, cp *ControlPoint) *Player {
 		Armor: 5,
 		Location: Location{49.5, 75},
 		OccupyingPoint: cp,
-		Weapons: make(map[string]Weapon),
 	}
 	go anders.sender()
 	return &anders
@@ -77,7 +74,6 @@ func makeOliver(team *Team, cp *ControlPoint) *Player {
 		Armor: 10,
 		Location: Location{50, 75},
 		OccupyingPoint: cp,
-		Weapons: make(map[string]Weapon),
 	}
 	go oliver.sender()
 	return &oliver
