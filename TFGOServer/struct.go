@@ -141,25 +141,29 @@ type ControlPoint struct {
 	ControllingTeam *Team
 }
 
+type PickupSpot struct {
+	Location Location
+	Pickup Pickup
+	Available bool
+	SpawnTimer *time.Timer // duration until respawn
+}
+
 // since pickups can vary wildly, we use an interface rather than
 // a type and only require them to implement a use() method
 type Pickup interface {
-	use(game *Game, player *Player)
+	use(player *Player)
 }
 
 type ArmorPickup struct {
 	AP int
-	Location Location
 }
 
 type HealthPickup struct {
 	HP int
-	Location Location
 }
 
 type WeaponPickup struct {
 	WP Weapon
-	Location Location
 }
 
 type Weapon struct {
@@ -184,9 +188,9 @@ var weapons = map[string]Weapon {
 var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
-	Spread: 2*math.Pi,
+	Spread: math.Pi,
 	Range: 50,
-	ClipSize: 500,
+	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
 }
@@ -232,8 +236,13 @@ func OUTOFBOUNDSTIME() time.Duration {
 }
 
 func RESPAWNTIME() time.Duration {
-	return 15 * time.Millisecond
+	return 15 * time.Second
 }
+
+func PICKUPRESPAWNTIME() time.Duration {
+	return 15 * time.Second
+}
+
 
 // returns the baseRadius given the games x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small
@@ -257,4 +266,8 @@ func MAXHEALTH() int {
 
 func MAXARMOR() int {
 	return 100
+}
+
+func PICKUPRADIUS() float64 {
+	return 1.0
 }
