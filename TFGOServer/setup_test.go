@@ -150,23 +150,26 @@ func TestGenerateObjectives(t *testing.T) {
 		BlueTeam: &Team{Name:"BlueTeam"},
 	}
 	g1.generateObjectives(1)
-	if (g1.RedTeam.Base != Location{195.0, 50.0}) {
+	if (g1.RedTeam.Base != Location{193.0, 50.0}) {
 		t.Errorf("TestGenerateObjectives(1) failed, expected Location{195,50}, got Location{%f,%f}", g1.RedTeam.Base.X, g1.RedTeam.Base.Y)
 	}
-	if g1.RedTeam.BaseRadius != 3.0 {
-		t.Errorf("TestGenerateObjectives(2) failed, expected BaseRadius 3, got BaseRadius %f", g1.RedTeam.BaseRadius)
+	if g1.RedTeam.BaseRadius != 5.0 {
+		t.Errorf("TestGenerateObjectives(2) failed, expected BaseRadius 5, got BaseRadius %f", g1.RedTeam.BaseRadius)
 	}
-	if (g1.BlueTeam.Base != Location{5.0, 50.0}) {
+	if (g1.BlueTeam.Base != Location{7.0, 50.0}) {
 		t.Errorf("TestGenerateObjectives(3) failed, expected Location{5,50}, got Location{%f,%f}", g1.BlueTeam.Base.X, g1.BlueTeam.Base.Y)
 	}
-	if g1.BlueTeam.BaseRadius != 3.0 {
-		t.Errorf("TestGenerateObjectives(4) failed, expected BaseRadius 3, got BaseRadius %f", g1.BlueTeam.BaseRadius)
+	if g1.BlueTeam.BaseRadius != 5.0 {
+		t.Errorf("TestGenerateObjectives(4) failed, expected BaseRadius 5, got BaseRadius %f", g1.BlueTeam.BaseRadius)
 	}
 	if len(g1.ControlPoints) != 1 {
 		t.Errorf("TestGenerateObjectives(5) failed, expected 1 ControlPoint, got %d", len(g1.ControlPoints))
 	}
 	if !inGameBounds(g1, g1.ControlPoints["CP1"].Location) {
 		t.Errorf("TestGenerateObjectives(6) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
+	if len(g1.Pickups) < 180 || len(g1.Pickups) > 200 {
+		t.Errorf("TestGenerateObjectives(7) failed, expected between 190 and 200 pickups, got %d", len(g1.Pickups))
 	}
 
 	// a game arena that is a tall rectangle
@@ -182,25 +185,88 @@ func TestGenerateObjectives(t *testing.T) {
 		BlueTeam: &Team{Name:"BlueTeam"},
 	}
 	g2.generateObjectives(2)
-	if (g2.RedTeam.Base != Location{50.0, 195.0}) {
-		t.Errorf("TestGenerateObjectives(7) failed, expected Location{50, 195}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
+	if (g2.RedTeam.Base != Location{50.0, 193.0}) {
+		t.Errorf("TestGenerateObjectives(8) failed, expected Location{50, 195}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
 	}
-	if g2.RedTeam.BaseRadius != 3.0 {
-		t.Errorf("TestGenerateObjectives(8) failed, expected BaseRadius 3, got BaseRadius %f", g2.RedTeam.BaseRadius)
+	if g2.RedTeam.BaseRadius != 5.0 {
+		t.Errorf("TestGenerateObjectives(9) failed, expected BaseRadius 5, got BaseRadius %f", g2.RedTeam.BaseRadius)
 	}
-	if (g2.BlueTeam.Base != Location{50.0, 5.0}) {
-		t.Errorf("TestGenerateObjectives(9) failed, expected Location{50,5}, got Location{%f,%f}", g2.BlueTeam.Base.X, g2.BlueTeam.Base.Y)
+	if (g2.BlueTeam.Base != Location{50.0, 7.0}) {
+		t.Errorf("TestGenerateObjectives(10) failed, expected Location{50,5}, got Location{%f,%f}", g2.BlueTeam.Base.X, g2.BlueTeam.Base.Y)
 	}
-	if g2.BlueTeam.BaseRadius != 3.0 {
-		t.Errorf("TestGenerateObjectives(10) failed, expected BaseRadius 3, got BaseRadius %f", g2.BlueTeam.BaseRadius)
+	if g2.BlueTeam.BaseRadius != 5.0 {
+		t.Errorf("TestGenerateObjectives(11) failed, expected BaseRadius 5, got BaseRadius %f", g2.BlueTeam.BaseRadius)
 	}
 	if len(g2.ControlPoints) != 2 {
-		t.Errorf("TestGenerateObjectives(11) failed, expected 1 ControlPoint, got %d", len(g2.ControlPoints))
+		t.Errorf("TestGenerateObjectives(12) failed, expected 1 ControlPoint, got %d", len(g2.ControlPoints))
 	}
 	if !inGameBounds(g2, g2.ControlPoints["CP1"].Location) {
-		t.Errorf("TestGenerateObjectives(12) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+		t.Errorf("TestGenerateObjectives(13) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
 	}
 	if !inGameBounds(g2, g2.ControlPoints["CP2"].Location) {
-		t.Errorf("TestGenerateObjectives(13) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+		t.Errorf("TestGenerateObjectives(14) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
+	}
+	if len(g2.Pickups) < 180 || len(g2.Pickups) > 200 {
+		t.Errorf("TestGenerateObjectives(15) failed, expected between 190 and 200 pickups, got %d", len(g2.Pickups))
+	}
+}
+
+func TestGeneratePickup(t *testing.T) {
+	isTesting = true
+	g := &Game{
+		Boundaries: []Border{
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 100}},
+			{Location{100, 100}, Direction{-100, 0}},
+			{Location{0, 100}, Direction{0, -100}},
+		},
+		RedTeam: &Team{Name:"RedTeam"},
+		BlueTeam: &Team{Name:"BlueTeam"},
+	}
+	generatePickup(g, 10.0, 10.0, 50.0)
+	if len(g.Pickups) != 1 {
+		t.Errorf("TestGeneratePickup(1) failed, expected 1 pickup, got %d", len(g.Pickups))
+	}
+	if !inGameBounds(g, g.Pickups[0].Location) {
+		t.Errorf("TestGeneratePickup(2) failed, expected inGameBounds(pickup) to be TRUE, got FALSE")
+	}
+	if g.Pickups[0].Location.X < 10.0 || g.Pickups[0].Location.X > 20.0 || g.Pickups[0].Location.Y < 10.0 || g.Pickups[0].Location.Y > 20.0 {
+		t.Errorf("TestGeneratePickup(3) failed, expected X and Y-values in the [10,20] range, got (%f,%f)", g.Pickups[0].Location.X, g.Pickups[0].Location.Y)
+	}
+	generatePickup(g, 40.0, 60.0, 50.0)
+	if len(g.Pickups) != 2 {
+		t.Errorf("TestGeneratePickup(4) failed, expected 2 pickups, got %d", len(g.Pickups))
+	}
+	if !inGameBounds(g, g.Pickups[1].Location) {
+		t.Errorf("TestGeneratePickup(5) failed, expected inGameBounds(pickup) to be TRUE, got FALSE")
+	}
+	if g.Pickups[1].Location.X < 40.0 || g.Pickups[1].Location.X > 50.0 || g.Pickups[1].Location.Y < 60.0 || g.Pickups[1].Location.Y > 70.0 {
+		t.Errorf("TestGeneratePickup(6) failed, expected X and Y-values in the [40,50] and [60,70] ranges, respectively, got (%f,%f)", g.Pickups[1].Location.X, g.Pickups[1].Location.Y)
+	}
+}
+
+func TestNoIntersections(t *testing.T) {
+	g := makeSampleGame()
+	CP1 := ControlPoint{Location: Location{10.0,10.0}, Radius: 3.0}
+	Pickup1 := PickupSpot{Location: Location{20.0,30.0}}
+	g.ControlPoints["CP1"] = &CP1
+	g.Pickups = append(g.Pickups, Pickup1)
+	loc1 := Location{14.0,10.0}
+	loc2 := Location{20.0, 32.0}
+	loc3 := Location{50.0,50.0}
+	if noIntersections(g, loc1, 2.0) {
+		t.Errorf("TestNoIntersections(1) failed, expected FALSE, got TRUE")
+	}
+	if !noIntersections(g, loc1, 0.5) {
+		t.Errorf("TestNoIntersections(2) failed, expected TRUE, got FALSE")
+	}
+	if noIntersections(g, loc2, 2.0) {
+		t.Errorf("TestNoIntersections(3) failed, expected FALSE, got TRUE")
+	}
+	if !noIntersections(g, loc2, 0.5) {
+		t.Errorf("TestNoIntersections(4) failed, expected TRUE, got FALSE")
+	}
+	if !noIntersections(g, loc3, 5.0) {
+		t.Errorf("TestNoIntersections(5) failed, expected TRUE, got FALSE")
 	}
 }
