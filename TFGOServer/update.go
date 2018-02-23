@@ -35,6 +35,11 @@ func inGameBounds(game *Game, loc Location) bool {
 	return math.Mod(intersections, 2.0) == 1.0
 }
 
+// in PAYLOAD mode, moves the payload towards the base of the controlling team
+func movePayload(game *Game) {
+	//to be implemented
+}
+
  // set player location, updating respawn, out-of-bounds, and control point
  // info as necessary
 func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {

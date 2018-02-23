@@ -126,10 +126,6 @@ type ControlPoint struct {
 	Location Location
 	Radius float64
 
-	// only used for payload games
-	PayloadPath [2]Location // start, end
-	PayloadLoc Location
-
 	// number of currently occupying players from each team
 	RedCount int
 	BlueCount int
