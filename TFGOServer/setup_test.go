@@ -138,7 +138,7 @@ func TestCreateGame(t *testing.T) {
 func TestGenerateObjectives(t *testing.T) {
 	isTesting = true
 	// a game arena that is a wide rectangle
-	// 1 control point
+	// SINGLECAP mode (same setup as PAYLOAD mode)
 	g1 := &Game{
 		Boundaries: []Border{
 			{Location{0, 0}, Direction{200, 0}},
@@ -148,6 +148,7 @@ func TestGenerateObjectives(t *testing.T) {
 		},
 		RedTeam: &Team{Name:"RedTeam"},
 		BlueTeam: &Team{Name:"BlueTeam"},
+		Mode: SINGLECAP,
 	}
 	g1.generateObjectives(1)
 	if (g1.RedTeam.Base != Location{193.0, 50.0}) {
@@ -173,7 +174,7 @@ func TestGenerateObjectives(t *testing.T) {
 	}
 
 	// a game arena that is a tall rectangle
-	// 2 control points
+	// MULTICAP mode with 2 control points
 	g2 := &Game{
 		Boundaries: []Border{
 			{Location{0, 0}, Direction{100, 0}},
@@ -183,6 +184,7 @@ func TestGenerateObjectives(t *testing.T) {
 		},
 		RedTeam: &Team{Name:"RedTeam"},
 		BlueTeam: &Team{Name:"BlueTeam"},
+		Mode: MULTICAP,
 	}
 	g2.generateObjectives(2)
 	if (g2.RedTeam.Base != Location{50.0, 193.0}) {
@@ -247,6 +249,8 @@ func TestGeneratePickup(t *testing.T) {
 
 func TestNoIntersections(t *testing.T) {
 	g := makeSampleGame()
+	g.ControlPoints = nil
+	g.ControlPoints = make(map[string]*ControlPoint)
 	CP1 := ControlPoint{Location: Location{10.0,10.0}, Radius: 3.0}
 	Pickup1 := PickupSpot{Location: Location{20.0,30.0}}
 	g.ControlPoints["CP1"] = &CP1

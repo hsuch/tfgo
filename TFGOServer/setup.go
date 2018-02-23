@@ -207,28 +207,36 @@ func (g *Game) generateObjectives(numCP int) {
 
 	// set up control points
 	cpRadius := CPRADIUS()
-	// make sure that control points don't intersect bases
-	minX = minX + 2 * xoffset + cpRadius
-	maxX = maxX - 2 * xoffset - cpRadius
-	minY = minY + 2 * yoffset + cpRadius
-	maxY = maxY - 2 * yoffset - cpRadius
-	xrange = maxX - minX
-	yrange = maxY - minY
+	if g.Mode == MULTICAP {
+		// make sure that control points don't intersect bases
+		minX = minX + 2 * xoffset + cpRadius
+		maxX = maxX - 2 * xoffset - cpRadius
+		minY = minY + 2 * yoffset + cpRadius
+		maxY = maxY - 2 * yoffset - cpRadius
+		xrange = maxX - minX
+		yrange = maxY - minY
 
-	// generate control points
-	g.ControlPoints = make(map[string]*ControlPoint)
-	rLock.Lock()
-	for i := 0; i < numCP; i++ {
-		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
-		if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
-			id := "CP" + strconv.Itoa(i+1)
-			cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
-			g.ControlPoints[id] = cp
-		} else {
-			i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
+		// generate control points
+		g.ControlPoints = make(map[string]*ControlPoint)
+		rLock.Lock()
+		for i := 0; i < numCP; i++ {
+			cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
+			if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
+				id := "CP" + strconv.Itoa(i+1)
+				cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
+				g.ControlPoints[id] = cp
+			} else {
+				i-- // if this location is invalid, decrement i so that it doesn't count towards numCP
+			}
 		}
+		rLock.Unlock()
+	} else if g.Mode == SINGLECAP {
+		g.ControlPoints["CP1"] = &ControlPoint{ID: "CP1", Location: g.findCenter(), Radius: cpRadius}
+	} else {
+		cpLoc := Location{(g.RedTeam.Base.X + g.BlueTeam.Base.X) / 2, (g.RedTeam.Base.Y + g.BlueTeam.Base.Y) / 2}
+		g.ControlPoints["CP1"] = &ControlPoint{ID: "CP1", Location: cpLoc, Radius: cpRadius}
 	}
-	rLock.Unlock()
+
 	// generate pickups
 	xSpread := (int)(math.Floor(xrange / PICKUPDISTRIBUTION()))
 	ySpread := (int)(math.Floor(yrange / PICKUPDISTRIBUTION()))
