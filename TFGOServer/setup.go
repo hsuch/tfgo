@@ -147,6 +147,16 @@ func (p *Player) joinGame(gameID string) *Game {
 // determines whether a CP or pickup with the given location and radius
 // intersects with any existing CPs or pickups
 func noIntersections(g *Game, loc Location, r float64) bool {
+	for _, val := range g.ControlPoints {
+		if distance(loc, val.Location) <= (r + val.Radius) {
+			return false
+		}
+	}
+	for _, val := range g.Pickups {
+		if distance(loc, val.Location) <= (r + PICKUPRADIUS()) {
+			return false
+		}
+	}
 	return true
 }
 
@@ -205,8 +215,8 @@ func (g *Game) generateObjectives(numCP int) {
 	xrange = maxX - minX
 	yrange = maxY - minY
 
+	// generate control points
 	g.ControlPoints = make(map[string]*ControlPoint)
-
 	rLock.Lock()
 	for i := 0; i < numCP; i++ {
 		cpLoc := Location{minX + r.Float64() * xrange, minY + r.Float64() * yrange}
@@ -219,6 +229,62 @@ func (g *Game) generateObjectives(numCP int) {
 		}
 	}
 	rLock.Unlock()
+	// generate pickups
+	xSpread := (int)(math.Floor(xrange / PICKUPDISTRIBUTION()))
+	ySpread := (int)(math.Floor(yrange / PICKUPDISTRIBUTION()))
+	half_range := math.Min(xrange, yrange)/2
+	for i := 0; i < xSpread; i ++ {
+		for j := 0; j < ySpread; j ++ {
+			generatePickup(g, (float64)(i) * PICKUPDISTRIBUTION(), (float64)(j) * PICKUPDISTRIBUTION(), half_range)
+		}
+	}
+}
+
+// semi-randomly places a pickup in the game
+func generatePickup(g *Game, minX, minY, half_range float64) {
+	rLock.Lock()
+	xoff := r.Float64() * PICKUPDISTRIBUTION()
+	yoff := r.Float64() * PICKUPDISTRIBUTION()
+	rLock.Unlock()
+	loc := Location{minX + xoff, minY + yoff}
+	if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
+		rLock.Lock()
+		xoff = r.Float64() * PICKUPDISTRIBUTION()
+		yoff = r.Float64() * PICKUPDISTRIBUTION()
+		rLock.Unlock()
+		loc = Location{minX + xoff, minY + yoff}
+		if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
+			return
+		}
+	}
+	dist := distance(g.findCenter(), loc)
+	healthprob := 50 * dist/half_range
+	armorprob := 50 - 25 * dist/half_range
+	weaponprob := 50 - 10 * dist/half_range
+	totalprob := healthprob + armorprob + weaponprob
+	healthprob = healthprob / totalprob
+	armorprob = armorprob / totalprob + healthprob
+	rLock.Lock()
+	choice := r.Float64()
+	rLock.Unlock()
+	var newPickup Pickup
+	if choice < healthprob {
+		newPickup = makeHealthPickup(chooseArmorHealth(g, loc, half_range * 2))
+	} else if choice < armorprob {
+		newPickup = makeArmorPickup(chooseArmorHealth(g, loc, half_range * 2))
+	} else {
+		rLock.Lock()
+		wn := r.Intn(len(weaponsSlice))
+		rLock.Unlock()
+		newPickup = makeWeaponPickup(weaponsSlice[wn])
+	}
+	newPickupSpot := PickupSpot{
+		Location: loc,
+		Pickup: newPickup,
+		Available: true,
+	}
+	g.Pickups = append(g.Pickups, newPickupSpot)
+	return
 }
 
 // assign players to teams at the start of a game
