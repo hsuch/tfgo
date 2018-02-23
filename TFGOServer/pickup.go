@@ -5,28 +5,24 @@ import (
 	)
 
 // consume a pickup, set status to respawning, call use () on it
-func (p *PickupSpot) consumePickup (game *Game, player *Player) {
-	// if (!p.Available) // pickup not active / live, already used
-		// return 
-
-	// }
-	// else {
+func (p *PickupSpot) consumePickup (player *Player) {
 	if (p.Available) {	
 		p.Pickup.use (player)
-		go p.awaitRespawn (game)
+		go p.awaitRespawn ()
 	}
 }
 
-func (p *PickupSpot) awaitRespawn (game *Game) {
+func (p *PickupSpot) awaitRespawn () {
 	p.Available = false
 	if (!isTesting) {
 		p.SpawnTimer = time.AfterFunc(PICKUPRESPAWNTIME (), 
-			func() {p.Available = true })
-		p.respawn (game)
+			func() {
+				p.respawn () 
+			})
 	}
 }
 
-func (p *PickupSpot) respawn (game *Game) {
+func (p *PickupSpot) respawn () {
 	p.Available = true
 	p.SpawnTimer = nil
 }
