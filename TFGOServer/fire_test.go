@@ -158,13 +158,3 @@ func TestTakeHit(t *testing.T) {
 	brad.takeHit(g, SWORD)
 	checkPlayerVitals(t, brad, bHP, bA - SWORD.Damage, NORMAL, "TestTakeHit", "brad")
 }
-
-func TestAwaitRespawn(t *testing.T) {
-	isTesting = true
-	// func (p *Player) awaitRespawn(game *Game)
-}
-
-func TestRespawn(t *testing.T) {
-	isTesting = true
-	// func (p *Player) respawn(game *Game)
-}
