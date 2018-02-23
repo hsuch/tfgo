@@ -76,7 +76,7 @@ type Game struct {
 
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
-	Pickups		  []PickupSpot
+	Pickups		  []*PickupSpot
 }
 
 type PlayerStatus int
@@ -105,8 +105,6 @@ type Player struct {
 
 	Health int
 	Armor int
-	SelectedWeapon Weapon
-	Weapons map[string]Weapon
 	Location Location
 	Orientation float64
 	OccupyingPoint *ControlPoint // control point player is currently in
@@ -125,10 +123,6 @@ type ControlPoint struct {
 
 	Location Location
 	Radius float64
-
-	// only used for payload games
-	PayloadPath [2]Location // start, end
-	PayloadLoc Location
 
 	// number of currently occupying players from each team
 	RedCount int
@@ -245,7 +239,7 @@ func TICK() time.Duration {
 }
 
 func OUTOFBOUNDSTIME() time.Duration {
-	return 10 * time.Millisecond
+	return 10 * time.Second
 }
 
 func RESPAWNTIME() time.Duration {
@@ -255,7 +249,6 @@ func RESPAWNTIME() time.Duration {
 func PICKUPRESPAWNTIME() time.Duration {
 	return 15 * time.Second
 }
-
 
 // returns the baseRadius given the games x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small
