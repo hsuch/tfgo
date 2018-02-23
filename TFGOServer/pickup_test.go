@@ -2,6 +2,24 @@ package main
 
 import "testing"
 
+func TestConsumePickup(t *testing.T) {
+	isTesting = true
+	g := makeSampleGame()
+	p := makeArmorPickup(50);
+	brad := getBrad(g) // (HP 80, AP 30)
+	bradAP := brad.Armor
+	p.consumePickup(brad)
+	if brad.Armor != bradAP + p.(*ArmorPickup).AP {
+		t.Errorf("TestPickupArmor(1) failed, expected (Armor: %d), got (Armor: %d)",
+			bradAP + p.(*ArmorPickup).AP, brad.Armor)
+	}
+	p.use(brad)
+	if brad.Armor != MAXARMOR() {
+		t.Errorf("%TestPickupArmor(2) failed, expected (Armor: %d), got (Armor: %d)",
+			MAXARMOR(), brad.Armor)
+	}
+}
+
 func TestPickupArmor(t *testing.T) {
 	isTesting = true
 	g := makeSampleGame()

@@ -236,11 +236,11 @@ func OUTOFBOUNDSTIME() time.Duration {
 }
 
 func RESPAWNTIME() time.Duration {
-	return 15 * time.Millisecond
+	return 15 * time.Second
 }
 
 func PICKUPRESPAWNTIME() time.Duration {
-	return 15 * time.Millisecond
+	return 15 * time.Second
 }
 
 
@@ -266,4 +266,8 @@ func MAXHEALTH() int {
 
 func MAXARMOR() int {
 	return 100
+}
+
+func PICKUPRADIUS() float64 {
+	return 1.0
 }

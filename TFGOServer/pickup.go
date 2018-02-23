@@ -2,27 +2,27 @@ package main
 
 import (
 	"time"
-	)
+)
 
 // consume a pickup, set status to respawning, call use () on it
-func (p *PickupSpot) consumePickup (player *Player) {
+func (p *PickupSpot) consumePickup(player *Player) {
 	if (p.Available) {	
-		p.Pickup.use (player)
-		go p.awaitRespawn ()
+		p.Pickup.use(player)
+		go p.awaitRespawn()
 	}
 }
 
-func (p *PickupSpot) awaitRespawn () {
+func (p *PickupSpot) awaitRespawn() {
 	p.Available = false
 	if (!isTesting) {
-		p.SpawnTimer = time.AfterFunc(PICKUPRESPAWNTIME (), 
+		p.SpawnTimer = time.AfterFunc(PICKUPRESPAWNTIME(),
 			func() {
-				p.respawn () 
+				p.respawn()
 			})
 	}
 }
 
-func (p *PickupSpot) respawn () {
+func (p *PickupSpot) respawn() {
 	p.Available = true
 	p.SpawnTimer = nil
 }
