@@ -14,8 +14,11 @@ class IconViewCell: UICollectionViewCell {
         didSet {
             if self.isSelected {
                 self.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+                self.layer.borderColor = #colorLiteral(red: 0, green: 0.5898008943, blue: 1, alpha: 1)
+                self.layer.borderWidth = 5.0
             } else {
                 self.transform = CGAffineTransform.identity
+                self.layer.borderWidth = 0.0
             }
         }
     }
@@ -44,11 +47,6 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = iconCollection.cellForItem(at: indexPath) as! IconViewCell
         gameState.setUserIcon(to: cell.label.text!)
-    }
-    
-    private func randomColor() -> UIColor {
-        let color = UIColor(red: CGFloat(arc4random_uniform(100))/200.0 + 0.5, green: CGFloat(arc4random_uniform(100))/200.0 + 0.5, blue: CGFloat(arc4random_uniform(100))/200.0 + 0.5, alpha: 1)
-        return color
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

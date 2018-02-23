@@ -36,8 +36,10 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath) as! WaitingViewCell
         let player = gameState.getCurrentGame().getPlayers()[indexPath.row]
         cell.icon.text = player.getIcon()
-        cell.icon.backgroundColor = #colorLiteral(red: 1, green: 0.5212053061, blue: 1, alpha: 1)
         cell.name.text = player.getName()
+        cell.icon.backgroundColor = randomColor()
+        cell.icon.layer.cornerRadius = 8.0
+        cell.icon.clipsToBounds = true
     }
 
     @IBOutlet weak var table: UITableView!

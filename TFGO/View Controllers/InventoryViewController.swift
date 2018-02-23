@@ -27,6 +27,9 @@ class InventoryViewController: UIViewController, UICollectionViewDelegate, UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Item", for: indexPath) as! PickupViewCell
+        cell.backgroundColor = randomColor()
+        cell.layer.cornerRadius = 8.0
+        cell.clipsToBounds = true
         return cell
     }
     

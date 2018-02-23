@@ -100,6 +100,9 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
         if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
             cell.label.text = lobbyCell.game?.getPlayers()[indexPath.row].getIcon()
         }
+        cell.backgroundColor = randomColor()
+        cell.layer.cornerRadius = 8.0
+        cell.clipsToBounds = true
         return cell
     }
     

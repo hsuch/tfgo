@@ -113,16 +113,24 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     private var gamemodes = [Gamemode.cp, .payload, .multi]
     
+    @IBOutlet weak var objectiveCell: UITableViewCell!
+    
     @IBAction private func chooseGamemode(_ sender: UIButton) {
         if let modeIndex = gamemodeButtons.index(of: sender) {
             gamemodeLabel.text = gamemodes[modeIndex].rawValue
             game.setMode(to: gamemodes[modeIndex])
+            if gamemodes[modeIndex] == .multi {
+                objectiveCell.isHidden = false
+            } else {
+                objectiveCell.isHidden = true
+            }
         }
     }
     
     @IBOutlet weak var playerLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var pointLabel: UILabel!
+    @IBOutlet weak var objectiveLabel: UILabel!
     
     @IBAction func step(_ sender: UIStepper) {
         let value = Int(sender.value)
@@ -136,6 +144,9 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         case 100000:
             game.setMaxPoints(to: value)
             pointLabel.text = "\(value) Points"
+        case 50:
+            game.setMaxObjectives(to: value)
+            objectiveLabel.text = "\(value) Control Points"
         default:
             break;
         }
@@ -143,14 +154,11 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     
     private var usePassword = false
+    @IBOutlet weak var passwordCell: UITableViewCell!
     
     @IBAction func passwordSwitch(_ sender: UISwitch) {
         usePassword = sender.isOn
-        if usePassword {
-            passwordField.backgroundColor =  #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        } else {
-            passwordField.backgroundColor =  #colorLiteral(red: 0.7540688515, green: 0.7540867925, blue: 0.7540771365, alpha: 1)
-        }
+        passwordCell.isHidden = sender.isOn
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {

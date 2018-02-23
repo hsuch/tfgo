@@ -417,12 +417,52 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="UGg-r3-jnR">
+                                        <rect key="frame" x="0.0" y="407.33333333333337" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UGg-r3-jnR" id="4l5-Yd-6jY">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Objectives" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1cY-0h-pb1">
+                                                    <rect key="frame" x="16" y="11" width="72.666666666666671" height="21"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" wraps="YES" value="2" minimumValue="2" maximumValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="v7p-TX-jYb">
+                                                    <rect key="frame" x="265" y="8" width="94" height="29"/>
+                                                    <connections>
+                                                        <action selector="step:" destination="ZEs-Lf-FFb" eventType="valueChanged" id="raa-yn-yn2"/>
+                                                    </connections>
+                                                </stepper>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="2 Control Points" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kUn-AT-1Rd">
+                                                    <rect key="frame" x="119" y="11" width="138" height="21"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="1cY-0h-pb1" firstAttribute="leading" secondItem="4l5-Yd-6jY" secondAttribute="leadingMargin" id="39r-Nc-66b"/>
+                                                <constraint firstItem="v7p-TX-jYb" firstAttribute="top" secondItem="4l5-Yd-6jY" secondAttribute="topMargin" constant="-3" id="Ejt-Gc-MSR"/>
+                                                <constraint firstItem="v7p-TX-jYb" firstAttribute="trailing" secondItem="4l5-Yd-6jY" secondAttribute="trailingMargin" id="JPb-or-pyT"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="kUn-AT-1Rd" secondAttribute="bottom" constant="1" id="M2o-ni-Vk5"/>
+                                                <constraint firstItem="kUn-AT-1Rd" firstAttribute="top" secondItem="4l5-Yd-6jY" secondAttribute="topMargin" id="Xex-CC-yem"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1cY-0h-pb1" secondAttribute="bottom" constant="1" id="iYq-No-cYK"/>
+                                                <constraint firstItem="v7p-TX-jYb" firstAttribute="leading" secondItem="kUn-AT-1Rd" secondAttribute="trailing" constant="8" id="ndv-38-rUo"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="v7p-TX-jYb" secondAttribute="bottom" constant="-4" id="ocR-GL-Wmk"/>
+                                                <constraint firstItem="kUn-AT-1Rd" firstAttribute="leading" secondItem="1cY-0h-pb1" secondAttribute="trailing" constant="30.333333333333329" id="oy7-dd-gVI"/>
+                                                <constraint firstItem="1cY-0h-pb1" firstAttribute="top" secondItem="4l5-Yd-6jY" secondAttribute="topMargin" id="u3g-cx-Ige"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Invite Options" footerTitle="Set a passcode to make your game private" id="Kpz-ib-2tG">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="re9-Uc-7st">
-                                        <rect key="frame" x="0.0" y="470.66666666666669" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="514.66666666666674" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="re9-Uc-7st" id="OZV-Lk-uCt">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
@@ -453,9 +493,9 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="J0q-0k-fD4">
-                                        <rect key="frame" x="0.0" y="514.66666666666674" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="558.66666666666674" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J0q-0k-fD4" id="zWW-Bs-mVW">
+                                        <tableViewCellContentView key="contentView" hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J0q-0k-fD4" id="zWW-Bs-mVW">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -467,7 +507,6 @@
                                                 </label>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oBV-ki-SCM">
                                                     <rect key="frame" x="146" y="6" width="213" height="30"/>
-                                                    <color key="backgroundColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
@@ -489,7 +528,7 @@
                             <tableViewSection headerTitle="Game Boundaries" id="r0m-2C-Lyp">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="215" id="lGk-Ql-XHQ">
-                                        <rect key="frame" x="0.0" y="626.66666666666674" width="375" height="215"/>
+                                        <rect key="frame" x="0.0" y="670.66666666666674" width="375" height="215"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lGk-Ql-XHQ" id="AVP-c0-Fwy">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="214.66666666666666"/>
@@ -512,7 +551,7 @@
                             <tableViewSection id="wgT-IW-0Pz">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="3Lv-V4-XYw">
-                                        <rect key="frame" x="0.0" y="877.66666666666674" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="921.66666666666674" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Lv-V4-XYw" id="m2F-u0-ReT">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
@@ -548,6 +587,9 @@
                         <outlet property="gamemodeLabel" destination="e5M-cN-Fte" id="KJG-zQ-f4s"/>
                         <outlet property="host_map" destination="WQC-r9-lL9" id="5uY-Pt-O6S"/>
                         <outlet property="nameField" destination="svy-63-p2w" id="pDO-yX-Lzw"/>
+                        <outlet property="objectiveCell" destination="UGg-r3-jnR" id="Q00-XW-H5e"/>
+                        <outlet property="objectiveLabel" destination="kUn-AT-1Rd" id="AWc-AA-Qek"/>
+                        <outlet property="passwordCell" destination="J0q-0k-fD4" id="Mcj-W3-DW4"/>
                         <outlet property="passwordField" destination="oBV-ki-SCM" id="cw0-mC-VXW"/>
                         <outlet property="playerLabel" destination="bqb-8n-YJV" id="apG-gJ-qTc"/>
                         <outlet property="pointLabel" destination="GRR-pU-umy" id="TJg-TI-A1A"/>
@@ -1475,9 +1517,9 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="4cG-7q-7tp"/>
+        <segue reference="xzX-Iq-bnB"/>
         <segue reference="Th9-pw-b0x"/>
-        <segue reference="XJj-c5-6F9"/>
+        <segue reference="FNE-Lr-RRh"/>
         <segue reference="Snh-On-Wk1"/>
     </inferredMetricsTieBreakers>
 </document>

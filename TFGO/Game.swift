@@ -15,6 +15,11 @@ enum Gamemode: String {
     case multi = "MultiCapture"
 }
 
+func randomColor() -> UIColor {
+    let color = UIColor(red: CGFloat(arc4random_uniform(100))/200.0 + 0.5, green: CGFloat(arc4random_uniform(100))/200.0 + 0.5, blue: CGFloat(arc4random_uniform(100))/200.0 + 0.5, alpha: 1)
+    return color
+}
+
 class Player {
     
     private var name: String
@@ -108,7 +113,6 @@ class Player {
         return name != "" && icon.count == 1
     }
     
-    
     init(name: String, icon: String) {
         self.name = name
         self.icon = icon
@@ -182,6 +186,7 @@ public class Game {
     private var maxTime: Int = 2
     private var maxPoints: Int = 10
     private var maxPlayers: Int = 2
+    private var maxObjectives: Int = 2
     private var redPoints: Int = 0
     private var bluePoints: Int = 0
     private var description: String
@@ -235,6 +240,14 @@ public class Game {
     
     func setMaxPoints(to points: Int) {
         self.maxPoints = points
+    }
+    
+    func getMaxObjectives() -> Int {
+        return maxObjectives
+    }
+    
+    func setMaxObjectives(to objectives: Int) {
+        self.maxObjectives = objectives
     }
     
     func getRedPoints() -> Int {

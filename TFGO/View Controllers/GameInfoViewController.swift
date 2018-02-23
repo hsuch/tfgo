@@ -40,6 +40,9 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Icon", for: indexPath) as! IconViewCell
         cell.label.text = game.getPlayers()[indexPath.row].getIcon()
+        cell.backgroundColor = randomColor()
+        cell.layer.cornerRadius = 8.0
+        cell.clipsToBounds = true
         return cell
     }
     
