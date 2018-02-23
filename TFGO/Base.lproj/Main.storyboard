@@ -492,10 +492,10 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="J0q-0k-fD4">
+                                    <tableViewCell hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="J0q-0k-fD4">
                                         <rect key="frame" x="0.0" y="558.66666666666674" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J0q-0k-fD4" id="zWW-Bs-mVW">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J0q-0k-fD4" id="zWW-Bs-mVW">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -741,6 +741,7 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
+                                    <outlet property="dataSource" destination="mDp-nZ-Q9M" id="4YH-hB-Nm2"/>
                                     <outlet property="delegate" destination="mDp-nZ-Q9M" id="dIQ-VC-UQR"/>
                                 </connections>
                             </tableView>
@@ -862,6 +863,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Waiting For Players" id="S8D-BF-2OR"/>
                     <connections>
+                        <outlet property="startButton" destination="KwR-EX-RFE" id="cSs-bf-Nf6"/>
                         <outlet property="table" destination="2Jg-VT-jWz" id="k8G-fk-3WK"/>
                     </connections>
                 </viewController>
@@ -1424,7 +1426,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🦄" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6A-EX-hEP">
-                                                    <rect key="frame" x="0.0" y="0.0" width="60" height="50"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="37"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>

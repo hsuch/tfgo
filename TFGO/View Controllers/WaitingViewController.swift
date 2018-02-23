@@ -13,26 +13,34 @@ class WaitingViewCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
 }
 
-class WaitingViewController: UIViewController, UITableViewDelegate {
+class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     private var startGame = false
     
+    private let game = gameState.getCurrentGame()
+    
+    @IBOutlet weak var startButton: UIButton!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        startButton.isHidden = !gameState.getUser().isHost()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let game = gameState.getCurrentGame()
-        table.numberOfRows(inSection: game.getPlayers().count)
+        runTimer()
         // Do any additional setup after loading the view.
-        print("sdfsadfsdfadsfadsfsadfasdf")
          DispatchQueue.global(qos: .background).async {
             while !self.startGame {
                 if MsgFromServer().parse() { }
             }
-            //self.table.reloadData()
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return game.getPlayers().count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath) as! WaitingViewCell
         let player = gameState.getCurrentGame().getPlayers()[indexPath.row]
         cell.icon.text = player.getIcon()
@@ -40,6 +48,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
         cell.icon.backgroundColor = randomColor()
         cell.icon.layer.cornerRadius = 8.0
         cell.icon.clipsToBounds = true
+        return cell
     }
 
     @IBOutlet weak var table: UITableView!
@@ -51,11 +60,6 @@ class WaitingViewController: UIViewController, UITableViewDelegate {
     }
     
     @objc private func checkPlayers() {
-        print("help")
-//        DispatchQueue.global(qos: .background).async {
-//            if MsgFromServer().parse() {
-//            }
-//        }
         self.table.reloadData()
     }
     

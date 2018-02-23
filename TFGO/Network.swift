@@ -167,11 +167,6 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                                 newGame.addPlayer(toGame: Player(name: name, icon: icon))
                             }
                         }
-                        
-                        // we hard code the name here because we will only have 1 game for iteration 1
-                        if newGame.setName(to: "Test Game") {}
-                        if gameState.setCurrentGame(to: newGame) {} //TODO DELETE THE SHIT OUT OF THIS
-                        
                         games.append(newGame)
                     }
                 }

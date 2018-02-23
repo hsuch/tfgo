@@ -17,7 +17,7 @@ class LobbyCustomViewCell: UITableViewCell {
     var game: Game?
 }
 
-class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource {
     
     private var hasChosenGame = false
     private var showPublic = false
@@ -34,6 +34,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
                 }
             }
         }
+        table.reloadData()
     }
     
     private var gamesPrivate: [Game] = []
@@ -46,6 +47,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
     
     @IBAction func segmentButtonPress(_ sender: UISegmentedControl) {
         showPublic = !showPublic
+        table.reloadData()
     }
     
     private var updateTimer = Timer()
@@ -66,12 +68,14 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
                 gamesPrivate.append(game)
             }
         }
-        
-        table.numberOfRows(inSection: gamesList.count)
         table.reloadData()
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return gamesList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
         let game = gamesList[indexPath.row]
         switch game.getMode() {
@@ -85,7 +89,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UICollecti
         cell.gameNameLabel.text = game.getName()!
         cell.gameDistanceLabel.text = "\(gameState.getDistanceFromGame(game: game)) units away"
         cell.game = game
-        cell.userCollection.reloadData()
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

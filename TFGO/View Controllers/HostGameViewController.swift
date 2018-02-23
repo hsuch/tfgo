@@ -158,7 +158,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     @IBAction func passwordSwitch(_ sender: UISwitch) {
         usePassword = sender.isOn
-        passwordCell.isHidden = sender.isOn
+        passwordCell.isHidden = !sender.isOn
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
