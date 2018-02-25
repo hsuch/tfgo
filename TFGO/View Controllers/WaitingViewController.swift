@@ -27,6 +27,8 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.table.dataSource = self;
+        self.table.delegate = self;
         runTimer()
         // Do any additional setup after loading the view.
          DispatchQueue.global(qos: .background).async {
@@ -40,6 +42,8 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         return game.getPlayers().count
     }
     
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Player", for: indexPath) as! WaitingViewCell
         let player = gameState.getCurrentGame().getPlayers()[indexPath.row]
@@ -48,6 +52,8 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.icon.backgroundColor = randomColor()
         cell.icon.layer.cornerRadius = 8.0
         cell.icon.clipsToBounds = true
+        cell.layer.cornerRadius = 8.0
+        cell.backgroundColor = randomColor()
         return cell
     }
 

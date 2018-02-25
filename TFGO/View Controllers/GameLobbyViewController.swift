@@ -24,7 +24,8 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.table.dataSource = self;
+        self.table.delegate = self;
         runTimer()
 
         DispatchQueue.global(qos: .background).async {
