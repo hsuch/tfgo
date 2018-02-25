@@ -191,7 +191,7 @@ public class Game {
     private var bluePoints: Int = 0
     private var description: String
     private var password: String?
-    private var startTime: String = ""
+    private var startTime: [String] = []
     
     private var objectives: [Objective]
     private var players: [Player]
@@ -278,12 +278,13 @@ public class Game {
         return description
     }
     
-    func getStartTime() -> String {
+    func getStartTime() -> [String] {
         return startTime
     }
     
-    func setStartTime(to startTime: String) {
-        self.startTime = startTime
+    func setStartTime(to startTime:String) {
+        let time: [String] = ["1"]
+        self.startTime = time
     }
     
     func setDescription(to description: String) -> Bool {

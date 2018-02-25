@@ -67,7 +67,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc private func checkPlayers() {
         self.table.reloadData()
-        if game.getStartTime() != "" {
+        if game.getStartTime() != [] {
             performSegue(withIdentifier: "startGame", sender: nil)
         }
     }
@@ -77,7 +77,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
            // DispatchQueue.global(qos: .background).async {
                 //while gameState.getCurrentGame().getStartTime() == "" {
             if MsgFromServer().parse() {
-                if gameState.getCurrentGame().getStartTime() != "" {
+                if gameState.getCurrentGame().getStartTime() != [] {
                     startGame = true
                     return true
                 }
