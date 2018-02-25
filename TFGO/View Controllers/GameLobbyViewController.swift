@@ -13,14 +13,12 @@ class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var gameNameLabel: UILabel!
     @IBOutlet weak var gameDistanceLabel: UILabel!
     @IBOutlet weak var userCollection: UICollectionView!
-    
-    var game: Game?
 }
 
 class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource {
     
     private var hasChosenGame = false
-    private var showPublic = false
+    private var showPublic = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +52,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
     private var updateTimer = Timer()
     
     private func runTimer() {
-        updateTimer = Timer.scheduledTimer(timeInterval: 3, target: self,   selector: (#selector(GameLobbyViewController.updateGames)), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameLobbyViewController.updateGames)), userInfo: nil, repeats: true)
     }
     
     @IBOutlet weak var table: UITableView!
@@ -89,22 +87,21 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         cell.gameNameLabel.text = game.getName()!
         cell.gameDistanceLabel.text = "\(gameState.getDistanceFromGame(game: game)) units away"
-        cell.game = game
+        cell.layer.cornerRadius = 8.0
+        cell.backgroundColor = randomColor()
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
-            return lobbyCell.game!.getPlayers().count
-        }
+        //
         return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
-        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
-            cell.label.text = lobbyCell.game?.getPlayers()[indexPath.row].getIcon()
-        }
+//        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
+//            cell.label.text = lobbyCell.game?.getPlayers()[indexPath.row].getIcon()
+//        }
         cell.backgroundColor = randomColor()
         cell.layer.cornerRadius = 8.0
         cell.clipsToBounds = true
@@ -113,11 +110,13 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @IBAction func selectGame(_ sender: UIButton) {
         if let cell = sender.superview?.superview as? LobbyCustomViewCell {
-            if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: cell.game!.getID()!)).isSuccess {
-                if gameState.setCurrentGame(to: cell.game!) {
+            let game = gamesList[(table.indexPath(for: cell)?.row)!]
+            if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: game.getID()!)).isSuccess {
+                if gameState.setCurrentGame(to: game) {
                     DispatchQueue.global(qos: .userInitiated).async {
                         if MsgFromServer().parse() {}
                     }
+                    performSegue(withIdentifier: "gameSelect", sender: nil)
                 }
             }
         }

@@ -116,7 +116,6 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     private var currentHealth = 100
     
     @objc func update() {
-        print("why")
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
 

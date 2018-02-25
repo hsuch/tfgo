@@ -67,6 +67,9 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     @objc private func checkPlayers() {
         self.table.reloadData()
+        if game.getStartTime() != "" {
+            performSegue(withIdentifier: "startGame", sender: nil)
+        }
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
