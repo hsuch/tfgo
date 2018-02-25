@@ -14,6 +14,8 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     @IBOutlet weak var gamemodeLbl: UILabel!
     @IBOutlet weak var descriptionLbl: UILabel!
     @IBOutlet weak var statusLbl: UILabel!
+    @IBOutlet weak var minutesLbl: UILabel!
+    @IBOutlet weak var pointsLbl: UILabel!
     
     private var game = gameState.getCurrentGame()
     
@@ -29,8 +31,14 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         case .payload:
             gamemodeLbl.text = "❖ - Multipoint"
         }
-        descriptionLbl.text = game.getDescription()
+        if game.getDescription() == "" {
+            descriptionLbl.text = "None"
+        } else {
+            descriptionLbl.text = game.getDescription()
+        }
         statusLbl.text = "Waiting for players - [\(game.getPlayers().count)/\(game.getMaxPlayers())]"
+        minutesLbl.text = "\(game.getTimeLimit()) Minutes"
+        pointsLbl.text = "\(game.getMaxPoints()) Points"
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
