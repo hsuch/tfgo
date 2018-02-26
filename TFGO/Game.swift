@@ -282,8 +282,13 @@ public class Game {
         return startTime
     }
     
+    func stringSplit(to time: String) -> [String] {
+        let result = time.components(separatedBy: ["-", " ", ":"])
+        return result
+    }
+    
     func setStartTime(to startTime:String) {
-        let time: [String] = ["1"]
+        let time: [String] = stringSplit(to: startTime)
         self.startTime = time
     }
     
