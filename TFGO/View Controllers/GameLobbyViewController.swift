@@ -29,7 +29,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         DispatchQueue.global(qos: .background).async {
             if  gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
                 while !self.hasChosenGame {
-                    if MsgFromServer().parse() { }
+                    if handleMsgFromServer() { }
                 }
             }
         }
@@ -114,7 +114,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
             if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: game.getID()!)).isSuccess {
                 if gameState.setCurrentGame(to: game) {
                     DispatchQueue.global(qos: .userInitiated).async {
-                        if MsgFromServer().parse() {}
+                        if handleMsgFromServer() {}
                     }
                     performSegue(withIdentifier: "gameSelect", sender: nil)
                 }

@@ -39,7 +39,59 @@ class Connection {
     }
 }
 
-class MsgFromServer {
+/* handleMsgFromServer(): takes the incoming message and splits it if there are multiple messages in buffer,
+ * then parses all of them
+ */
+func handleMsgFromServer() -> Bool {
+    let conn = gameState.getConnection()
+    var received: Data? = nil
+    while(received == nil)
+    {
+        received = conn.recvData()
+    }
+    let recvStr: String = String(data: received!, encoding: .utf8)!
+    var strArray: [String] = []
+    recvStr.enumerateLines { line, _ in
+        strArray.append(line)
+    }
+    for line in strArray {
+        var data = try! JSONSerialization.jsonObject(with: line.data(using: .utf8)!, options: []) as! [String: Any]
+        let type = data.removeValue(forKey: "Type") as! String
+        if (!parse(data: data, type: type)) {
+            return false
+        }
+    }
+    return true
+}
+
+/* parse(): convert data array into appropriate data struct depending on message type */
+func parse(data: [String: Any], type: String) -> Bool {
+    switch type {
+    case "PlayerListUpdate":
+        return parsePlayerListUpdate(data: data)
+    case "AvailableGames":
+        return parseAvailableGames(data: data)
+    case "GameInfo":
+        return parseGameInfo(data: data)
+    case "JoinGameError":
+        return parseJoinGameError(data: data)
+    case "GameStartInfo":
+        return parseGameStartInfo(data: data)
+    case "GameUpdate":
+        return parseGameUpdate(data: data)
+    case "StatusUpdate":
+        return parseStatusUpdate(data: data)
+    case "TakeHit":
+        return parseTakeHit(data: data)
+    case "Gameover":
+        return parseGameOver(data: data)
+    default:
+        return false
+    }
+}
+
+/* depreciated MsgFromServer class */
+/*class MsgFromServer {
     private var type: String = ""
     /* possible message types:
         PlayerListUpdate, AvailableGames, GameInfo, JoinGameError, GameStartInfo, GameUpdate, StatusUpdate
@@ -90,7 +142,7 @@ class MsgFromServer {
         print(self.type)
         print(self.data)
     }
-}
+}*/
 
 /* Parsing functions: helper functions called by parse() to parse different messages */
 /* The structure of each of the messages can be found in the Wiki section of the project github */

@@ -188,19 +188,19 @@ func TestGenerateObjectives(t *testing.T) {
 	}
 	g2.generateObjectives(2)
 	if (g2.RedTeam.Base != Location{50.0, 193.0}) {
-		t.Errorf("TestGenerateObjectives(8) failed, expected Location{50, 195}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
+		t.Errorf("TestGenerateObjectives(8) failed, expected Location{50, 193}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
 	}
 	if g2.RedTeam.BaseRadius != 5.0 {
 		t.Errorf("TestGenerateObjectives(9) failed, expected BaseRadius 5, got BaseRadius %f", g2.RedTeam.BaseRadius)
 	}
 	if (g2.BlueTeam.Base != Location{50.0, 7.0}) {
-		t.Errorf("TestGenerateObjectives(10) failed, expected Location{50,5}, got Location{%f,%f}", g2.BlueTeam.Base.X, g2.BlueTeam.Base.Y)
+		t.Errorf("TestGenerateObjectives(10) failed, expected Location{50,7}, got Location{%f,%f}", g2.BlueTeam.Base.X, g2.BlueTeam.Base.Y)
 	}
 	if g2.BlueTeam.BaseRadius != 5.0 {
 		t.Errorf("TestGenerateObjectives(11) failed, expected BaseRadius 5, got BaseRadius %f", g2.BlueTeam.BaseRadius)
 	}
 	if len(g2.ControlPoints) != 2 {
-		t.Errorf("TestGenerateObjectives(12) failed, expected 1 ControlPoint, got %d", len(g2.ControlPoints))
+		t.Errorf("TestGenerateObjectives(12) failed, expected 2 ControlPoints, got %d", len(g2.ControlPoints))
 	}
 	if !inGameBounds(g2, g2.ControlPoints["CP1"].Location) {
 		t.Errorf("TestGenerateObjectives(13) failed, expected inGameBounds(CP) to be TRUE, got FALSE")
@@ -210,6 +210,48 @@ func TestGenerateObjectives(t *testing.T) {
 	}
 	if len(g2.Pickups) < 180 || len(g2.Pickups) > 200 {
 		t.Errorf("TestGenerateObjectives(15) failed, expected between 190 and 200 pickups, got %d", len(g2.Pickups))
+	}
+
+	// a square arena
+	// PAYLOAD mode
+	g3 := &Game{
+		Boundaries: []Border{
+			{Location{0, 0}, Direction{100, 0}},
+			{Location{100, 0}, Direction{0, 100}},
+			{Location{100, 100}, Direction{-100, 0}},
+			{Location{0, 100}, Direction{0, -100}},
+		},
+		RedTeam: &Team{Name:"RedTeam"},
+		BlueTeam: &Team{Name:"BlueTeam"},
+		Mode: PAYLOAD,
+	}
+	g3.generateObjectives(1)
+	if (g3.RedTeam.Base != Location{50.0, 93.0}) {
+		t.Errorf("TestGenerateObjectives(16) failed, expected Location{50, 93}, got Location{%f,%f}", g3.RedTeam.Base.X, g3.RedTeam.Base.Y)
+	}
+	if g3.RedTeam.BaseRadius != 5.0 {
+		t.Errorf("TestGenerateObjectives(17) failed, expected BaseRadius 5, got BaseRadius %f", g3.RedTeam.BaseRadius)
+	}
+	if (g3.BlueTeam.Base != Location{50.0, 7.0}) {
+		t.Errorf("TestGenerateObjectives(18) failed, expected Location{50,7}, got Location{%f,%f}", g3.BlueTeam.Base.X, g3.BlueTeam.Base.Y)
+	}
+	if g3.BlueTeam.BaseRadius != 5.0 {
+		t.Errorf("TestGenerateObjectives(19) failed, expected BaseRadius 5, got BaseRadius %f", g3.BlueTeam.BaseRadius)
+	}
+	if len(g3.ControlPoints) != 1 {
+		t.Errorf("TestGenerateObjectives(20) failed, expected 1 ControlPoint, got %d", len(g3.ControlPoints))
+	}
+	if (g3.ControlPoints["Payload"].Location != Location{50.0, 50.0}) {
+		t.Errorf("TestGenerateObjectives(21) failed, expected Payload Location{50,50}, got Location{%f,%f}", g3.ControlPoints["Payload"].Location.X, g3.ControlPoints["Payload"].Location.Y)
+	}
+	if len(g3.Pickups) < 80 || len(g3.Pickups) > 100 {
+		t.Errorf("TestGenerateObjectives(22) failed, expected between 80 and 100 pickups, got %d", len(g3.Pickups))
+	}
+	if (g3.PayloadPath != Direction{0.0, -86.0}) {
+		t.Errorf("TestGenerateObjectives(23) failed, expected PayloadPath Direction{0,-86}, got Direction{%f,%f}", g3.PayloadPath.X, g3.PayloadPath.Y)
+	}
+	if g3.PayloadSpeed != 0.5 {
+		t.Errorf("TestGenerateObjectives(24) failed, expected PayloadSpeed 0.5, got %f", g3.PayloadSpeed)
 	}
 }
 

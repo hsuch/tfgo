@@ -87,7 +87,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
             while true {
-                if MsgFromServer().parse() {
+                if handleMsgFromServer() {
                     DispatchQueue.main.async {
                         if self.currentHealth != gameState.getUserHealth() {
                             self.currentHealth = gameState.getUserHealth()
