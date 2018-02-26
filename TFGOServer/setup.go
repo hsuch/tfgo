@@ -278,9 +278,9 @@ func generatePickup(g *Game, minX, minY, halfRange float64) {
 	rLock.Unlock()
 	var newPickup Pickup
 	if choice < healthProb {
-		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2)}
+		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2, false)}
 	} else if choice < armorProb {
-		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2)}
+		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2, true)}
 	} else {
 		for _, weapon := range weapons {
 			newPickup = WeaponPickup{weapon}

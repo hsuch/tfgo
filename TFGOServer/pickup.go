@@ -31,11 +31,16 @@ func (p WeaponPickup) use(player *Player) {
 }
 
 // functions for deciding on pickup attributes
-func chooseArmorHealth(g *Game, loc Location, grange float64) int {
+func chooseArmorHealth(g *Game, loc Location, grange float64, isArmor bool) int {
 	rLock.Lock()
 	baseAH := r.Intn(2 * MAXARMOR())
 	rLock.Unlock()
-	locAdj := (int)(math.Floor(distance(g.findCenter(), loc) * (float64)(MAXARMOR())/grange))
+	var locAdj int
+	if isArmor {
+		locAdj = (int)(math.Floor(distance(g.findCenter(), loc) * (float64)(MAXARMOR())/grange))
+	} else {
+		locAdj = (int)(math.Floor((grange/2 - distance(g.findCenter(), loc)) * (float64)(MAXHEALTH())/grange))
+	}
 	armorHealth := intMax(baseAH-locAdj, 10)
 	armorHealth = intMin(armorHealth, MAXARMOR())
 	return armorHealth
