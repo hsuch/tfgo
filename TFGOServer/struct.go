@@ -176,11 +176,27 @@ type Weapon struct {
 var weapons = map[string]Weapon {
 	"Sword" : SWORD,
 	"Shotgun" : SHOTGUN,
+	"Pistol" : PISTOL,
+	"Blaster" : BLASTER,
+	"Crossbow" : CROSSBOW,
+	"Sniper Rifle" : RIFLE,
+	"Boomerang" : BOOMERANG,
+	"Lightsaber" : LIGHTSABER,
+	"Spear" : SPEAR,
+	"Ban Hammer" : BANHAMMER,
 }
 
 var weaponToString = map[Weapon]string {
 	SWORD : "Sword",
 	SHOTGUN : "Shotgun",
+	PISTOL: "Pistol",
+	BLASTER: "Blaster",
+	CROSSBOW: "Crossbow",
+	RIFLE: "Sniper Rifle",
+	BOOMERANG: "Boomerang",
+	LIGHTSABER: "Lightsaber",
+	SPEAR: "Spear",
+	BANHAMMER: "Ban Hammer",
 }
 
 // each of the available weapons is defined as a globally
@@ -189,7 +205,7 @@ var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
 	Spread: math.Pi,
-	Range: 50,
+	Range: 1,
 	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
@@ -203,6 +219,86 @@ var SHOTGUN = Weapon {
 	ClipSize: 2,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
+}
+
+var PISTOL = Weapon {
+	Name: "Pistol",
+	Damage: 25,
+	Spread: math.Pi/2,
+	Range: 5,
+	ClipSize: 6,
+	ShotReload: time.Millisecond * 500,
+	ClipReload: time.Second * 3,
+}
+
+var BLASTER = Weapon {
+	Name: "Blaster",
+	Damage: 35,
+	Spread: math.Pi/3,
+	Range: 10,
+	ClipSize: 10,
+	ShotReload: time.Millisecond * 300,
+	ClipReload: time.Second * 5,
+}
+
+var CROSSBOW = Weapon {
+	Name: "Crossbow",
+	Damage: 20,
+	Spread: math.Pi/2,
+	Range: 5,
+	ClipSize: 20,
+	ShotReload: time.Second * 3,
+	ClipReload: time.Second * 20,
+}
+
+var RIFLE = Weapon {
+	Name: "Sniper Rifle",
+	Damage: 30,
+	Spread: math.Pi/8,
+	Range: 30,
+	ClipSize: 10,
+	ShotReload: time.Millisecond * 300,
+	ClipReload: time.Second * 3,
+}
+
+var BOOMERANG = Weapon {
+	Name: "Boomerang",
+	Damage: 20,
+	Spread: math.Pi,
+	Range: 13,
+	ClipSize: 1,
+	ShotReload: time.Second * 0,
+	ClipReload: time.Second * 20,
+}
+
+var LIGHTSABER = Weapon {
+	Name: "Lightsaber",
+	Damage: 50,
+	Spread: math.Pi,
+	Range: 1,
+	ClipSize: 1337,
+	ShotReload: time.Second * 0,
+	ClipReload: time.Second * 0,
+}
+
+var SPEAR = Weapon {
+	Name: "Spear",
+	Damage: 20,
+	Spread: math.Pi/2,
+	Range: 8,
+	ClipSize: 3,
+	ShotReload: time.Second * 1,
+	ClipReload: time.Second * 20,
+}
+
+var BANHAMMER = Weapon {
+	Name: "Ban Hammer",
+	Damage: 30,
+	Spread: math.Pi/2,
+	Range: 15,
+	ClipSize: 1,
+	ShotReload: time.Second * 0,
+	ClipReload: time.Second * 10,
 }
 
 // Helper functions, mostly for conversions
