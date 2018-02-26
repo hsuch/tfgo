@@ -31,7 +31,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         
             let myLocation = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
         
-            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
+            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.0015, 0.0015)
             region = MKCoordinateRegionMake(myLocation, span)
             host_map.isRotateEnabled = false
             initialized = true
