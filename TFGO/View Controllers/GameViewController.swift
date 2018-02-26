@@ -9,11 +9,13 @@
 import UIKit
 import MapKit
 import CoreLocation
+import AudioToolbox.AudioServices
 
 class GameViewController: UIViewController, CLLocationManagerDelegate {
     
-    
     @IBOutlet weak var game_map: MKMapView!
+    
+    private var game = gameState.getCurrentGame()
     
     let manager = CLLocationManager() // used to track the user's location
     
@@ -87,9 +89,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
             while true {
                 if MsgFromServer().parse() {
                     DispatchQueue.main.async {
-                        print("fuck")
                         if self.currentHealth != gameState.getUserHealth() {
                             self.currentHealth = gameState.getUserHealth()
+                            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                             let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
                             alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
                             self.present(alertController, animated: true, completion: nil)
@@ -100,11 +102,30 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    @IBOutlet weak var clock: UILabel!
+    @IBOutlet weak var redScore: UILabel!
+    @IBOutlet weak var blueScore: UILabel!
+    
+    private func tick() {
+//        let calender = Calendar.current
+//        let date = calender.dateComponents([.year,.month,.day,.hour,.minute,.second], from: Date())
+//
+//
+//        let year = date.year
+//        let month = date.month
+//        let day = date.day
+//        let hour = date.hour
+//        let minute = date.minute
+//        let second = date.second
+    }
     
     @IBAction func fireButton(_ sender: UIButton) {
         if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
             //Put on Cooldown. Not necessary for Iteration 1
         }
+        redScore.text = "\(game.getRedPoints())"
+        blueScore.text = "\(game.getBluePoints())"
+        tick()
     }
     
     var updateTimer = Timer()
@@ -118,22 +139,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
-
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         updateTimer.invalidate()
     }
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
 }
