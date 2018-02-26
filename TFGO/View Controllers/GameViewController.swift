@@ -21,6 +21,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     
     var initialized = false  // boolean set to true after the first tracking of user's position
     
+    var playerLocs: [MKPointAnnotation] = []
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // we want the most recent position of our user
@@ -140,6 +142,26 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
         }
+        
+        // update the locations of other players on the map
+        // first we remove all the previous player annotations
+        for playerLoc in playerLocs {
+            let annotation = playerLoc as MKAnnotation
+            self.game_map.removeAnnotation(annotation)
+        }
+        
+        // then we build a new list of player annotations
+        let playerList = gameState.getCurrentGame().getPlayers()
+        for player in playerList {
+            let annotation = MKPointAnnotation()
+            let loc = player.getLocation().coordinate
+            annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
+            annotation.title = player.getName()
+            annotation.subtitle = player.getTeam()
+            game_map.addAnnotation(annotation)
+            playerLocs.append(annotation)
+        }
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
