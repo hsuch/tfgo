@@ -86,7 +86,7 @@ class TFGOTests: XCTestCase {
         XCTAssertTrue(gameState.getFoundGames()[0].getName() == "DEF")
         XCTAssertTrue(gameState.getFoundGames()[0].getMode().rawValue == "SingleCapture")
         XCTAssertTrue(gameState.getFoundGames()[0].getLocation().x == 1.23)
-        XCTAssertTrue(gameState.getFoundGames()[0].getLocation().x == 12.3)
+        XCTAssertFalse(gameState.getFoundGames()[0].getLocation().x == 12.3)
         XCTAssertTrue(gameState.getCurrentGame().getDescription() == "Abc")
         XCTAssertTrue(gameState.getCurrentGame().getMaxPoints() == 100)
         XCTAssertTrue(gameState.getCurrentGame().getMaxPlayers() == 50)
@@ -95,7 +95,11 @@ class TFGOTests: XCTestCase {
         XCTAssertTrue(gameState.getCurrentGame().getObjectives()[0].getRadius() == 1.23)
         XCTAssertTrue(gameState.getCurrentGame().getPlayers()[0].getName() == "ABC")
         XCTAssertTrue(gameState.getCurrentGame().getPlayers()[1].getName() == "BCD")
-        
+        XCTAssertTrue(gameState.getCurrentGame().getStartTime()[0] == "2017")
+        XCTAssertTrue(gameState.getCurrentGame().getStartTime()[1] == "02")
+        XCTAssertTrue(gameState.getCurrentGame().getStartTime()[2] == "14")
+        XCTAssertTrue(gameState.getCurrentGame().getStartTime()[3] == "17")
+        XCTAssertFalse(gameState.getCurrentGame().getStartTime()[0] == "2018")
         /***
          
          Here we picked some casese where the parse function will "break" in the
