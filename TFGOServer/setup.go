@@ -215,13 +215,13 @@ func (g *Game) generateObjectives(numCP int) {
 		maxX = maxX - 2 *xOffset - cpRadius
 		minY = minY + 2 *yOffset + cpRadius
 		maxY = maxY - 2 *yOffset - cpRadius
-		xRange = maxX - minX
-		yRange = maxY - minY
+		xRangeM := maxX - minX
+		yRangeM := maxY - minY
 
 		// generate control points
 		rLock.Lock()
 		for i := 0; i < numCP; i++ {
-			cpLoc := Location{minX + r.Float64() *xRange, minY + r.Float64() *yRange}
+			cpLoc := Location{minX + r.Float64() * xRangeM, minY + r.Float64() * yRangeM}
 			if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
 				id := "CP" + strconv.Itoa(i+1)
 				cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
@@ -278,9 +278,9 @@ func generatePickup(g *Game, minX, minY, halfRange float64) {
 	rLock.Unlock()
 	var newPickup Pickup
 	if choice < healthProb {
-		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2)}
+		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2, false)}
 	} else if choice < armorProb {
-		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2)}
+		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2, true)}
 	} else {
 		for _, weapon := range weapons {
 			newPickup = WeaponPickup{weapon}
