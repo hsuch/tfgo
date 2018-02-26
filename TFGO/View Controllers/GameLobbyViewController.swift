@@ -89,19 +89,30 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.gameDistanceLabel.text = "\(gameState.getDistanceFromGame(game: game)) units away"
         cell.layer.cornerRadius = 8.0
         cell.backgroundColor = randomColor()
+        cell.userCollection.delegate = self
+        cell.userCollection.dataSource = self
+        cell.userCollection.backgroundColor = cell.backgroundColor
+        cell.userCollection.reloadData()
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //
+        if let cell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
+            for game in gamesList {
+                if cell.gameNameLabel.text == game.getName() {
+                    return game.getPlayers().count
+                }
+            }
+        }
         return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
-//        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
-//            cell.label.text = lobbyCell.game?.getPlayers()[indexPath.row].getIcon()
-//        }
+        if let lobbyCell = collectionView.superview?.superview as? LobbyCustomViewCell {
+            let game = gamesList[(table.indexPath(for: lobbyCell)?.row)!]
+            cell.label.text = game.getPlayers()[indexPath.row].getIcon()
+        }
         cell.backgroundColor = randomColor()
         cell.layer.cornerRadius = 8.0
         cell.clipsToBounds = true
