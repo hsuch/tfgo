@@ -99,23 +99,20 @@ func TestMovePayload(t *testing.T) {
 	g.Mode = PAYLOAD
 	g.generateObjectives(1)
 
-	g.ControlPoints["Payload"].BlueCount = 0
-	g.ControlPoints["Payload"].RedCount = 0
+	g.ControlPoints["Payload"].ControllingTeam = nil
 	movePayload(g)
 	cpLoc := g.ControlPoints["Payload"].Location
 	if cpLoc.X != 50.0 && cpLoc.Y != 50.0 {
 		t.Errorf("TestMovePayload(1) failed, expected payload location to be (50,50), (%f,%f)", cpLoc.X, cpLoc.Y)
 	}
 
-	g.ControlPoints["Payload"].BlueCount = 1
+	g.ControlPoints["Payload"].ControllingTeam = g.RedTeam
 	movePayload(g)
-	cpLoc = g.ControlPoints["Payload"].Location
-	if cpLoc.X != 50.0 && cpLoc.Y != 49.0 {
-		t.Errorf("TestMovePayload(2) failed, expected payload location to be (50,49), got (%f,%f)", cpLoc.X, cpLoc.Y)
+	if cpLoc.X != 50.0 && cpLoc.Y != 49.5 {
+		t.Errorf("TestMovePayload(2) failed, expected payload location to be (50,49.5), got (%f,%f)", cpLoc.X, cpLoc.Y)
 	}
 
-	g.ControlPoints["Payload"].BlueCount = 0
-	g.ControlPoints["Payload"].RedCount = 1
+	g.ControlPoints["Payload"].ControllingTeam = g.BlueTeam
 	movePayload(g)
 	cpLoc = g.ControlPoints["Payload"].Location
 	if cpLoc.X != 50.0 && cpLoc.Y != 50.0 {
