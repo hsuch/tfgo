@@ -4,6 +4,7 @@ package main
 
 import (
 	"math"
+	"time"
 )
 
 // returns the dot product of two Direction vectors
@@ -74,38 +75,34 @@ func (p *Player) takeHit(game *Game, wep Weapon) {
 	}
 	if p.Health <= 0 {
 		p.Health = 0
-		go p.awaitRespawn(game)
+		p.Status = RESPAWNING
+		if p.OccupyingPoint != nil {
+			if p.Team == game.RedTeam {
+				p.OccupyingPoint.RedCount--
+			} else if p.Team == game.BlueTeam {
+				p.OccupyingPoint.BlueCount--
+			}
+			p.OccupyingPoint = nil
+		}
+		sendStatusUpdate(p, "Respawn")
 	} else {
-		sendVitalStats(p)
+		sendVitalsUpdate(p)
 	}
 }
 
 func (p *Player) awaitRespawn(game *Game) {
-	p.Status = RESPAWNING
-	if p.OccupyingPoint != nil {
-		if p.Team == game.RedTeam {
-			p.OccupyingPoint.RedCount--
-		} else if p.Team == game.BlueTeam {
-			p.OccupyingPoint.BlueCount--
-		}
-		p.OccupyingPoint = nil
-	}
-	sendStatusUpdate(p, "Respawn")
-	if !isTesting {
+	p.StatusTimer = time.NewTimer(RESPAWNTIME())
+	for {
 		<- p.StatusTimer.C
-		p.respawn(game)
-	}
-}
-
-func (p *Player) respawn(game *Game) {
-	p.Status = NORMAL
-	p.StatusTimer = nil
-	p.Health = MAXHEALTH()
-	p.Armor = 0
-
-	if !inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
-		go p.awaitRespawn(game)
-	} else {
-		sendStatusUpdate(p, "Respawned")
+		if inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
+			p.Status = NORMAL
+			p.StatusTimer = nil
+			p.Health = MAXHEALTH()
+			p.Armor = 0
+			sendStatusUpdate(p, "Respawned")
+			break
+		} else {
+			p.StatusTimer = time.NewTimer(RESPAWNTIME())
+		}
 	}
 }

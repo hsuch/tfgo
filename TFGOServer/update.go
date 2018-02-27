@@ -53,14 +53,15 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 
 	// start respawn timer if they just returned to their base after dying
 	if p.Status == RESPAWNING && p.StatusTimer == nil && inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
-		p.StatusTimer = time.NewTimer(RESPAWNTIME())
+		p.awaitRespawn(game)
 	}
 
 	// handle entering/exiting game boundaries
 	if p.Status == NORMAL && !inGameBounds(game, p.Location) {
 		p.Status = OUTOFBOUNDS
 		p.StatusTimer = time.AfterFunc(OUTOFBOUNDSTIME(), func() {
-			p.awaitRespawn(game)
+			p.Status = RESPAWNING
+			sendStatusUpdate(p, "Respawn")
 		})
 		sendStatusUpdate(p, "OutOfBounds")
 	} else if p.Status == OUTOFBOUNDS && inGameBounds(game, p.Location) {
@@ -74,7 +75,7 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 	if p.Status == NORMAL {
 		for _, pickup := range game.Pickups {
 			if inRange(p.Location, pickup.Location, PICKUPRADIUS()) {
-				pickup.consumePickup(p)
+				pickup.consumePickup(p, game)
 				break
 			}
 		}
@@ -137,12 +138,22 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 		cp.CaptureProgress = -7
 	}
 
-	// add a point to the team controlling this control point
+	// modify data for the controlling team
 	if cp.ControllingTeam != nil {
-		cp.ControllingTeam.Points++
-		if cp.ControllingTeam.Points == game.PointLimit {
-			game.Timer.Stop()
-			game.stop()
+		if game.Mode == PAYLOAD {
+			movePayload(game)
+			payloadLoc := game.ControlPoints["Payload"].Location
+			if inRange(payloadLoc, game.RedTeam.Base, game.RedTeam.BaseRadius) ||
+				inRange(payloadLoc, game.BlueTeam.Base, game.BlueTeam.BaseRadius) {
+				game.Timer.Stop()
+				game.stop()
+			}
+		} else {
+			cp.ControllingTeam.Points++
+			if cp.ControllingTeam.Points == game.PointLimit {
+				game.Timer.Stop()
+				game.stop()
+			}
 		}
 	}
 }
