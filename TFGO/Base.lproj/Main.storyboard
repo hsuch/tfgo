@@ -1023,22 +1023,20 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="WZL-hS-MaZ">
-                                <rect key="frame" x="16" y="748" width="343" height="16"/>
-                                <color key="tintColor" red="1" green="0.1055042148" blue="0.16003847879999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="16" y="738" width="343" height="16"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="klz-gz-dVa"/>
                                 </constraints>
                                 <color key="progressTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="trackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </progressView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="1" translatesAutoresizingMaskIntoConstraints="NO" id="Mxi-NA-Mod">
-                                <rect key="frame" x="16" y="763" width="343" height="16"/>
-                                <color key="tintColor" red="1" green="0.10550421476571237" blue="0.16003847884382116" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="16" y="753" width="343" height="16"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="i7N-PV-ScY"/>
                                 </constraints>
                                 <color key="progressTintColor" red="1" green="0.1055042148" blue="0.16003847879999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="trackTintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1053,7 +1051,7 @@
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="leading" secondItem="Gte-M2-hCv" secondAttribute="trailing" constant="8" id="EMy-Yx-ye1"/>
                             <constraint firstItem="q8e-PW-GWW" firstAttribute="centerY" secondItem="UjK-QY-EBG" secondAttribute="centerY" id="EOx-Yd-2hU"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="top" secondItem="fFv-lY-09b" secondAttribute="top" id="I2f-cm-RF0"/>
-                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="bottom" secondItem="hNm-qJ-cQQ" secondAttribute="bottom" id="Mhg-Jx-BiS"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="bottom" secondItem="hNm-qJ-cQQ" secondAttribute="bottom" constant="-10" id="Mhg-Jx-BiS"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="trailing" secondItem="wVE-TO-o2V" secondAttribute="trailing" constant="16" id="NpH-oc-ZPY"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="height" secondItem="UjK-QY-EBG" secondAttribute="height" id="QdA-Ro-qoa"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="top" secondItem="wVE-TO-o2V" secondAttribute="bottom" constant="-79" id="Sey-Ec-cw6"/>

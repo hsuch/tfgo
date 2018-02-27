@@ -56,7 +56,6 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     }
     
     @IBAction func playerAlert(_ sender: UIButton) {
-        gameState.setUserName(to: nameField.text ?? "")
         if gameState.getUserName() == "" {
             let alertController = UIAlertController(title: "Invalid Username", message:
                 "Please input a username", preferredStyle: UIAlertControllerStyle.alert)
@@ -71,6 +70,7 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        gameState.setUserName(to: nameField.text ?? "")
         return gameState.getUser().isValid()
     }
 }
