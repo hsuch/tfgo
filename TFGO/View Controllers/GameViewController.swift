@@ -140,6 +140,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBOutlet weak var armorBar: UIProgressView!
     @IBOutlet weak var healthBar: UIProgressView!
     
+    override func viewWillAppear(_ animated: Bool) {
+        armorBar.layer.cornerRadius = 2.0
+        armorBar.layer.borderWidth = 3.0
+        armorBar.layer.borderColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        healthBar.layer.cornerRadius = 2.0
+        healthBar.layer.borderWidth = 3.0
+        healthBar.layer.borderColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+    }
+    
     private func talkShitGetHit() {
         if status != (gameState.getUserHealth(), gameState.getUserArmor()) {
             status = (gameState.getUserHealth(), gameState.getUserArmor())

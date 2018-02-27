@@ -17,25 +17,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         background.image = UIImage(named: "bg2")
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if identifier == "temp" {
-            let connection = gameState.getConnection()
-            if connection.sendData(data: ShowGamesMsg()).isSuccess {
-                if handleMsgFromServer(), gameState.findPublicGames().count > 0 {
-                    let game = gameState.findPublicGames()[0]
-                    if connection.sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
-                        return gameState.setCurrentGame(to: game)
-                    }
-                }
-            }
-            return false
-        } else {
-            return true
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
