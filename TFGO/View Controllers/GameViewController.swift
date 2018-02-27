@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import AudioToolbox.AudioServices
 
-class GameViewController: UIViewController, CLLocationManagerDelegate {
+class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     @IBOutlet weak var game_map: MKMapView!
     
@@ -20,6 +20,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
     let manager = CLLocationManager() // used to track the user's location
     
     var initialized = false  // boolean set to true after the first tracking of user's position
+    
+    var playerLocs: [MKPointAnnotation] = []
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
@@ -57,6 +59,23 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    func game_map(game_map: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKCircle {
+            var circleRenderer = MKCircleRenderer(overlay: overlay)
+            circleRenderer.fillColor = UIColor.blue
+            circleRenderer.strokeColor = UIColor.red
+            circleRenderer.lineWidth = 1
+            return circleRenderer
+        }
+        return MKOverlayRenderer(overlay: overlay)
+    }
+    
+    func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
+        self.game_map.delegate = self
+        var circle = MKCircle(center: location.coordinate, radius: radius)
+        self.game_map.add(circle)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -81,13 +100,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
             annotation.subtitle = String(objectiveNumber)
             game_map.addAnnotation(annotation)
             
+            var center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
+            addRadiusCircle(location: center, radius: objective.getRadius())
+            
             objectiveNumber = objectiveNumber + 1
         }
+        
+        
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
             while true {
-                if MsgFromServer().parse() {
+                if handleMsgFromServer() {
                     DispatchQueue.main.async {
                         if self.currentHealth != gameState.getUserHealth() {
                             self.currentHealth = gameState.getUserHealth()
@@ -140,6 +164,26 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
         }
+        
+        // update the locations of other players on the map
+        // first we remove all the previous player annotations
+        for playerLoc in playerLocs {
+            let annotation = playerLoc as MKAnnotation
+            self.game_map.removeAnnotation(annotation)
+        }
+        
+        // then we build a new list of player annotations
+        let playerList = gameState.getCurrentGame().getPlayers()
+        for player in playerList {
+            let annotation = MKPointAnnotation()
+            let loc = player.getLocation().coordinate
+            annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
+            annotation.title = player.getName()
+            annotation.subtitle = player.getTeam()
+            game_map.addAnnotation(annotation)
+            playerLocs.append(annotation)
+        }
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -37,7 +37,20 @@ func inGameBounds(game *Game, loc Location) bool {
 
 // in PAYLOAD mode, moves the payload towards the base of the controlling team
 func movePayload(game *Game) {
-	//to be implemented
+	cp := game.ControlPoints["Payload"]
+	if cp.ControllingTeam == nil {
+		return
+	}
+	var t float64
+	if cp.ControllingTeam == game.BlueTeam {
+		t = -1
+	} else {
+		t = 1
+	}
+
+	cp.Location.X += t * game.PayloadPath.X * game.PayloadSpeed
+	cp.Location.Y += t * game.PayloadPath.Y * game.PayloadSpeed
+	return
 }
 
  // set player location, updating respawn, out-of-bounds, and control point

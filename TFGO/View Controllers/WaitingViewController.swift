@@ -33,7 +33,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Do any additional setup after loading the view.
          DispatchQueue.global(qos: .background).async {
             while !self.startGame {
-                if MsgFromServer().parse() { }
+                if handleMsgFromServer() { }
             }
         }
     }
@@ -76,7 +76,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
            // DispatchQueue.global(qos: .background).async {
                 //while gameState.getCurrentGame().getStartTime() == "" {
-            if MsgFromServer().parse() {
+            if handleMsgFromServer() {
                 if gameState.getCurrentGame().getStartTime() != [] {
                     startGame = true
                     return true

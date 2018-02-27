@@ -239,6 +239,8 @@ func (g *Game) generateObjectives(numCP int) {
 	} else {
 		cpLoc := Location{(g.RedTeam.Base.X + g.BlueTeam.Base.X) / 2, (g.RedTeam.Base.Y + g.BlueTeam.Base.Y) / 2}
 		g.ControlPoints["Payload"] = &ControlPoint{ID: "Payload", Location: cpLoc, Radius: cpRadius}
+		g.PayloadSpeed = math.Min(xRange / 120, MAXSPEED())
+		g.PayloadPath = Direction{X: g.BlueTeam.Base.X - g.RedTeam.Base.X, Y: g.BlueTeam.Base.Y - g.RedTeam.Base.Y}
 	}
 
 	// generate pickups

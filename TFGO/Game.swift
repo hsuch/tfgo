@@ -28,6 +28,8 @@ class Player {
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     private var orientation: Float
     private var weapon: String
+    private var weapons: [String] = []
+    private var pickups: [Pickup] = []
     private var status: String
     private var health: Int
     private var armor: Int
@@ -109,6 +111,10 @@ class Player {
         self.team = team
     }
     
+    func addWeapon(to weapon: String) {
+        self.weapons.append(weapon)
+    }
+    
     func isValid() -> Bool {
         return name != "" && icon.count == 1
     }
@@ -133,6 +139,7 @@ public class Objective {
     private var occupants: [String]
     private var owner: String
     private var progress: Int
+    private var id: String
     
     func getXLoc() -> Double {
         return xLoc
@@ -166,14 +173,53 @@ public class Objective {
         self.progress = progress
     }
     
+    func getID() -> String {
+        return id
+    }
     
-    init(x: Double, y: Double, radius: Double) {
+    func setID(to id: String) {
+        self.id = id
+    }
+    
+    init(x: Double, y: Double, radius: Double, id: String) {
         self.radius = radius
         self.occupants = []
         self.owner = "Neutral"
         self.progress = 0
         self.xLoc = x
         self.yLoc = y
+        self.id = id
+    }
+    
+}
+
+public class Pickup {
+    
+    private var loc : MKMapPoint
+    private var type : String
+    private var amount : Int
+    private var available : Bool = true
+    
+    init(loc: MKMapPoint, type: String, amount: Int) {
+        self.loc = loc
+        self.type = type
+        self.amount = amount
+    }
+    
+    func getX() -> Double {
+        return loc.x
+    }
+    
+    func getY() -> Double {
+        return loc.y
+    }
+    
+    func getAvailability() -> Bool {
+        return available
+    }
+    
+    func setAvailability(to availability: Bool) {
+        self.available = availability
     }
     
 }
@@ -195,8 +241,13 @@ public class Game {
     
     private var objectives: [Objective]
     private var players: [Player]
+    private var pickups: [Pickup] = []
     private var boundaries: [MKMapPoint]
     private var location: MKMapPoint
+    private var blueBaseLoc : MKMapPoint
+    private var blueBaseRad : Double = 0.0
+    private var redBaseLoc : MKMapPoint
+    private var redBaseRad : Double = 0.0
     
     func getID() -> String? {
         return ID
@@ -282,8 +333,13 @@ public class Game {
         return startTime
     }
     
+    func stringSplit(to time: String) -> [String] {
+        let result = time.components(separatedBy: ["-", " ", ":"])
+        return result
+    }
+    
     func setStartTime(to startTime:String) {
-        let time: [String] = ["1"]
+        let time: [String] = stringSplit(to: startTime)
         self.startTime = time
     }
     
@@ -317,6 +373,14 @@ public class Game {
     
     func setPlayers(toGame players: [Player]) {
         self.players = players
+    }
+    
+    func getPickups() -> [Pickup] {
+        return pickups
+    }
+    
+    func setPickups(toPickup pickups: [Pickup]) {
+        self.pickups = pickups
     }
     
     func addPlayer(toGame player: Player) {
@@ -359,10 +423,21 @@ public class Game {
         return -1
     }
     
-    func findObjectiveIndex(x: Double, y: Double) -> Int {
+    func findObjectiveIndex(id: String) -> Int {
         var i = 0
         for objective in objectives {
-            if x == objective.getXLoc(), y == objective.getYLoc() {
+            if id == objective.getID() {
+                return i
+            }
+            i = i + 1
+        }
+        return -1
+    }
+    
+    func findPickupIndex(x: Double, y: Double) -> Int {
+        var i = 0
+        for pickup in pickups {
+            if x == pickup.getX(), y == pickup.getY() {
                 return i
             }
             i = i + 1
@@ -376,6 +451,38 @@ public class Game {
     
     func getLocation() -> MKMapPoint {
         return location
+    }
+    
+    func getBlueBaseLoc() -> MKMapPoint {
+        return blueBaseLoc
+    }
+    
+    func setBlueBaseLoc(to loc: MKMapPoint) {
+        self.blueBaseLoc = loc
+    }
+    
+    func getBlueBaseRad() -> Double {
+        return blueBaseRad
+    }
+    
+    func setBlueBaseRad(to radius: Double) {
+        self.blueBaseRad = radius
+    }
+    
+    func getRedBaseLoc() -> MKMapPoint {
+        return redBaseLoc
+    }
+    
+    func setRedBaseLoc(to loc: MKMapPoint) {
+        self.redBaseLoc = loc
+    }
+    
+    func getRedBaseRad() -> Double {
+        return redBaseRad
+    }
+    
+    func setRedBaseRad(to radius: Double) {
+        self.redBaseRad = radius
     }
     
     private func validName(_ name: String?) -> Bool {
@@ -409,5 +516,7 @@ public class Game {
         boundaries = []
         objectives = []
         location = MKMapPoint()
+        blueBaseLoc = MKMapPoint()
+        redBaseLoc = MKMapPoint()
     }
 }
