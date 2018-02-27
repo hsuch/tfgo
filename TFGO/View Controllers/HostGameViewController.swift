@@ -61,6 +61,12 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let region = MKCoordinateRegionMake(center, span)
         self.host_map.setRegion(region, animated: true)
         
+        /*
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action:Selector(("handleTap:")))
+        gestureRecognizer.delegate = self as? UIGestureRecognizerDelegate
+        host_map.addGestureRecognizer(gestureRecognizer)
+        */
+        
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
@@ -72,7 +78,41 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+   /*
+    func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
+        
+        let location = gestureReconizer.location(in: host_map)
+        let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
+        
+        // Add annotation:
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = "corner"
+        annotation.subtitle = "tbd"
+        host_map.addAnnotation(annotation)
+    }
+    */
     
+    //@IBOutlet weak var host_map: MKMapView!
+    
+    func handleLongPress (gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == UIGestureRecognizerState.began {
+        
+        let touchPoint: CGPoint = gestureRecognizer.location(in: host_map)
+        let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
+        
+        addAnnotationOnLocation(pointedCoordinate: newCoordinate)
+        }
+    }
+    
+    func addAnnotationOnLocation(pointedCoordinate: CLLocationCoordinate2D) {
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = pointedCoordinate
+        annotation.title = "Loading..."
+        annotation.subtitle = "Loading..."
+        host_map.addAnnotation(annotation)
+    }
     
     
     @IBOutlet weak var nameField: UITextField!
