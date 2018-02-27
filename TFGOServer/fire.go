@@ -94,6 +94,13 @@ func (p *Player) awaitRespawn(game *Game) {
 	p.StatusTimer = time.NewTimer(RESPAWNTIME())
 	for {
 		<- p.StatusTimer.C
+
+		// account for early timer termination due to game end
+		time.Sleep(10 * time.Millisecond)
+		if p.StatusTimer == nil {
+			break
+		}
+
 		if inRange(p.Location, p.Team.Base, p.Team.BaseRadius) {
 			p.Status = NORMAL
 			p.StatusTimer = nil
