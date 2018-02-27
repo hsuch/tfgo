@@ -57,7 +57,7 @@ type Border struct {
 }
 
 type Game struct {
-	ID          string
+	HostID      string
 	Name        string
 	Password    string
 	Description string
@@ -96,6 +96,7 @@ var playerStatusToString = map[PlayerStatus]string {
 }
 
 type Player struct {
+	ID string
 	Name string
 	Icon string
 	Team *Team
@@ -182,11 +183,11 @@ var weapons = map[string]Weapon {
 	"Pistol" : PISTOL,
 	"Blaster" : BLASTER,
 	"Crossbow" : CROSSBOW,
-	"Sniper Rifle" : RIFLE,
+	"SniperRifle" : RIFLE,
 	"Boomerang" : BOOMERANG,
 	"Lightsaber" : LIGHTSABER,
 	"Spear" : SPEAR,
-	"Ban Hammer" : BANHAMMER,
+	"BanHammer" : BANHAMMER,
 }
 
 var weaponToString = map[Weapon]string {
@@ -195,11 +196,11 @@ var weaponToString = map[Weapon]string {
 	PISTOL: "Pistol",
 	BLASTER: "Blaster",
 	CROSSBOW: "Crossbow",
-	RIFLE: "Sniper Rifle",
+	RIFLE: "SniperRifle",
 	BOOMERANG: "Boomerang",
 	LIGHTSABER: "Lightsaber",
 	SPEAR: "Spear",
-	BANHAMMER: "Ban Hammer",
+	BANHAMMER: "BanHammer",
 }
 
 // each of the available weapons is defined as a globally
@@ -255,7 +256,7 @@ var CROSSBOW = Weapon {
 }
 
 var RIFLE = Weapon {
-	Name: "Sniper Rifle",
+	Name: "SniperRifle",
 	Damage: 30,
 	Spread: math.Pi/8,
 	Range: 30,
@@ -295,7 +296,7 @@ var SPEAR = Weapon {
 }
 
 var BANHAMMER = Weapon {
-	Name: "Ban Hammer",
+	Name: "BanHammer",
 	Damage: 30,
 	Spread: math.Pi/2,
 	Range: 15,

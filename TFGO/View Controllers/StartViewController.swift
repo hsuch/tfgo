@@ -49,24 +49,14 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         gameState.setUserIcon(to: cell.label.text!)
     }
     
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return gameState.getUser().isValid()
-    }
-    
     @IBOutlet weak var nameField: UITextField!
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        var name = gameState.getUserName()
-        name.append(string)
-        gameState.setUserName(to: name)
-        return true
-    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }
     
     @IBAction func playerAlert(_ sender: UIButton) {
+        gameState.setUserName(to: nameField.text ?? "")
         if gameState.getUserName() == "" {
             let alertController = UIAlertController(title: "Invalid Username", message:
                 "Please input a username", preferredStyle: UIAlertControllerStyle.alert)
@@ -80,4 +70,7 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         }
     }
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        return gameState.getUser().isValid()
+    }
 }

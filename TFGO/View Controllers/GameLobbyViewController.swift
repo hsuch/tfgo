@@ -25,6 +25,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         self.table.dataSource = self;
         self.table.delegate = self;
         runTimer()
+        updateGames()
 
         DispatchQueue.global(qos: .background).async {
             if  gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
@@ -33,7 +34,6 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
             }
         }
-        table.reloadData()
     }
     
     private var gamesPrivate: [Game] = []

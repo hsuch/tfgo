@@ -17,6 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         background.image = UIImage(named: "bg2")
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -35,6 +36,10 @@ class ViewController: UIViewController {
         } else {
             return true
         }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
 }

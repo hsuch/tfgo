@@ -6,28 +6,30 @@ import (
 )
 
 // consume a pickup and start its respawn timer
-func (p *PickupSpot) consumePickup(player *Player) {
+func (p *PickupSpot) consumePickup(player *Player, game *Game) {
 	p.Pickup.use(player)
 	p.Available = false
+	sendPickupUpdate(p, game)
 	p.SpawnTimer = time.AfterFunc(PICKUPRESPAWNTIME(), func() {
 		p.Available = true
 		p.SpawnTimer = nil
+		sendPickupUpdate(p, game)
 	})
 }
 
 // interface implementations
 func (p ArmorPickup) use(player *Player) {
 	player.Armor = intMin(MAXARMOR(), player.Armor + p.AP)
-	sendVitalStats(player)
+	sendVitalsUpdate(player)
 }
 
 func (p HealthPickup) use(player *Player) {
 	player.Health = intMin(MAXHEALTH(), player.Health + p.HP)
-	sendVitalStats(player)
+	sendVitalsUpdate(player)
 }
 
 func (p WeaponPickup) use(player *Player) {
-	sendWeaponAcquire(player, p.WP)
+	sendAcquireWeapon(player, p.WP)
 }
 
 // functions for deciding on pickup attributes
