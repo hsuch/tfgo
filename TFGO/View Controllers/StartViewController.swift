@@ -71,6 +71,7 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         gameState.setUserName(to: nameField.text ?? "")
+        gameState.getConnection().sendData(data: RegisterPlayerMsg())
         return gameState.getUser().isValid()
     }
 }
