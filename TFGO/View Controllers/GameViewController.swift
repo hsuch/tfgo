@@ -191,13 +191,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         // then we build a new list of player annotations
         let playerList = gameState.getCurrentGame().getPlayers()
         for player in playerList {
-            let annotation = MKPointAnnotation()
-            let loc = player.getLocation().coordinate
-            annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
-            annotation.title = player.getName()
-            annotation.subtitle = player.getTeam()
-            game_map.addAnnotation(annotation)
-            playerLocs.append(annotation)
+            if player.getName() != gameState.getUser().getName() {
+                let annotation = MKPointAnnotation()
+                let loc = player.getLocation().coordinate
+                annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
+                annotation.title = player.getName()
+                annotation.subtitle = player.getTeam()
+                game_map.addAnnotation(annotation)
+                playerLocs.append(annotation)
+            }
         }
         
     }
