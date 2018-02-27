@@ -78,8 +78,8 @@ type Game struct {
 	ControlPoints map[string]*ControlPoint
 	Pickups		  []*PickupSpot
 
-	PayloadPath		Direction
-	PayloadSpeed	float64
+	PayloadPath		Direction	//direction of Payload motion from Red base to Blue base
+	PayloadSpeed	float64		//in meter/second
 }
 
 type PlayerStatus int
@@ -188,6 +188,7 @@ var weapons = map[string]Weapon {
 	"Lightsaber" : LIGHTSABER,
 	"Spear" : SPEAR,
 	"BanHammer" : BANHAMMER,
+	"BeeSwarm" : BEESWARM,
 }
 
 var weaponToString = map[Weapon]string {
@@ -201,6 +202,7 @@ var weaponToString = map[Weapon]string {
 	LIGHTSABER: "Lightsaber",
 	SPEAR: "Spear",
 	BANHAMMER: "BanHammer",
+	BEESWARM: "BeeSwarm",
 }
 
 // each of the available weapons is defined as a globally
@@ -305,6 +307,16 @@ var BANHAMMER = Weapon {
 	ClipReload: time.Second * 10,
 }
 
+var BEESWARM = Weapon {
+	Name: "BeeSwarm",
+	Damage: 10,
+	Spread: 2 * math.Pi,
+	Range: 3,
+	ClipSize: 1337,
+	ShotReload: time.Second * 0,
+	ClipReload: time.Second * 0,
+}
+
 // Helper functions, mostly for conversions
 func meterToDegree(m float64) float64 {
 	return m * 9 / 1000000
@@ -350,7 +362,7 @@ func PICKUPRESPAWNTIME() time.Duration {
 	return 15 * time.Second
 }
 
-// returns the baseRadius given the games x and y dimensions
+// returns the baseRadius given the game's x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small
 func BASERADIUS(x, y float64) float64 {
 	if x < 14 || y < 14 {
