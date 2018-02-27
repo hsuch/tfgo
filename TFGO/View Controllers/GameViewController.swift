@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import AudioToolbox.AudioServices
 
-class GameViewController: UIViewController, CLLocationManagerDelegate {
+class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     @IBOutlet weak var game_map: MKMapView!
     
@@ -59,6 +59,23 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    func game_map(game_map: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKCircle {
+            var circleRenderer = MKCircleRenderer(overlay: overlay)
+            circleRenderer.fillColor = UIColor.blue
+            circleRenderer.strokeColor = UIColor.red
+            circleRenderer.lineWidth = 1
+            return circleRenderer
+        }
+        return MKOverlayRenderer(overlay: overlay)
+    }
+    
+    func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
+        self.game_map.delegate = self
+        var circle = MKCircle(center: location.coordinate, radius: radius)
+        self.game_map.add(circle)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -83,8 +100,13 @@ class GameViewController: UIViewController, CLLocationManagerDelegate {
             annotation.subtitle = String(objectiveNumber)
             game_map.addAnnotation(annotation)
             
+            var center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
+            addRadiusCircle(location: center, radius: objective.getRadius())
+            
             objectiveNumber = objectiveNumber + 1
         }
+        
+        
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
