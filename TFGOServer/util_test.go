@@ -21,6 +21,7 @@ func isAcceptableError(testValue float64, expectedValue float64, errorThreshold 
 
 func makeJenny(team *Team, cp *ControlPoint) *Player {
 	jenny := Player {
+		ID: "jenny",
 		Name: "Jenny",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -36,6 +37,7 @@ func makeJenny(team *Team, cp *ControlPoint) *Player {
 
 func makeBrad(team *Team, cp *ControlPoint) *Player {
 	brad := Player {
+		ID: "brad",
 		Name: "Brad",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -51,6 +53,7 @@ func makeBrad(team *Team, cp *ControlPoint) *Player {
 
 func makeAnders(team *Team, cp *ControlPoint) *Player {
 	anders := Player {
+		ID: "anders",
 		Name: "Anders",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -66,6 +69,7 @@ func makeAnders(team *Team, cp *ControlPoint) *Player {
 
 func makeOliver(team *Team, cp *ControlPoint) *Player {
 	oliver := Player {
+		ID: "oliver",
 		Name: "Oliver",
 		Team: team,
 		Chan: make(chan map[string]interface{}),
@@ -125,7 +129,7 @@ func makeSampleGame() *Game {
 	cp1 := makeCP1()
 	cp2 := makeCP2()
 	return &Game {
-		ID: "G1",
+		HostID: "jenny",
 		Name: "Test Game",
 		Password: "tfgo",
 		Status: PLAYING,

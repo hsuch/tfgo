@@ -321,6 +321,7 @@ func (p *Player) leaveGame(game *Game) {
 	if game.HostID == p.ID {
 		delete(games, game.HostID)
 		sendLeaveGame(game)
+		game.Players = nil
 	} else {
 		delete(game.Players, p.ID)
 	}

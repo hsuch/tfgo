@@ -76,13 +76,10 @@ func TestCreateGame(t *testing.T) {
 			map[string]interface{} {"X": meterToDegree(100.0), "Y": meterToDegree(100.0)},
 			map[string]interface{} {"X": 0.0, "Y": meterToDegree(100.0)},
 		},
-		"Host" : map[string]interface{} {
-			"Name" : "P1Name",
-			"Icon" : "P1Icon",
-		},
-
 	}
-	g, p := createGame(nil, data)
+
+	p := &Player{ID: "P1ID", Name: "P1Name", Icon: "P1Icon"}
+	g := p.createGame(nil, data)
 
 	if g.Name != data["Name"] {
 		t.Errorf("TestCreateGame(1) failed, expected (Game) Name %s, got (Game) Name %s", data["Name"], g.Name)
@@ -115,23 +112,15 @@ func TestCreateGame(t *testing.T) {
 				g.Boundaries[i].P.X, g.Boundaries[i].P.Y, g.Boundaries[i].D.X, g.Boundaries[i].D.Y)
 		}
 	}
-	if p.Name != data["Host"].(map[string]interface{})["Name"] {
-		t.Errorf("TestCreateGame(10) failed, expected (Player) Name %s, got (Player) Name %s",
-			data["Host"].(map[string]interface{})["Name"], p.Name)
-	}
-	if p.Icon != data["Host"].(map[string]interface{})["Icon"] {
-		t.Errorf("TestCreateGame(11) failed, expected Icon %s, got Icon %s",
-			data["Host"].(map[string]interface{})["Icon"], p.Icon)
-	}
 	if g.RedTeam.Name != "Red" {
 		t.Errorf("TestCreateGame(12) failed, expected (RedTeam) Name %s, got (RedTeam) Name %s", "Red", g.RedTeam.Name)
 	}
 	if g.BlueTeam.Name != "Blue" {
 		t.Errorf("TestCreateGame(13) failed, expected (BlueTeam) Name %s, got (BlueTeam) Name %s", "Blue", g.BlueTeam.Name)
 	}
-	if g.Players[data["Host"].(map[string]interface{})["Name"].(string)] != p {
+	if g.Players[p.ID] != p {
 		t.Errorf("TestCreateGame(14) failed, expected Player %s to be in Game Player List, got Player %s",
-			p.Name, g.Players[data["Host"].(map[string]interface{})["Name"].(string)])
+			p.Name, g.Players[p.ID])
 	}
 }
 
