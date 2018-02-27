@@ -57,7 +57,7 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "infoToWaiting" {
             if gameState.getConnection().sendData(data: JoinGameMsg(IDtoJoin: game.getID()!)).isSuccess {
-                if MsgFromServer().parse() {
+                if handleMsgFromServer() {
                     if game.isValid() {
                         return true
                     } else {

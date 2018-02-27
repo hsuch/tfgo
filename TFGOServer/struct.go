@@ -77,6 +77,9 @@ type Game struct {
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
 	Pickups		  []*PickupSpot
+
+	PayloadPath		Direction
+	PayloadSpeed	float64
 }
 
 type PlayerStatus int
@@ -376,4 +379,8 @@ func MAXHEALTH() int {
 
 func MAXARMOR() int {
 	return 100
+}
+
+func MAXSPEED() float64 {
+	return 0.5
 }
