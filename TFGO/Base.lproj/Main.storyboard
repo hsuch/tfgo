@@ -404,6 +404,9 @@
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="ZEs-Lf-FFb" id="ghU-2T-YDR"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -510,6 +513,9 @@
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="ZEs-Lf-FFb" id="xFN-mw-w1a"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -1016,28 +1022,52 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="WZL-hS-MaZ">
+                                <rect key="frame" x="16" y="748" width="343" height="16"/>
+                                <color key="tintColor" red="1" green="0.1055042148" blue="0.16003847879999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="klz-gz-dVa"/>
+                                </constraints>
+                                <color key="progressTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="trackTintColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </progressView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="1" translatesAutoresizingMaskIntoConstraints="NO" id="Mxi-NA-Mod">
+                                <rect key="frame" x="16" y="763" width="343" height="16"/>
+                                <color key="tintColor" red="1" green="0.10550421476571237" blue="0.16003847884382116" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="i7N-PV-ScY"/>
+                                </constraints>
+                                <color key="progressTintColor" red="1" green="0.1055042148" blue="0.16003847879999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="trackTintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Gte-M2-hCv" firstAttribute="centerY" secondItem="wVE-TO-o2V" secondAttribute="centerY" id="3DX-GT-hI5"/>
                             <constraint firstItem="CDg-ez-zN8" firstAttribute="centerX" secondItem="oH6-PH-wpb" secondAttribute="centerX" id="3FM-xR-SUO"/>
                             <constraint firstAttribute="bottom" secondItem="Ld3-ss-D4K" secondAttribute="bottom" id="3Qy-F2-MDa"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="leading" secondItem="oH6-PH-wpb" secondAttribute="leading" id="AJV-Wc-u4a"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="leading" secondItem="Eo1-fu-60h" secondAttribute="trailing" constant="108" id="BI9-JG-Fwy"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="trailing" secondItem="WZL-hS-MaZ" secondAttribute="trailing" id="C3v-Pm-wNH"/>
                             <constraint firstItem="q8e-PW-GWW" firstAttribute="baseline" secondItem="Eo1-fu-60h" secondAttribute="baseline" id="DTA-ff-uHh"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="leading" secondItem="Gte-M2-hCv" secondAttribute="trailing" constant="8" id="EMy-Yx-ye1"/>
                             <constraint firstItem="q8e-PW-GWW" firstAttribute="centerY" secondItem="UjK-QY-EBG" secondAttribute="centerY" id="EOx-Yd-2hU"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="top" secondItem="fFv-lY-09b" secondAttribute="top" id="I2f-cm-RF0"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="bottom" secondItem="hNm-qJ-cQQ" secondAttribute="bottom" id="Mhg-Jx-BiS"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="trailing" secondItem="wVE-TO-o2V" secondAttribute="trailing" constant="16" id="NpH-oc-ZPY"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="height" secondItem="UjK-QY-EBG" secondAttribute="height" id="QdA-Ro-qoa"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="top" secondItem="wVE-TO-o2V" secondAttribute="bottom" constant="-79" id="Sey-Ec-cw6"/>
                             <constraint firstItem="Gte-M2-hCv" firstAttribute="leading" secondItem="Eo1-fu-60h" secondAttribute="trailing" constant="8.3333333333333428" id="Ttn-ED-QlC"/>
                             <constraint firstItem="oH6-PH-wpb" firstAttribute="bottom" secondItem="hNm-qJ-cQQ" secondAttribute="bottom" id="XzF-AY-Y5Z"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="leading" secondItem="WZL-hS-MaZ" secondAttribute="leading" id="YGh-iI-4Np"/>
                             <constraint firstItem="CDg-ez-zN8" firstAttribute="centerY" secondItem="oH6-PH-wpb" secondAttribute="centerY" id="bgk-Y5-xN6"/>
                             <constraint firstItem="hNm-qJ-cQQ" firstAttribute="trailing" secondItem="oH6-PH-wpb" secondAttribute="trailing" constant="16" id="cHd-hq-3w0"/>
                             <constraint firstItem="q8e-PW-GWW" firstAttribute="leading" secondItem="UjK-QY-EBG" secondAttribute="trailing" constant="8" id="e6S-du-odf"/>
                             <constraint firstItem="oH6-PH-wpb" firstAttribute="leading" secondItem="hNm-qJ-cQQ" secondAttribute="leading" constant="16" id="ebt-UD-D0M"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="top" secondItem="WZL-hS-MaZ" secondAttribute="bottom" id="enh-xB-JiO"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="width" secondItem="UjK-QY-EBG" secondAttribute="width" id="hKW-pC-Bfc"/>
                             <constraint firstItem="Eo1-fu-60h" firstAttribute="leading" secondItem="q8e-PW-GWW" secondAttribute="trailing" constant="8" id="jbw-DP-HaT"/>
+                            <constraint firstItem="Mxi-NA-Mod" firstAttribute="trailing" secondItem="oH6-PH-wpb" secondAttribute="trailing" id="kmu-ZN-PwC"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="leading" secondItem="UjK-QY-EBG" secondAttribute="leading" constant="-16" id="m97-b7-4RE"/>
                             <constraint firstItem="Ld3-ss-D4K" firstAttribute="leading" secondItem="hNm-qJ-cQQ" secondAttribute="leading" id="mCI-fI-eIc"/>
                             <constraint firstItem="Eo1-fu-60h" firstAttribute="leading" secondItem="UjK-QY-EBG" secondAttribute="trailing" constant="109" id="pUD-Mv-004"/>
@@ -1047,9 +1077,11 @@
                         <viewLayoutGuide key="safeArea" id="hNm-qJ-cQQ"/>
                     </view>
                     <connections>
+                        <outlet property="armorBar" destination="WZL-hS-MaZ" id="ent-th-ftV"/>
                         <outlet property="blueScore" destination="q8e-PW-GWW" id="GAf-3P-qOU"/>
                         <outlet property="clock" destination="Eo1-fu-60h" id="Tc0-zX-ago"/>
                         <outlet property="game_map" destination="Ld3-ss-D4K" id="4EY-WD-nZS"/>
+                        <outlet property="healthBar" destination="Mxi-NA-Mod" id="xUd-nP-as4"/>
                         <outlet property="redScore" destination="Gte-M2-hCv" id="G9Z-2I-tk6"/>
                     </connections>
                 </viewController>
@@ -1569,9 +1601,9 @@
         <image name="settings" width="179" height="179"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xzX-Iq-bnB"/>
+        <segue reference="evh-x0-bHz"/>
         <segue reference="Th9-pw-b0x"/>
-        <segue reference="l98-lC-GIH"/>
+        <segue reference="FNE-Lr-RRh"/>
         <segue reference="Snh-On-Wk1"/>
     </inferredMetricsTieBreakers>
 </document>

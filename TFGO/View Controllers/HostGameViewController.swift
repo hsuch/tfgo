@@ -51,9 +51,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        gameState.getUser().makeHost()
-
         game.setMode(to: .cp)
         
         let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
@@ -73,36 +70,34 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
-    
-    
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        var name = game.getName() ?? ""
-        name.append(string)
-        if textField == nameField {
-            if !game.setName(to: name) {
-                //give invalid name message
-                return false
-            }
-        } else if textField == descriptionField {
-            if !game.setDescription(to: name) {
-                //give invalid description message
-                return false
-            }
-        } else if textField == passwordField {
-            if usePassword {
-                if !game.setPassword(to: name) {
-                    //give invalid password message
-                    return false
-                }
-            }
-        }
-        return true
-    }
-    
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        var name = game.getName() ?? ""
+//        name.append(string)
+//        if textField == nameField {
+//            if !game.setName(to: name) {
+//                //give invalid name message
+//                return false
+//            }
+//        } else if textField == descriptionField {
+//            if !game.setDescription(to: name) {
+//                //give invalid description message
+//                return false
+//            }
+//        } else if textField == passwordField {
+//            if usePassword {
+//                if !game.setPassword(to: name) {
+//                    //give invalid password message
+//                    return false
+//                }
+//            }
+//        }
+//        return true
+//    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }
@@ -165,6 +160,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         if identifier == "Create Game" {
             if gameState.setCurrentGame(to: game) {
                 if gameState.getConnection().sendData(data: CreateGameMsg(game: game)).isSuccess {
+                    gameState.getUser().makeHost()
                     return true
                 }
             }
@@ -174,6 +170,10 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     }
     
     @IBAction func checkGame(_ sender: UIButton) {
+        if game.setName(to: nameField.text ?? ""), game.setDescription(to: descriptionField.text ?? "") {}
+        if usePassword {
+            if game.setPassword(to: passwordField.text ?? "") {}
+        }
         if !game.isValid() {
             let alertController = UIAlertController(title: "Invalid Game", message:
                 "Please ensure that you have filled all required fields", preferredStyle: UIAlertControllerStyle.alert)

@@ -76,6 +76,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         self.game_map.add(circle)
     }
     
+    private var status = (100, 0)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -106,23 +108,30 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             objectiveNumber = objectiveNumber + 1
         }
         
-        
-        
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
             while true {
                 if handleMsgFromServer() {
                     DispatchQueue.main.async {
-                        if self.currentHealth != gameState.getUserHealth() {
-                            self.currentHealth = gameState.getUserHealth()
-                            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-                            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-                            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-                            self.present(alertController, animated: true, completion: nil)
-                        }
+                        self.talkShitGetHit()
                     }
                 }
             }
+        }
+    }
+    
+    @IBOutlet weak var armorBar: UIProgressView!
+    @IBOutlet weak var healthBar: UIProgressView!
+    
+    private func talkShitGetHit() {
+        if status != (gameState.getUserHealth(), gameState.getUserArmor()) {
+            status = (gameState.getUserHealth(), gameState.getUserArmor())
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            armorBar.setProgress(Float(self.status.0)/100, animated: true)
+            healthBar.setProgress(Float(self.status.1)/100, animated: true)
+            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+            present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -157,8 +166,6 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     func runTimer() {
         updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
-    
-    private var currentHealth = 100
     
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
