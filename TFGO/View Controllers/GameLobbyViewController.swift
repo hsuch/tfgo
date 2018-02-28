@@ -61,11 +61,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         gamesPrivate = []
         gamesPublic = []
         for game in gameState.getFoundGames() {
-            if game.getPassword() == nil {
-                gamesPublic.append(game)
-            } else {
-                gamesPrivate.append(game)
-            }
+            game.isPrivate() ? gamesPrivate.append(game) : gamesPublic.append(game)
         }
         table.reloadData()
     }
