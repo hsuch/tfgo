@@ -34,6 +34,7 @@ class Player {
     private var health: Int
     private var armor: Int
     private var host: Bool = false
+    private var annotation: MKPointAnnotation = MKPointAnnotation()
     
     func getName() -> String {
         return name
@@ -113,6 +114,16 @@ class Player {
     
     func addWeapon(to weapon: String) {
         self.weapons.append(weapon)
+    }
+    
+    func updateAnnotation() {
+        self.annotation.coordinate = loc.coordinate
+        self.annotation.title = name
+        self.annotation.subtitle = team
+    }
+    
+    func getAnnotation() -> MKPointAnnotation {
+        return annotation
     }
     
     func isValid() -> Bool {
@@ -483,6 +494,20 @@ public class Game {
     
     func setRedBaseRad(to radius: Double) {
         self.redBaseRad = radius
+    }
+    
+    func updatePlayerAnnotations() {
+        for player in players {
+            player.updateAnnotation()
+        }
+    }
+    
+    func getPlayerAnnotations() -> [MKPointAnnotation] {
+        var annotations: [MKPointAnnotation] = []
+        for player in players {
+            annotations.append(player.getAnnotation())
+        }
+        return annotations
     }
     
     private func validName(_ name: String?) -> Bool {

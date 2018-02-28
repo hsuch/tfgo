@@ -76,6 +76,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         self.game_map.add(circle)
     }
     
+    private var status = (100, 0)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -88,41 +90,74 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
         // we want to mark objective locations with pins
         let game = gameState.getCurrentGame()
-        let annotation = MKPointAnnotation()
         
         // used to differentiate between objectives if we have more than one
         var objectiveNumber = 1
         
         // now we make a pin on the map for each objective
         for objective in game.getObjectives() {
+            let annotation = MKPointAnnotation()
             annotation.coordinate = CLLocationCoordinate2D(latitude: objective.getXLoc(), longitude: objective.getYLoc())
             annotation.title = "OBJECTIVE"
             annotation.subtitle = String(objectiveNumber)
             game_map.addAnnotation(annotation)
             
-            var center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
+            let center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
             addRadiusCircle(location: center, radius: objective.getRadius())
             
             objectiveNumber = objectiveNumber + 1
         }
         
+        // next, we set pins for the bases
+        let redBaseLoc = gameState.getCurrentGame().getRedBaseLoc()
+        let blueBaseLoc = gameState.getCurrentGame().getBlueBaseLoc()
+        let rbAnnotation = MKPointAnnotation()
+        let bbAnnotation = MKPointAnnotation()
+        rbAnnotation.coordinate = CLLocationCoordinate2D(latitude: redBaseLoc.x, longitude: redBaseLoc.y)
+        rbAnnotation.title = "RED BASE"
+        game_map.addAnnotation(rbAnnotation)
+        bbAnnotation.coordinate = CLLocationCoordinate2D(latitude: blueBaseLoc.x, longitude: blueBaseLoc.y)
+        bbAnnotation.title = "BLUE BASE"
+        game_map.addAnnotation(bbAnnotation)
         
+        // now we set pins for each player in the game
+        gameState.getCurrentGame().updatePlayerAnnotations()
+        let annotations = gameState.getCurrentGame().getPlayerAnnotations()
+        game_map.addAnnotations(annotations)
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
             while true {
                 if handleMsgFromServer() {
                     DispatchQueue.main.async {
-                        if self.currentHealth != gameState.getUserHealth() {
-                            self.currentHealth = gameState.getUserHealth()
-                            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-                            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-                            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-                            self.present(alertController, animated: true, completion: nil)
-                        }
+                        self.talkShitGetHit()
                     }
                 }
             }
+        }
+    }
+    
+    @IBOutlet weak var armorBar: UIProgressView!
+    @IBOutlet weak var healthBar: UIProgressView!
+    
+    override func viewWillAppear(_ animated: Bool) {
+        armorBar.layer.cornerRadius = 2.0
+        armorBar.layer.borderWidth = 3.0
+        armorBar.layer.borderColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        healthBar.layer.cornerRadius = 2.0
+        healthBar.layer.borderWidth = 3.0
+        healthBar.layer.borderColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+    }
+    
+    private func talkShitGetHit() {
+        if status != (gameState.getUserHealth(), gameState.getUserArmor()) {
+            status = (gameState.getUserHealth(), gameState.getUserArmor())
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            armorBar.setProgress(Float(self.status.0)/100, animated: true)
+            healthBar.setProgress(Float(self.status.1)/100, animated: true)
+            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+            present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -158,31 +193,34 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
     
-    private var currentHealth = 100
-    
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
         }
         
         // update the locations of other players on the map
-        // first we remove all the previous player annotations
-        for playerLoc in playerLocs {
-            let annotation = playerLoc as MKAnnotation
-            self.game_map.removeAnnotation(annotation)
-        }
+        gameState.getCurrentGame().updatePlayerAnnotations()
         
-        // then we build a new list of player annotations
-        let playerList = gameState.getCurrentGame().getPlayers()
-        for player in playerList {
-            let annotation = MKPointAnnotation()
-            let loc = player.getLocation().coordinate
-            annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
-            annotation.title = player.getName()
-            annotation.subtitle = player.getTeam()
-            game_map.addAnnotation(annotation)
-            playerLocs.append(annotation)
-        }
+        
+//        // first we remove all the previous player annotations
+//        for playerLoc in playerLocs {
+//            let annotation = playerLoc as MKAnnotation
+//            self.game_map.removeAnnotation(annotation)
+//        }
+//
+//        // then we build a new list of player annotations
+//        let playerList = gameState.getCurrentGame().getPlayers()
+//        for player in playerList {
+//            if player.getName() != gameState.getUser().getName() {
+//                let annotation = MKPointAnnotation()
+//                let loc = player.getLocation().coordinate
+//                annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
+//                annotation.title = player.getName()
+//                annotation.subtitle = player.getTeam()
+//                game_map.addAnnotation(annotation)
+//                playerLocs.append(annotation)
+//            }
+//        }
         
     }
     

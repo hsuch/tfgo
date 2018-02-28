@@ -12,7 +12,7 @@ import SwiftyJSON
 import MapKit
 
 class Connection {
-    private var servadd: String = "10.150.51.79" // to be replaced with real server ip
+    private var servadd: String = "10.150.119.166" // to be replaced with real server ip
     private var servport: Int32 = 9265
     private var client: TCPClient
 
@@ -354,6 +354,9 @@ func parsePickupUpdate(data: [String: Any]) -> Bool {
     return false
 }
 
+/* MsgToServer
+ * A class that stores data for messages sent to the server, and implements a method to convert them to json
+ */
 class MsgToServer {
     private var action: String
     /* possible message actions:
@@ -386,23 +389,27 @@ private func boundariesToArray(boundaries: [MKMapPoint]) -> [[String: Any]] {
 
 /* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
 
+func RegisterPlayerMsg() -> Data {
+    let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String : Any]
+    return MsgToServer(action: "RegisterPlayer", data: payload).toJson()
+}
 func CreateGameMsg(game: Game) -> Data {
-    // still needs to take boundaries from game page
-    let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
     let minutes = game.getTimeLimit()
     let timelimit = "0h" + "\(minutes)" + "m0s"
-    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "Host": host] as [String : Any]
+    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "NumCP": game.getMaxObjectives()] as [String : Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
-    let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
-    return MsgToServer(action: "ShowGames", data: payload).toJson()
+    return MsgToServer(action: "ShowGames", data: [:]).toJson()
 }
 func ShowGameInfoMsg(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
 }
 func JoinGameMsg(IDtoJoin: String) -> Data {
     return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+}
+func LeaveGameMsg() -> Data {
+    return MsgToServer(action: "LeaveGame", data: [:]).toJson()
 }
 func StartGameMsg() -> Data {
     return MsgToServer(action: "StartGame", data: [:]).toJson()
@@ -413,7 +420,6 @@ func LocUpMsg() -> Data {
     return MsgToServer(action: "LocationUpdate", data: payload).toJson()
 }
 func FireMsg() -> Data {
-    // todo, take orientation and weapon from this client's player
     let weapon = gameState.getUserWeapon()
     let direction = gameState.getUserOrientation()
     let payload = ["Weapon": weapon, "Direction": direction] as [String: Any]
