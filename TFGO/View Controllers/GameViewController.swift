@@ -122,6 +122,24 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         let annotations = gameState.getCurrentGame().getPlayerAnnotations()
         game_map.addAnnotations(annotations)
         
+        // finally, we draw the games boundaries
+        let gameBounds = game.getBoundaries()
+        let drawBounds = UIBezierPath.init()
+        var first = true
+        
+        for bound in gameBounds {
+            if (first) {
+                drawBounds.move(to: CGPoint(x: bound.x, y: bound.y))
+                first = false
+            }
+            else {
+                drawBounds.addLine(to: CGPoint(x: bound.x, y: bound.y))
+            }
+        }
+        // connect the last and first boundaries, then draw the boundaries
+        drawBounds.move(to: CGPoint(x: gameBounds[0].x, y: gameBounds[0].y))
+        drawBounds.stroke()
+        
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
             while true {

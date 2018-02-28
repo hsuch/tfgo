@@ -24,7 +24,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        
         if (initialized == false) {
             // we want the most recent position of our user
             let location = locations [0]
@@ -40,12 +39,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         
             host_map.setRegion(region, animated: false)
             self.host_map.showsUserLocation = true
-            
-            let myLat = myLocation.latitude
-            let myLon = myLocation.longitude
-            
-            // These are hardcoded boundaries for the purpose of testing iteration 1 code
-            game.setBoundaries([MKMapPointMake(myLat + 0.1, myLon + 0.1), MKMapPointMake(myLat + 0.1, myLon - 0.1), MKMapPointMake(myLat - 0.1, myLon + 0.1), MKMapPointMake(myLat - 0.1, myLon - 0.1)])
             
             initialized = true
             
