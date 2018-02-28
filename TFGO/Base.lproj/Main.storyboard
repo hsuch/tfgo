@@ -1082,7 +1082,7 @@
                                     <navigationItem title="Inventory" id="07j-va-lxH">
                                         <barButtonItem key="leftBarButtonItem" title="Back" id="gy1-An-GqB">
                                             <connections>
-                                                <segue destination="mhV-e7-hMe" kind="show" id="4cG-7q-7tp"/>
+                                                <segue destination="mhV-e7-hMe" kind="show" identifier="back" id="4cG-7q-7tp"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -1090,7 +1090,6 @@
                             </navigationBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="e0l-aH-1fW">
                                 <rect key="frame" x="16" y="88" width="343" height="690"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="afJ-z6-9nL">
                                     <size key="itemSize" width="85" height="85"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1105,15 +1104,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgV-af-J7s">
-                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
-                                                </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctr-Br-SKN">
                                                     <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                                     <connections>
                                                         <action selector="selectItem:" destination="Wa6-Ia-L1j" eventType="touchUpInside" id="T9d-H7-x7P"/>
                                                     </connections>
                                                 </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgV-af-J7s">
+                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
@@ -1127,6 +1126,7 @@
                                             <constraint firstItem="CgV-af-J7s" firstAttribute="top" secondItem="RFh-be-Mkn" secondAttribute="top" id="vOq-WT-WWH"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="button" destination="ctr-Br-SKN" id="La2-r5-gZW"/>
                                             <outlet property="image" destination="CgV-af-J7s" id="GDA-z6-m8M"/>
                                         </connections>
                                     </collectionViewCell>
@@ -1580,7 +1580,7 @@
         <image name="triangle" width="1080" height="1920"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xzX-Iq-bnB"/>
+        <segue reference="4cG-7q-7tp"/>
         <segue reference="2n9-BF-tBN"/>
         <segue reference="FNE-Lr-RRh"/>
         <segue reference="Snh-On-Wk1"/>

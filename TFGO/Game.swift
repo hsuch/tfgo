@@ -28,7 +28,7 @@ class Player {
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     private var orientation: Float
     private var weapon: String
-    private var weapons: [String] = []
+    private var weapons: [String]
     private var pickups: [Pickup] = []
     private var status: String
     private var health: Int
@@ -116,6 +116,10 @@ class Player {
         self.weapons.append(weapon)
     }
     
+    func setWeapon(to weapon: String) {
+        self.weapon = weapon
+    }
+    
     func getWeaponsList() -> [String] {
         return weapons
     }
@@ -143,6 +147,7 @@ class Player {
         self.health = 100 // later
         self.armor = 0 // later
         self.team = ""
+        self.weapons = ["BeeSwarm", "Sword", "Shotgun"]
     }
 }
 

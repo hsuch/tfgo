@@ -26,9 +26,9 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         switch game.getMode() {
         case .cp:
             gamemodeLbl.text = "◆ - Standard"
-        case .multi:
-            gamemodeLbl.text = "⇥ - Payload"
         case .payload:
+            gamemodeLbl.text = "⇥ - Payload"
+        case .multi:
             gamemodeLbl.text = "❖ - Multipoint"
         }
         if game.getDescription() == "" {
