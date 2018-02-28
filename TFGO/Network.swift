@@ -124,7 +124,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]] {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]], let hasPassword = game["HasPassword"] as? Bool {
                         
                         let newGame = Game()
                         newGame.setID(to: id)
@@ -134,6 +134,8 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
                             newGame.setLocation(to: MKMapPointMake(x, y))
                         }
+                        
+                        newGame.setHasPassword(to: hasPassword)
                         
                         for player in players {
                             if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
