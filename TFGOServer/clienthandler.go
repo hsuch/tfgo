@@ -67,8 +67,7 @@ func serveClient(conn net.Conn) {
 		case "ShowGameInfo":
 			sendGameInfo(p, msg.Data["GameID"].(string))
 		case "JoinGame":
-			pw, _ := msg.Data["Password"].(string)
-			g = p.joinGame(msg.Data["GameID"].(string), pw)
+			g = p.joinGame(msg.Data["GameID"].(string), msg.Data["Password"].(string))
 		case "LeaveGame":
 			p.leaveGame(g)
 		case "StartGame":
