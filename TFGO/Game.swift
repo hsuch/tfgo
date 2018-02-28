@@ -433,6 +433,10 @@ public class Game {
         boundaries = points
     }
     
+    func addBounary(to point: MKMapPoint) {
+        boundaries.append(point)
+    }
+    
     func hasPlayer(name: String) -> Bool {
         for player in players {
             if name == player.getName() {
