@@ -252,6 +252,7 @@ public class Game {
     private var bluePoints: Int = 0
     private var description: String
     private var password: String?
+    private var hasPassword: Bool = false
     private var startTime: [String] = []
     
     private var objectives: [Objective]
@@ -373,9 +374,18 @@ public class Game {
     func setPassword(to password: String) -> Bool {
         if validDescription(password) {
             self.password = password
+            self.hasPassword = true
             return true
         }
         return false
+    }
+    
+    func isPrivate() -> Bool {
+        return hasPassword
+    }
+    
+    func setHasPassword(to hasPassword: Bool) {
+        self.hasPassword = hasPassword
     }
     
     func getPlayers() -> [Player] {
