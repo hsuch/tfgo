@@ -311,7 +311,7 @@ var BEESWARM = Weapon {
 	Name: "BeeSwarm",
 	Damage: 10,
 	Spread: 2 * math.Pi,
-	Range: 3,
+	Range: 50,
 	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
