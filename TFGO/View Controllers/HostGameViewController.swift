@@ -28,16 +28,16 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         if (initialized == false) {
             // we want the most recent position of our user
             let location = locations [0]
-        
+            
             var region:MKCoordinateRegion
-        
+            
             let myLocation = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
-        
+            
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.0015, 0.0015)
             region = MKCoordinateRegionMake(myLocation, span)
             host_map.isRotateEnabled = false
             initialized = true
-        
+            
             host_map.setRegion(region, animated: false)
             self.host_map.showsUserLocation = true
             
@@ -78,20 +78,20 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-   /*
-    func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
-        
-        let location = gestureReconizer.locationc(in: host_map)
-        let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
-        
-        // Add annotation:
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        annotation.title = "corner"
-        annotation.subtitle = "tbd"
-        host_map.addAnnotation(annotation)
-    }
-    */
+    /*
+     func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
+     
+     let location = gestureReconizer.locationc(in: host_map)
+     let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
+     
+     // Add annotation:
+     let annotation = MKPointAnnotation()
+     annotation.coordinate = coordinate
+     annotation.title = "corner"
+     annotation.subtitle = "tbd"
+     host_map.addAnnotation(annotation)
+     }
+     */
     
     //@IBOutlet weak var host_map: MKMapView!
     var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
@@ -128,7 +128,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         customAnnotation.annotation = annotation
         
         customAnnotation.tag = 1
-        annotations.append(customAnnotation)
+        //annotations.append(customAnnotation)
         host_map.addAnnotation(annotation)
     }
     
@@ -136,7 +136,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }
