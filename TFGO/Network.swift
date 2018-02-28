@@ -405,8 +405,8 @@ func ShowGamesMsg() -> Data {
 func ShowGameInfoMsg(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
 }
-func JoinGameMsg(IDtoJoin: String) -> Data {
-    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+func JoinGameMsg(IDtoJoin: String, password: String) -> Data {
+    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin, "Password": password]).toJson()
 }
 func LeaveGameMsg() -> Data {
     return MsgToServer(action: "LeaveGame", data: [:]).toJson()
