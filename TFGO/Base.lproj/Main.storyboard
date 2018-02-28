@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="triangle" translatesAutoresizingMaskIntoConstraints="NO" id="ouk-Mg-hHW">
-                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pDX-eO-ApH">
@@ -32,7 +32,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="146" height="48.666666666666664"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Host Game">
-                                            <color key="titleColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="0.78342390641127113" green="0.93066097155867422" blue="0.46930549270538963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="ZEs-Lf-FFb" kind="show" identifier="Host Game" id="jkD-TJ-GTL"/>
@@ -42,7 +42,7 @@
                                         <rect key="frame" x="0.0" y="56.666666666666686" width="146" height="48"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Join Game">
-                                            <color key="titleColor" red="0.0" green="0.98106676339999999" blue="0.57369142770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="1" green="0.76775226082042691" blue="0.44680859675164286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="mDp-nZ-Q9M" kind="show" identifier="Game Lobby" id="sNw-Co-70M"/>
@@ -52,7 +52,7 @@
                                         <rect key="frame" x="0.0" y="112.66666666666667" width="146" height="48.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Player Info">
-                                            <color key="titleColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="1" green="0.52842415646490548" blue="0.46749827107604802" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="Ibe-RX-1f9" kind="show" identifier="Player Info" id="w0N-5a-D0Z"/>
@@ -62,7 +62,7 @@
                                         <rect key="frame" x="0.0" y="169" width="146" height="48"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Settings">
-                                            <color key="titleColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="1" green="0.34409839771633299" blue="0.4541931867964043" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="6k5-FI-bQK" kind="show" identifier="Settings" id="2n9-BF-tBN"/>
@@ -81,13 +81,13 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TFGO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-qu-lXV">
                                         <rect key="frame" x="4.3333333333333428" y="0.0" width="180" height="86"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="72"/>
-                                        <color key="textColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" red="0.34565921598863669" green="1" blue="0.9450000720392463" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Fun Game Online" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7oH-mt-UXU">
                                         <rect key="frame" x="0.0" y="86" width="188.33333333333334" height="24"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" red="1" green="0.52120530610000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" red="0.4640167276646" green="0.9839722056335225" blue="0.73086953736384963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -100,7 +100,7 @@
                         <constraints>
                             <constraint firstItem="ouk-Mg-hHW" firstAttribute="leading" secondItem="h6T-vy-hJt" secondAttribute="leading" id="08l-Og-D5R"/>
                             <constraint firstItem="Caz-Jg-YC7" firstAttribute="top" secondItem="h6T-vy-hJt" secondAttribute="top" constant="56" id="9K2-Bs-ayO"/>
-                            <constraint firstItem="ouk-Mg-hHW" firstAttribute="top" secondItem="h6T-vy-hJt" secondAttribute="top" id="AjY-w0-iv4"/>
+                            <constraint firstItem="ouk-Mg-hHW" firstAttribute="top" secondItem="h6T-vy-hJt" secondAttribute="top" constant="-88" id="AjY-w0-iv4"/>
                             <constraint firstItem="h6T-vy-hJt" firstAttribute="bottom" secondItem="pDX-eO-ApH" secondAttribute="bottom" constant="173" id="KfP-R8-SqT"/>
                             <constraint firstItem="ouk-Mg-hHW" firstAttribute="trailing" secondItem="h6T-vy-hJt" secondAttribute="trailing" id="SM4-hc-xRR"/>
                             <constraint firstItem="pDX-eO-ApH" firstAttribute="centerX" secondItem="h6T-vy-hJt" secondAttribute="centerX" id="Wwp-Gu-HQC"/>
