@@ -40,7 +40,7 @@ class InventoryViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @IBAction func selectItem(_ sender: UIButton) {
         let actionController = UIAlertController(title: nil, message:
-            "help", preferredStyle: UIAlertControllerStyle.actionSheet)
+            sender.currentTitle ?? "halp", preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Equip", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
             self.player.setWeapon(to: sender.currentTitle ?? "BeeSwarm")
             self.performSegue(withIdentifier: "back", sender: nil)

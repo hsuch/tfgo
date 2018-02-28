@@ -221,8 +221,20 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
     }
     
+    @IBAction func leaveGame(_ sender: UIButton) {
+        let actionController = UIAlertController(title: nil, message:
+            "Are you sure you want to leave?", preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionController.addAction(UIAlertAction(title: "Yep", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
+            self.performSegue(withIdentifier: "leaveGame", sender: nil)
+        }))
+        actionController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.cancel,handler: nil))
+        self.present(actionController, animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        updateTimer.invalidate()
+        if segue.identifier != "inventory" {
+            updateTimer.invalidate()
+        }
     }
     
 }

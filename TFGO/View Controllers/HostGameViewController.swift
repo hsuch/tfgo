@@ -41,12 +41,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
             host_map.setRegion(region, animated: false)
             self.host_map.showsUserLocation = true
             
-            let myLat = myLocation.latitude
-            let myLon = myLocation.longitude
-            
-            // These are hardcoded boundaries for the purpose of testing iteration 1 code
-            game.setBoundaries([MKMapPointMake(myLat + 0.1, myLon + 0.1), MKMapPointMake(myLat + 0.1, myLon - 0.1), MKMapPointMake(myLat - 0.1, myLon + 0.1), MKMapPointMake(myLat - 0.1, myLon - 0.1)])
-            
             initialized = true
             
             host_map.delegate = self
