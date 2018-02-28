@@ -73,30 +73,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-    
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        var name = game.getName() ?? ""
-//        name.append(string)
-//        if textField == nameField {
-//            if !game.setName(to: name) {
-//                //give invalid name message
-//                return false
-//            }
-//        } else if textField == descriptionField {
-//            if !game.setDescription(to: name) {
-//                //give invalid description message
-//                return false
-//            }
-//        } else if textField == passwordField {
-//            if usePassword {
-//                if !game.setPassword(to: name) {
-//                    //give invalid password message
-//                    return false
-//                }
-//            }
-//        }
-//        return true
-//    }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
