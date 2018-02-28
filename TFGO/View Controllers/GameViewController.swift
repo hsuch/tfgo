@@ -145,6 +145,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         var first = true
         
         for bound in gameBounds {
+            print("GOING THROUGH THE GAME BOUNDS")
             if (first) {
                 drawBounds.move(to: CGPoint(x: bound.x, y: bound.y))
                 first = false
@@ -154,8 +155,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             }
         }
         // connect the last and first boundaries, then draw the boundaries
-        drawBounds.move(to: CGPoint(x: gameBounds[0].x, y: gameBounds[0].y))
+        drawBounds.addLine(to: CGPoint(x: gameBounds[0].x, y: gameBounds[0].y))
         drawBounds.stroke()
+        drawBounds.fill()
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
