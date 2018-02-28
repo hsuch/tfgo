@@ -24,6 +24,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+        // we want the most recent position of our user
+        let location = locations [0]
         
         if (initialized == false) {
             // we want the most recent position of our user
@@ -51,16 +53,25 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
             
             host_map.delegate = self
         }
+        else {
+            region = host_map.region
+            region.center = myLocation
+        }
+        
+        // update the region of the map with the appropriate information
+        host_map.setRegion(region, animated: false)
+        self.host_map.showsUserLocation = true
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         game.setMode(to: .cp)
-        
-        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
-        let span = MKCoordinateSpanMake(0.1, 0.1)
-        let region = MKCoordinateRegionMake(center, span)
-        self.host_map.setRegion(region, animated: true)
+//        
+//        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
+//        let span = MKCoordinateSpanMake(0.1, 0.1)
+//        let region = MKCoordinateRegionMake(center, span)
+//        self.host_map.setRegion(region, animated: true)
         
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleLongPress))
@@ -96,8 +107,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     //@IBOutlet weak var host_map: MKMapView!
     var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
     
-    var boundaries = [MKMapPoint]()
-    
     @objc func handleLongPress (gestureRecognizer: UITapGestureRecognizer) {
         //print("test if running")
         //if gestureRecognizer.state == UIGestureRecognizerState.began {
@@ -106,7 +115,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
         testpoint = newCoordinate
         print(testpoint)
-        boundaries.append(MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
+        game.addBounary(to: MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
         //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
         //}

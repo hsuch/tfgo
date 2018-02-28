@@ -80,25 +80,71 @@ func (g *Game) findCenter() Location {
 	return Location{X / c, Y / c}
 }
 
-// determine game boundaries based on vertex information
-func (g *Game) setBoundaries(boundaries []interface{}) {
-	for _, val := range boundaries {
-		vertex := val.(map[string]interface{})
-		p := Location{X: degreeToMeter(vertex["X"].(float64)), Y: degreeToMeter(vertex["Y"].(float64))}
-		g.Boundaries = append(g.Boundaries, Border{P: p})
+// create an array of Borders based on an array of Locations
+func connectTheDots(verts []Location) []Border {
+	var boundaries []Border
+	for _, val := range verts {
+		boundaries = append(boundaries, Border{P: val})
 	}
 
-	for i, boundary := range g.Boundaries {
+	for i, boundary := range boundaries {
 		var index int
 		if i == 0 {
-			index = len(g.Boundaries) - 1
+			index = len(boundaries) - 1
 		} else {
 			index = i - 1
 		}
 
-		prev := g.Boundaries[index].P
-		g.Boundaries[index].D = Direction{boundary.P.X - prev.X, boundary.P.Y - prev.Y}
+		prev := boundaries[index].P
+		boundaries[index].D = Direction{boundary.P.X - prev.X, boundary.P.Y - prev.Y}
 	}
+	return boundaries
+}
+
+// tests whether any borders intersect
+// if so, returns the indices of the second vertex of the first of the two
+// intersecting borders and the first vertex of the other
+// if not returns (-1,-1)
+func testBorders(boundaries []Border) (int,int) {
+	len := len(boundaries) - 1
+	for k1, v1 := range boundaries {
+		if k1 >= len {
+			break
+		}
+		for k2, v2 := range boundaries {
+			if k2 > k1 {
+				t := (v2.P.Y + (v2.D.Y * (v1.P.X - v2.P.X) / v2.D.X) - v1.P.Y) / (v1.D.Y - (v1.D.X * v2.D.Y / v2.D.X))
+				s := ((v1.P.X - v2.P.X) / v2.D.X) + (v1.D.X * t / v2.D.X)
+				if t > 0 && t < 1 && s > 0 && s < 1 {
+					return k1 + 1, k2
+				}
+			}
+		}
+	}
+	return -1, -1
+}
+
+// determine game boundaries based on vertex information
+func (g *Game) setBoundaries(boundaries []interface{}) {
+	var verts []Location
+	for _, val := range boundaries {
+		vertex := val.(map[string]interface{})
+		p := Location{X: degreeToMeter(vertex["X"].(float64)), Y: degreeToMeter(vertex["Y"].(float64))}
+		verts = append(verts, p)
+	}
+
+	var borders []Border
+	for true {
+		borders = connectTheDots(verts)
+		v1, v2 := testBorders(borders)
+		if v1 == -1 {
+			break
+		}
+		temp := verts[v1]
+		verts[v1] = verts[v2]
+		verts[v2] = temp
+	}
+	g.Boundaries = borders
 }
 
 // determines whether a CP or pickup with the given location and radius
@@ -200,11 +246,11 @@ func (g *Game) generateObjectives(numCP int) {
 		yOffset = (yRange- baseRadius * 2) / 4 + baseRadius
 	}
 	if xRange > yRange {
-		mid := yRange / 2
+		mid := minY + yRange / 2
 		g.RedTeam.Base = Location{maxX - xOffset, mid}
 		g.BlueTeam.Base = Location{minX + xOffset, mid}
 	} else {
-		mid := xRange / 2
+		mid := minX + xRange / 2
 		g.RedTeam.Base = Location{mid, maxY - yOffset}
 		g.BlueTeam.Base = Location{mid, minY + yOffset}
 	}
@@ -268,7 +314,7 @@ func (p *Player) createGame(conn net.Conn, data map[string]interface{}) *Game {
 	if g.Mode != PAYLOAD {
 		g.PointLimit = int(data["PointLimit"].(float64))
 	}
-	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
+	g.TimeLimit = time.Duration(data["TimeLimit"].(float64)) * time.Minute
 	g.setBoundaries(data["Boundaries"].([]interface{}))
 
 	g.RedTeam = &Team{Name: "Red"}
