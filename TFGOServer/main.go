@@ -15,9 +15,9 @@ var isTesting = false
 // the following server code is heavily inspired by the example at
 // https://astaxie.gitbooks.io/build-web-application-with-golang/en/08.1.html
 func main() {
-	flag.BoolVar(&verbose, "v", false, "print sent and received JSON")
-	var HOST = flag.String("host", "127.0.0.1", "ip address on which to run server")
-	var PORT = flag.String("port", "9265", "port on which to run server")
+	flag.IntVar(&verbosity, "v", 0, "verbosity: 0 (high-level info only), 1 (non-periodic JSON), or 2 (all JSON)")
+	var HOST = flag.String("host", "127.0.0.1", "server ip")
+	var PORT = flag.String("port", "9265", "server port")
 	flag.Parse()
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", *HOST+":"+*PORT)

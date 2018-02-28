@@ -13,6 +13,61 @@ import (
 	"sync"
 )
 
+// the following random string generation code is heavily inspired by the
+// example code at https://siongui.github.io/2015/04/13/go-generate-random-string/
+var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+const idChars = "abcdefghijklmnopqrstuvwxyz1234567890"
+var rLock sync.Mutex
+
+// generate a random ID
+func createID() string {
+	rLock.Lock()
+	candidate := make([]byte, 16)
+	for i := range candidate {
+		candidate[i] = idChars[r.Intn(len(idChars))]
+	}
+	rLock.Unlock()
+
+	return string(candidate)
+}
+
+// resets non-permanent player info to its initial state.
+// called during player creation and after game end.
+func (p *Player) reset() {
+	p.Team = nil
+	p.Status = NORMAL
+	if p.StatusTimer != nil {
+		p.StatusTimer.Stop()
+		p.StatusTimer = nil
+	}
+	p.Health = MAXHEALTH()
+	p.Armor = 0
+	p.Location = Location{}
+	p.Orientation = 0
+	p.OccupyingPoint = nil
+}
+
+// register a new player
+func createPlayer(conn net.Conn, name, icon string) *Player {
+	var p Player
+	p.ID = createID()
+	p.Name = name
+	p.Icon = icon
+
+	p.Chan = make(chan map[string]interface{})
+	if !isTesting {
+		p.Encoder = json.NewEncoder(conn)
+	}
+
+	p.reset()
+
+	go p.sender()
+
+	fmt.Printf("Player %s created.\n", p.Name)
+
+	return &p
+}
+
 // return the central position of a game
 func (g *Game) findCenter() Location {
 	X := 0.0
@@ -23,52 +78,6 @@ func (g *Game) findCenter() Location {
 		Y += val.P.Y
 	}
 	return Location{X / c, Y / c}
-}
-
-// register a new player, but do not add them to any team.
-// performed whenever someone chooses Create Game or Join
-// Game from the primary app menu
-func createPlayer(conn net.Conn, name, icon string) *Player {
-	var p Player
-	p.Name = name
-	p.Icon = icon
-
-	p.Chan = make(chan map[string]interface{})
-	if !isTesting {
-		p.Encoder = json.NewEncoder(conn)
-	}
-
-	p.Status = NORMAL
-	p.Health = MAXHEALTH()
-	p.Armor = 0
-
-	go p.sender()
-
-	fmt.Printf("Player %s created.\n", p.Name)
-
-	return &p
-}
-
-// the following random string generation code is heavily inspired by the
-// example code at https://siongui.github.io/2015/04/13/go-generate-random-string/
-var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-const idChars = "abcdefghijklmnopqrstuvwxyz1234567890"
-var rLock sync.Mutex
-
-// generate a random unique game ID
-func createGameID() string {
-	rLock.Lock()
-	candidate := make([]byte, 16)
-	for i := range candidate {
-		candidate[i] = idChars[r.Intn(len(idChars))]
-	}
-	rLock.Unlock()
-
-	if _, exists := games[string(candidate)]; exists {
-		return createGameID()
-	} else {
-		return string(candidate)
-	}
 }
 
 // determine game boundaries based on vertex information
@@ -92,59 +101,6 @@ func (g *Game) setBoundaries(boundaries []interface{}) {
 	}
 }
 
-// register a new game instance, with the host as its first player
-func createGame(conn net.Conn, data map[string]interface{}) (*Game, *Player) {
-	var g Game
-	g.ID = createGameID()
-	g.Name = data["Name"].(string)
-	g.Password = data["Password"].(string)
-	g.Description = data["Description"].(string)
-	g.PlayerLimit = int(data["PlayerLimit"].(float64))
-	g.PointLimit = int(data["PointLimit"].(float64))
-	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
-	g.Status = CREATING
-	g.Mode = stringToMode[data["Mode"].(string)]
-	g.setBoundaries(data["Boundaries"].([]interface{}))
-
-	host := data["Host"].(map[string]interface{})
-	p := createPlayer(conn, host["Name"].(string), host["Icon"].(string))
-
-	g.RedTeam = &Team{Name: "Red"}
-	g.BlueTeam = &Team{Name: "Blue"}
-	g.Players = map[string]*Player{p.Name : p}
-
-	games[g.ID] = &g
-
-	fmt.Printf("Game %s with ID %s created.\n", g.Name, g.ID)
-	fmt.Printf("Player %s added to game %s.\n", p.Name, g.ID)
-
-	return &g, p
-}
-
-// add a player to a game if possible
-func (p *Player) joinGame(gameID string) *Game {
-	target := games[gameID]
-	if len(target.Players) == target.PlayerLimit {
-		sendJoinGameError(p, "GameFull")
-		return nil
-	} else if target.Status != CREATING {
-		sendJoinGameError(p, "GameStarted")
-		return nil
-	} else {
-		target.Players[p.Name] = p
-		sendPlayerListUpdate(target)
-
-		fmt.Printf("Player %s added to game %s.\n", p.Name, gameID)
-
-		return target
-	}
-}
-
-// remove a player from a game
-func (p *Player) leaveGame(game *Game) *Game {
-	return nil
-}
-
 // determines whether a CP or pickup with the given location and radius
 // intersects with any existing CPs or pickups
 func noIntersections(g *Game, loc Location, r float64) bool {
@@ -159,6 +115,53 @@ func noIntersections(g *Game, loc Location, r float64) bool {
 		}
 	}
 	return true
+}
+
+// semi-randomly places a pickup in the game
+func generatePickup(g *Game, minX, minY, halfRange float64) {
+	rLock.Lock()
+	xOff := r.Float64() * PICKUPDISTRIBUTION()
+	yOff := r.Float64() * PICKUPDISTRIBUTION()
+	rLock.Unlock()
+	loc := Location{minX + xOff, minY + yOff}
+	if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
+		rLock.Lock()
+		xOff = r.Float64() * PICKUPDISTRIBUTION()
+		yOff = r.Float64() * PICKUPDISTRIBUTION()
+		rLock.Unlock()
+		loc = Location{minX + xOff, minY + yOff}
+		if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
+			return
+		}
+	}
+	dist := distance(g.findCenter(), loc)
+	healthProb := 50 * dist/ halfRange
+	armorProb := 50 - 25 * dist/halfRange
+	weaponProb := 50 - 10 * dist/halfRange
+	totalProb := healthProb + armorProb + weaponProb
+	healthProb = healthProb / totalProb
+	armorProb = armorProb/totalProb + healthProb
+	rLock.Lock()
+	choice := r.Float64()
+	rLock.Unlock()
+	var newPickup Pickup
+	if choice < healthProb {
+		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2, false)}
+	} else if choice < armorProb {
+		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2, true)}
+	} else {
+		for _, weapon := range weapons {
+			newPickup = WeaponPickup{weapon}
+			break
+		}
+	}
+	newPickupSpot := PickupSpot{
+		Location: loc,
+		Pickup: newPickup,
+		Available: true,
+	}
+	g.Pickups = append(g.Pickups, &newPickupSpot)
+	return
 }
 
 // determine locations and radii of bases and control points
@@ -236,6 +239,8 @@ func (g *Game) generateObjectives(numCP int) {
 	} else {
 		cpLoc := Location{(g.RedTeam.Base.X + g.BlueTeam.Base.X) / 2, (g.RedTeam.Base.Y + g.BlueTeam.Base.Y) / 2}
 		g.ControlPoints["Payload"] = &ControlPoint{ID: "Payload", Location: cpLoc, Radius: cpRadius}
+		g.PayloadSpeed = math.Min(xRange / 120, MAXSPEED())
+		g.PayloadPath = Direction{X: g.BlueTeam.Base.X - g.RedTeam.Base.X, Y: g.BlueTeam.Base.Y - g.RedTeam.Base.Y}
 	}
 
 	// generate pickups
@@ -249,51 +254,77 @@ func (g *Game) generateObjectives(numCP int) {
 	}
 }
 
-// semi-randomly places a pickup in the game
-func generatePickup(g *Game, minX, minY, halfRange float64) {
-	rLock.Lock()
-	xOff := r.Float64() * PICKUPDISTRIBUTION()
-	yOff := r.Float64() * PICKUPDISTRIBUTION()
-	rLock.Unlock()
-	loc := Location{minX + xOff, minY + yOff}
-	if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
-		rLock.Lock()
-		xOff = r.Float64() * PICKUPDISTRIBUTION()
-		yOff = r.Float64() * PICKUPDISTRIBUTION()
-		rLock.Unlock()
-		loc = Location{minX + xOff, minY + yOff}
-		if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
-			return
-		}
+// register a new game instance, with the host as its first player
+func (p *Player) createGame(conn net.Conn, data map[string]interface{}) *Game {
+	var g Game
+	g.HostID = p.ID
+	g.Status = CREATING
+	g.Mode = stringToMode[data["Mode"].(string)]
+
+	g.Name = data["Name"].(string)
+	g.Password = data["Password"].(string)
+	g.Description = data["Description"].(string)
+	g.PlayerLimit = int(data["PlayerLimit"].(float64))
+	if g.Mode != PAYLOAD {
+		g.PointLimit = int(data["PointLimit"].(float64))
 	}
-	dist := distance(g.findCenter(), loc)
-	healthProb := 50 * dist/ halfRange
-	armorProb := 50 - 25 * dist/halfRange
-	weaponProb := 50 - 10 * dist/halfRange
-	totalProb := healthProb + armorProb + weaponProb
-	healthProb = healthProb / totalProb
-	armorProb = armorProb/totalProb + healthProb
-	rLock.Lock()
-	choice := r.Float64()
-	rLock.Unlock()
-	var newPickup Pickup
-	if choice < healthProb {
-		newPickup = HealthPickup{chooseArmorHealth(g, loc, halfRange* 2, false)}
-	} else if choice < armorProb {
-		newPickup = ArmorPickup{chooseArmorHealth(g, loc, halfRange* 2, true)}
+	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
+	g.setBoundaries(data["Boundaries"].([]interface{}))
+
+	g.RedTeam = &Team{Name: "Red"}
+	g.BlueTeam = &Team{Name: "Blue"}
+	g.Players = map[string]*Player{p.ID : p}
+
+	if g.Mode == MULTICAP {
+		g.generateObjectives(int(data["NumCP"].(float64)))
 	} else {
-		for _, weapon := range weapons {
-			newPickup = WeaponPickup{weapon}
-			break
-		}
+		g.generateObjectives(1)
 	}
-	newPickupSpot := PickupSpot{
-		Location: loc,
-		Pickup: newPickup,
-		Available: true,
+
+	games[g.HostID] = &g
+
+	fmt.Printf("Game %s with ID %s created.\n", g.Name, g.HostID)
+	fmt.Printf("Player %s added to game %s.\n", p.Name, g.HostID)
+
+	return &g
+}
+
+// add a player to a game if possible
+func (p *Player) joinGame(gameID string, password string) *Game {
+	target := games[gameID]
+	if len(target.Players) == target.PlayerLimit {
+		sendJoinGameError(p, "GameFull")
+		return nil
+	} else if target.Status != CREATING {
+		sendJoinGameError(p, "GameStarted")
+		return nil
+	} else if target.Password != "" && target.Password != password {
+		sendJoinGameError(p, "WrongPassword")
+		return nil
+	} else {
+		target.Players[p.ID] = p
+		sendPlayerListUpdate(target)
+
+		fmt.Printf("Player %s added to game %s.\n", p.Name, gameID)
+
+		return target
 	}
-	g.Pickups = append(g.Pickups, &newPickupSpot)
-	return
+}
+
+// remove a player from a game
+func (p *Player) leaveGame(game *Game) {
+	// nil game return, remove player from game, if host end game and kick out everyone
+	if game == nil {
+		return
+	}
+
+	if game.HostID == p.ID {
+		delete(games, game.HostID)
+		sendLeaveGame(game)
+		game.Players = nil
+	} else {
+		delete(game.Players, p.ID)
+	}
 }
 
 // assign players to teams at the start of a game
@@ -315,10 +346,7 @@ func (g *Game) randomizeTeams() {
 // begin a game, determining objective and team information and
 // starting goroutines that will run for the duration of the game
 func (g *Game) start() {
-	// for now we're doing just one ControlPoint, that may change later
-	g.generateObjectives(1)
 	g.randomizeTeams()
-
 	startTime := time.Now().Add(time.Second * 5)
 	sendGameStartInfo(g, startTime)
 	go g.awaitStart(startTime)
@@ -338,10 +366,16 @@ func (g *Game) awaitStart(startTime time.Time) {
 
 // end a game, signalling and performing resource cleanup
 func (g *Game) stop() {
-	sendGameOver(g)
 	g.Status = GAMEOVER
-	delete(games, g.ID)
 	for _, player := range g.Players {
-		close(player.Chan)
+		player.reset()
 	}
+	for _, pickup := range g.Pickups {
+		if pickup.SpawnTimer != nil {
+			pickup.SpawnTimer.Stop()
+			pickup.SpawnTimer = nil
+		}
+	}
+	sendGameOver(g)
+	delete(games, g.HostID)
 }

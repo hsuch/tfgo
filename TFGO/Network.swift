@@ -39,62 +39,63 @@ class Connection {
     }
 }
 
-class MsgFromServer {
-    private var type: String = ""
-    /* possible message types:
-        PlayerListUpdate, AvailableGames, GameInfo, JoinGameError, GameStartInfo, GameUpdate, StatusUpdate
-    */
-
-    private var data: [String: Any] = [:]
-
-    func getType() -> String {
-        return type
+/* handleMsgFromServer(): takes the incoming message and splits it if there are multiple messages in buffer,
+ * then parses all of them
+ */
+func handleMsgFromServer() -> Bool {
+    let conn = gameState.getConnection()
+    var received: Data? = nil
+    while(received == nil)
+    {
+        received = conn.recvData()
     }
-
-    /* parse(): convert data array into appropriate data struct depending on message type */
-    func parse() -> Bool {
-        switch type {
-        case "PlayerListUpdate":
-            return parsePlayerListUpdate(data: data)
-        case "AvailableGames":
-            return parseAvailableGames(data: data)
-        case "GameInfo":
-            return parseGameInfo(data: data)
-        case "JoinGameError":
-            return parseJoinGameError(data: data)
-        case "GameStartInfo":
-            return parseGameStartInfo(data: data)
-        case "GameUpdate":
-            return parseGameUpdate(data: data)
-        case "StatusUpdate":
-            return parseStatusUpdate(data: data)
-        case "TakeHit":
-            return parseTakeHit(data: data)
-        case "Gameover":
-            return parseGameOver(data: data)
-        default:
+    let recvStr: String = String(data: received!, encoding: .utf8)!
+    var strArray: [String] = []
+    recvStr.enumerateLines { line, _ in
+        strArray.append(line)
+    }
+    for line in strArray {
+        var data = try! JSONSerialization.jsonObject(with: line.data(using: .utf8)!, options: []) as! [String: Any]
+        let type = data.removeValue(forKey: "Type") as! String
+        if (!parse(data: data, type: type)) {
             return false
         }
     }
-
-    init() {
-        let conn = gameState.getConnection()
-        var received: Data? = nil
-        while(received == nil)
-        {
-            received = conn.recvData()
-        }
-        self.data = try! JSONSerialization.jsonObject(with: received!, options: []) as! [String: Any]
-        let type = data.removeValue(forKey: "Type")
-        self.type = type as! String
-        print(self.type)
-        print(self.data)
-    }
+    return true
 }
 
-/* Parsing functions: helper functions called by parse() to parse different messages */
-/* The structure of each of the messages can be found in the Wiki section of the project github */
+/* parse(): convert data array into appropriate data struct depending on message type */
 /* URL for the structure of the messages : https://github.com/hsuch/tfgo/wiki/Network-Messages */
+func parse(data: [String: Any], type: String) -> Bool {
+    switch type {
+    case "PlayerListUpdate":
+        return parsePlayerListUpdate(data: data)
+    case "AvailableGames":
+        return parseAvailableGames(data: data)
+    case "GameInfo":
+        return parseGameInfo(data: data)
+    case "JoinGameError":
+        return parseJoinGameError(data: data)
+    case "LeaveGame":
+        return parseLeaveGame()
+    case "GameStartInfo":
+        return parseGameStartInfo(data: data)
+    case "GameUpdate":
+        return parseGameUpdate(data: data)
+    case "StatusUpdate":
+        return parseStatusUpdate(data: data)
+    case "VitalsUpdate":
+        return parseVitalsUpdate(data: data)
+    case "Gameover":
+        return parseGameOver(data: data)
+    case "AcquireWeapon":
+        return parseAcquireWeapon(data: data)
+    case "PickupUpdate":
+        return parsePickupUpdate(data: data)
+    default:
+        return false
+    }
+}
 
 func parsePlayerListUpdate(data: [String: Any]) -> Bool {
     
@@ -113,33 +114,6 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
     
     return false
     
-//    gameState.getCurrentGame().setPlayers(toGame: players)
-//
-//    var current_players = gameState.getCurrentGame().getPlayers()
-//    var index = 0
-//
-//    // if there are players in the current game that are not in the passed in list, remove them
-//    for current_player in current_players {
-//        let current_name = current_player.getName()
-//        for player in players {
-//            if current_name == player.getName() {
-//                gameState.getCurrentGame().removePlayer(index: index)
-//                index = index - 1
-//                break
-//            }
-//        }
-//        index = index + 1
-//    }
-//
-//    current_players = gameState.getCurrentGame().getPlayers()
-//
-//    // if there are players in the passed in list that are not in the current game, add them
-//    for player in players {
-//        if gameState.getCurrentGame().hasPlayer(name: player.getName()) {
-//            gameState.getCurrentGame().addPlayer(toGame: player)
-//        }
-//    }
-    
 }
 
 func parseAvailableGames(data: [String: Any]) -> Bool {
@@ -150,7 +124,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]] {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]], let hasPassword = game["HasPassword"] as? Bool {
                         
                         let newGame = Game()
                         newGame.setID(to: id)
@@ -160,6 +134,8 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
                             newGame.setLocation(to: MKMapPointMake(x, y))
                         }
+                        
+                        newGame.setHasPassword(to: hasPassword)
                         
                         for player in players {
                             if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
@@ -195,6 +171,18 @@ func parseGameInfo(data: [String: Any]) -> Bool {
             
             
         }
+        
+        if let bounds = info["Boundaries"] as? [[String: Any]] {
+            var gameBounds: [MKMapPoint] = []
+            for bound in bounds {
+                if let x = bound["X"] as? Double, let y = bound["Y"] as? Double {
+                    let newBound = MKMapPoint(x: x, y: y)
+                    gameBounds.append(newBound)
+                }
+            }
+            gameState.getCurrentGame().setBoundaries(gameBounds)
+        }
+        
         if let players = info["PlayerList"] as? [[String: Any]] {
             for player in players {
                 if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
@@ -211,9 +199,12 @@ func parseJoinGameError(data: [String: Any]) -> Bool {
     return gameState.setCurrentGame(to: Game())
 }
 
+func parseLeaveGame() -> Bool {
+    return true   //TODO have the player leave the game
+}
+
 func parseGameStartInfo(data: [String: Any]) -> Bool {
     
-    //TODO add bases for iteration 2
     if let info = data["Data"] as? [String: Any] {
         if let players = info["PlayerList"] as? [[String: Any]] {
             for player in players {
@@ -227,10 +218,32 @@ func parseGameStartInfo(data: [String: Any]) -> Bool {
         }
         if let objectives = info["Objectives"] as? [[String: Any]] {
             for objective in objectives {
-                if let loc = objective["Location"] as? [String: Any], let radius = objective["Radius"] as? Double {
+                if let loc = objective["Location"] as? [String: Any], let radius = objective["Radius"] as? Double, let id = objective["ID"] as? String {
                     if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
-                        gameState.getCurrentGame().addObjective(toObjective: Objective(x: x, y: y, radius: radius))
+                        gameState.getCurrentGame().addObjective(toObjective: Objective(x: x, y: y, radius: radius, id: id))
                     }
+                }
+            }
+        }
+        if let pickups = info["Pickups"] as? [[String: Any]] {
+            var gamePickups: [Pickup] = []
+            for pickup in pickups {
+                if let loc = pickup["Location"] as? [String: Any], let type = pickup["Type"] as? String, let amount = pickup["Amount"] as? Int {
+                    if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                        let point = MKMapPoint(x: x, y: y)
+                        gamePickups.append(Pickup(loc: point, type: type, amount: amount))
+                    }
+                }
+            }
+            gameState.getCurrentGame().setPickups(toPickup: gamePickups)
+        }
+        if let bBase = info["BlueBase"] as? [String: Any], let rBase = info["RedBase"] as? [String: Any] {
+            if let bLoc = bBase["Location"] as? [String: Any], let bRad = bBase["Radius"] as? Double, let rLoc = rBase["Location"] as? [String: Any], let rRad = rBase["Radius"] as? Double {
+                if let bX = bLoc["X"] as? Double, let bY = bLoc["Y"] as? Double, let rX = rLoc["X"] as? Double, let rY = rLoc["Y"] as? Double {
+                    gameState.getCurrentGame().setBlueBaseLoc(to: MKMapPoint(x: bX, y: bY))
+                    gameState.getCurrentGame().setBlueBaseRad(to: bRad)
+                    gameState.getCurrentGame().setRedBaseLoc(to: MKMapPoint(x: rX, y: rY))
+                    gameState.getCurrentGame().setRedBaseRad(to: rRad)
                 }
             }
         }
@@ -266,15 +279,15 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
             }
             
             for objective in objectives {
-                if let loc = objective["Location"] as? [String: Any], let occupants = objective["Occupying"] as? [String], let owner = objective["BelongsTo"] as? String, let progress = objective["Progress"] as? Int {
+                if let id = objective["ID"] as? String, let occupants = objective["Occupying"] as? [String], let owner = objective["BelongsTo"] as? String, let progress = objective["Progress"] as? Int {
                     
-                    if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
-                        let objIndex = gameState.getCurrentGame().findObjectiveIndex(x: x, y: y)
-                        if objIndex > -1 {
-                            gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
-                            gameState.getCurrentGame().getObjectives()[objIndex].setProgress(to: progress)
-                            gameState.getCurrentGame().getObjectives()[objIndex].setOccupants(to: occupants)
-                        }
+  //                  if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {  TODO Dont think we need this
+                    let objIndex = gameState.getCurrentGame().findObjectiveIndex(id: id)
+                    if objIndex > -1 {
+                        gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
+                        gameState.getCurrentGame().getObjectives()[objIndex].setProgress(to: progress)
+                        gameState.getCurrentGame().getObjectives()[objIndex].setOccupants(to: occupants)
+                    //    }
                     }
                 }
             }
@@ -307,7 +320,7 @@ func parseStatusUpdate(data: [String: Any]) -> Bool {
     return false
 }
 
-func parseTakeHit(data: [String: Any]) -> Bool {
+func parseVitalsUpdate(data: [String: Any]) -> Bool {
     if let info = data["Data"] as? [String: Any] {
         if let health = info["Health"] as? Int, let armor = info["Armor"] as? Int {
             gameState.setUserHealth(to: health)
@@ -318,6 +331,34 @@ func parseTakeHit(data: [String: Any]) -> Bool {
     return false
 }
 
+func parseAcquireWeapon(data: [String: Any]) -> Bool {
+    if let weapon = data["Data"] as? String {
+        gameState.getUser().addWeapon(to: weapon)
+        return true
+    }
+    
+    return false
+}
+
+func parsePickupUpdate(data: [String: Any]) -> Bool {
+    if let info = data["Data"] as? [String: Any] {
+        if let loc = info["Location"] as? [String: Any], let available = info["Available"] as? Bool {
+            if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
+                let index = gameState.getCurrentGame().findPickupIndex(x: x, y: y)
+                if index > -1 {
+                    gameState.getCurrentGame().getPickups()[index].setAvailability(to: available)
+                    return true
+                }
+            }
+        }
+    }
+    
+    return false
+}
+
+/* MsgToServer
+ * A class that stores data for messages sent to the server, and implements a method to convert them to json
+ */
 class MsgToServer {
     private var action: String
     /* possible message actions:
@@ -350,23 +391,27 @@ private func boundariesToArray(boundaries: [MKMapPoint]) -> [[String: Any]] {
 
 /* Message generators: the following functions generate messages that can be directly sent to the server via Connection.sendData()*/
 
+func RegisterPlayerMsg() -> Data {
+    let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String : Any]
+    return MsgToServer(action: "RegisterPlayer", data: payload).toJson()
+}
 func CreateGameMsg(game: Game) -> Data {
-    // still needs to take boundaries from game page
-    let host = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()] as [String: Any]
     let minutes = game.getTimeLimit()
     let timelimit = "0h" + "\(minutes)" + "m0s"
-    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "Host": host] as [String : Any]
+    let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "NumCP": game.getMaxObjectives()] as [String : Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
 func ShowGamesMsg() -> Data {
-    let payload = ["Name": gameState.getUserName(), "Icon": gameState.getUserIcon()]
-    return MsgToServer(action: "ShowGames", data: payload).toJson()
+    return MsgToServer(action: "ShowGames", data: [:]).toJson()
 }
 func ShowGameInfoMsg(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
 }
-func JoinGameMsg(IDtoJoin: String) -> Data {
-    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+func JoinGameMsg(IDtoJoin: String, password: String) -> Data {
+    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin, "Password": password]).toJson()
+}
+func LeaveGameMsg() -> Data {
+    return MsgToServer(action: "LeaveGame", data: [:]).toJson()
 }
 func StartGameMsg() -> Data {
     return MsgToServer(action: "StartGame", data: [:]).toJson()
@@ -377,7 +422,6 @@ func LocUpMsg() -> Data {
     return MsgToServer(action: "LocationUpdate", data: payload).toJson()
 }
 func FireMsg() -> Data {
-    // todo, take orientation and weapon from this client's player
     let weapon = gameState.getUserWeapon()
     let direction = gameState.getUserOrientation()
     let payload = ["Weapon": weapon, "Direction": direction] as [String: Any]

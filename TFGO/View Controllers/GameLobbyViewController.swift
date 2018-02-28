@@ -25,15 +25,15 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         self.table.dataSource = self;
         self.table.delegate = self;
         runTimer()
+        updateGames()
 
         DispatchQueue.global(qos: .background).async {
             if  gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
                 while !self.hasChosenGame {
-                    if MsgFromServer().parse() { }
+                    if handleMsgFromServer() { }
                 }
             }
         }
-        table.reloadData()
     }
     
     private var gamesPrivate: [Game] = []
@@ -61,11 +61,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         gamesPrivate = []
         gamesPublic = []
         for game in gameState.getFoundGames() {
-            if game.getPassword() == nil {
-                gamesPublic.append(game)
-            } else {
-                gamesPrivate.append(game)
-            }
+            game.isPrivate() ? gamesPrivate.append(game) : gamesPublic.append(game)
         }
         table.reloadData()
     }
@@ -80,28 +76,39 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         switch game.getMode() {
         case .cp:
             cell.gamemodeLabel.text = "◆"
-        case .multi:
-            cell.gamemodeLabel.text = "⇥"
         case .payload:
+            cell.gamemodeLabel.text = "⇥"
+        case .multi:
             cell.gamemodeLabel.text = "❖"
         }
         cell.gameNameLabel.text = game.getName()!
         cell.gameDistanceLabel.text = "\(gameState.getDistanceFromGame(game: game)) units away"
         cell.layer.cornerRadius = 8.0
         cell.backgroundColor = randomColor()
+        cell.userCollection.delegate = self
+        cell.userCollection.dataSource = self
+        cell.userCollection.backgroundColor = cell.backgroundColor
+        cell.userCollection.reloadData()
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //
+        if let cell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
+            for game in gamesList {
+                if cell.gameNameLabel.text == game.getName() {
+                    return game.getPlayers().count
+                }
+            }
+        }
         return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "icon", for: indexPath) as! IconViewCell
-//        if let lobbyCell = collectionView.superview?.superview?.superview as? LobbyCustomViewCell {
-//            cell.label.text = lobbyCell.game?.getPlayers()[indexPath.row].getIcon()
-//        }
+        if let lobbyCell = collectionView.superview?.superview as? LobbyCustomViewCell {
+            let game = gamesList[(table.indexPath(for: lobbyCell)?.row)!]
+            cell.label.text = game.getPlayers()[indexPath.row].getIcon()
+        }
         cell.backgroundColor = randomColor()
         cell.layer.cornerRadius = 8.0
         cell.clipsToBounds = true
@@ -114,7 +121,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
             if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: game.getID()!)).isSuccess {
                 if gameState.setCurrentGame(to: game) {
                     DispatchQueue.global(qos: .userInitiated).async {
-                        if MsgFromServer().parse() {}
+                        if handleMsgFromServer() {}
                     }
                     performSegue(withIdentifier: "gameSelect", sender: nil)
                 }

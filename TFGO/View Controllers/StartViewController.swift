@@ -49,18 +49,7 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         gameState.setUserIcon(to: cell.label.text!)
     }
     
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return gameState.getUser().isValid()
-    }
-    
     @IBOutlet weak var nameField: UITextField!
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        var name = gameState.getUserName()
-        name.append(string)
-        gameState.setUserName(to: name)
-        return true
-    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
@@ -80,4 +69,9 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
         }
     }
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        gameState.setUserName(to: nameField.text ?? "")
+        gameState.getConnection().sendData(data: RegisterPlayerMsg())
+        return gameState.getUser().isValid()
+    }
 }

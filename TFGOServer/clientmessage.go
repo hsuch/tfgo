@@ -22,7 +22,7 @@ func (p *Player) sender() {
 	for {
 		msg, open := <-p.Chan
 		if open {
-			if verbose {
+			if verbosity > 1 || verbosity > 0 && msg["Type"] != "GameUpdate" {
 				rawJSON, _ := json.Marshal(msg)
 				fmt.Printf("Sending to %s:\n%s\n", p.Name, prettyPrintJSON(rawJSON))
 			}
@@ -35,10 +35,16 @@ func (p *Player) sender() {
 	}
 }
 
+// prevents sending to closed channels, as we close and send in different places
+func (p *Player) safeSend(msg map[string]interface{}) {
+	defer func() { recover() }()
+	p.Chan <- msg
+}
+
 // deliver a message to all players
 func (g *Game) broadcast(msg map[string]interface{}) {
 	for _, player := range g.Players {
-		player.Chan <- msg
+		player.safeSend(msg)
 	}
 }
 
@@ -88,8 +94,30 @@ func (t *Team) getLocInfo() map[string]interface{} {
 
 func (cp *ControlPoint) getLocInfo() map[string]interface{} {
 	return map[string]interface{} {
+		"ID" : cp.ID,
 		"Location" : cp.Location.locationToDegrees(),
 		"Radius" : cp.Radius, //also in meters
+	}
+}
+
+func (p *PickupSpot) getInfo() map[string]interface{} {
+	var pickupType string
+	var pickupAmt int
+	if ap, ok := p.Pickup.(ArmorPickup); ok {
+		pickupType = "Armor"
+		pickupAmt = ap.AP
+	} else if hp, ok := p.Pickup.(HealthPickup); ok {
+		pickupType = "Health"
+		pickupAmt = hp.HP
+	} else if wp, ok := p.Pickup.(WeaponPickup); ok {
+		pickupType = wp.WP.Name
+		pickupAmt = 1
+	}
+
+	return map[string]interface{} {
+		"Location" : p.Location,
+		"Type" : pickupType,
+		"Amount" : pickupAmt,
 	}
 }
 
@@ -105,6 +133,7 @@ func (g *Game) getObjectiveUpdate() []map[string]interface{} {
 	var cpList []map[string]interface{}
 	for _, cp := range g.ControlPoints {
 		cpInfo := make(map[string]interface{})
+		cpInfo["ID"] = cp.ID
 		cpInfo["Location"] = cp.Location.locationToDegrees()
 		cpInfo["Occupying"] = occupants[cp]
 		if cp.ControllingTeam == nil {
@@ -134,10 +163,15 @@ func sendPlayerListUpdate(game *Game) {
 func sendAvailableGames(player *Player) {
 	var gameList []map[string]interface{}
 	for _, game := range games {
-		if game.Status == CREATING {
+		if game.Status == CREATING && len(game.Players) < game.PlayerLimit {
 			gameInfo := make(map[string]interface{})
-			gameInfo["ID"] = game.ID
+			gameInfo["ID"] = game.HostID
 			gameInfo["Name"] = game.Name
+			if game.Password == "" {
+				gameInfo["HasPassword"] = false
+			} else {
+				gameInfo["HasPassword"] = true
+			}
 			gameInfo["Mode"] = modeToString[game.Mode]
 			gameInfo["Location"] = game.findCenter().locationToDegrees()
 			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Icon"})
@@ -149,7 +183,7 @@ func sendAvailableGames(player *Player) {
 		"Type" : "AvailableGames",
 		"Data" : gameList,
 	}
-	player.Chan <- msg
+	player.safeSend(msg)
 }
 
 func sendGameInfo(player *Player, gameID string) {
@@ -166,7 +200,7 @@ func sendGameInfo(player *Player, gameID string) {
 		"Type" : "GameInfo",
 		"Data" : gameInfo,
 	}
-	player.Chan <- msg
+	player.safeSend(msg)
 }
 
 func sendJoinGameError(player *Player, error string) {
@@ -174,7 +208,19 @@ func sendJoinGameError(player *Player, error string) {
 		"Type" : "JoinGameError",
 		"Data" : error,
 	}
-	player.Chan <- msg
+	player.safeSend(msg)
+}
+
+func sendLeaveGame(game *Game) {
+	msg := map[string]interface{}{
+		"Type" : "LeaveGame",
+	}
+
+	for id, player := range game.Players {
+		if id != game.HostID {
+			player.safeSend(msg)
+		}
+	}
 }
 
 func sendGameStartInfo(game *Game, startTime time.Time) {
@@ -187,6 +233,11 @@ func sendGameStartInfo(game *Game, startTime time.Time) {
 		cpInfo = append(cpInfo, cp.getLocInfo())
 	}
 	gameInfo["Objectives"] = cpInfo
+	var pickupInfo []map[string]interface{}
+	for _, pickup := range game.Pickups {
+		pickupInfo = append(pickupInfo, pickup.getInfo())
+	}
+	gameInfo["Pickups"] = pickupInfo
 	gameInfo["StartTime"] = startTime.Format("2006-01-02 15:04:05")
 
 	msg := map[string]interface{} {
@@ -221,34 +272,54 @@ func sendStatusUpdate(player *Player, status string) {
 		"Type" : "StatusUpdate",
 		"Data" : status,
 	}
-	player.Chan <- msg
+	player.safeSend(msg)
 }
 
-func sendVitalStats(player *Player) {
+func sendVitalsUpdate(player *Player) {
 	msg := map[string]interface{} {
-		"Type" : "VitalStats",
+		"Type" : "VitalsUpdate",
 		"Data" : map[string]int {
 			"Health" : player.Health,
 			"Armor" : player.Armor,
 		},
 	}
-	player.Chan <- msg
+	player.safeSend(msg)
 }
 
-func sendWeaponAcquire(player *Player, weapon Weapon) {
+func sendPickupUpdate(pickup *PickupSpot, game *Game) {
 	msg := map[string]interface{} {
-		"Type" : "WeaponAcquire",
+		"Type" : "PickupUpdate",
+		"Data" : map[string]interface{} {
+			"Location" : pickup.Location,
+			"Available" : pickup.Available,
+		},
+	}
+	game.broadcast(msg)
+}
+
+func sendAcquireWeapon(player *Player, weapon Weapon) {
+	msg := map[string]interface{} {
+		"Type" : "AcquireWeapon",
 		"Data" : weaponToString[weapon],
 	}
-	player.Chan <- msg
+	player.safeSend(msg)
 }
 
 func sendGameOver(game *Game) {
 	winner := "None"
-	if game.RedTeam.Points > game.BlueTeam.Points {
-		winner = game.RedTeam.Name
-	} else if game.RedTeam.Points < game.BlueTeam.Points {
-		winner = game.BlueTeam.Name
+	if game.Mode == PAYLOAD {
+		payloadLoc := game.ControlPoints["Payload"].Location
+		if inRange(payloadLoc, game.RedTeam.Base, game.RedTeam.BaseRadius) {
+			winner = game.BlueTeam.Name
+		} else if inRange(payloadLoc, game.BlueTeam.Base, game.BlueTeam.BaseRadius) {
+			winner = game.RedTeam.Name
+		}
+	} else {
+		if game.RedTeam.Points > game.BlueTeam.Points {
+			winner = game.RedTeam.Name
+		} else if game.RedTeam.Points < game.BlueTeam.Points {
+			winner = game.BlueTeam.Name
+		}
 	}
 
 	msg := map[string]interface{} {

@@ -57,7 +57,7 @@ type Border struct {
 }
 
 type Game struct {
-	ID          string
+	HostID      string
 	Name        string
 	Password    string
 	Description string
@@ -77,6 +77,9 @@ type Game struct {
 	Boundaries    []Border
 	ControlPoints map[string]*ControlPoint
 	Pickups		  []*PickupSpot
+
+	PayloadPath		Direction	//direction of Payload motion from Red base to Blue base
+	PayloadSpeed	float64		//in meter/second
 }
 
 type PlayerStatus int
@@ -93,6 +96,7 @@ var playerStatusToString = map[PlayerStatus]string {
 }
 
 type Player struct {
+	ID string
 	Name string
 	Icon string
 	Team *Team
@@ -179,11 +183,12 @@ var weapons = map[string]Weapon {
 	"Pistol" : PISTOL,
 	"Blaster" : BLASTER,
 	"Crossbow" : CROSSBOW,
-	"Sniper Rifle" : RIFLE,
+	"SniperRifle" : RIFLE,
 	"Boomerang" : BOOMERANG,
 	"Lightsaber" : LIGHTSABER,
 	"Spear" : SPEAR,
-	"Ban Hammer" : BANHAMMER,
+	"BanHammer" : BANHAMMER,
+	"BeeSwarm" : BEESWARM,
 }
 
 var weaponToString = map[Weapon]string {
@@ -192,11 +197,12 @@ var weaponToString = map[Weapon]string {
 	PISTOL: "Pistol",
 	BLASTER: "Blaster",
 	CROSSBOW: "Crossbow",
-	RIFLE: "Sniper Rifle",
+	RIFLE: "SniperRifle",
 	BOOMERANG: "Boomerang",
 	LIGHTSABER: "Lightsaber",
 	SPEAR: "Spear",
-	BANHAMMER: "Ban Hammer",
+	BANHAMMER: "BanHammer",
+	BEESWARM: "BeeSwarm",
 }
 
 // each of the available weapons is defined as a globally
@@ -252,7 +258,7 @@ var CROSSBOW = Weapon {
 }
 
 var RIFLE = Weapon {
-	Name: "Sniper Rifle",
+	Name: "SniperRifle",
 	Damage: 30,
 	Spread: math.Pi/8,
 	Range: 30,
@@ -292,13 +298,23 @@ var SPEAR = Weapon {
 }
 
 var BANHAMMER = Weapon {
-	Name: "Ban Hammer",
+	Name: "BanHammer",
 	Damage: 30,
 	Spread: math.Pi/2,
 	Range: 15,
 	ClipSize: 1,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 10,
+}
+
+var BEESWARM = Weapon {
+	Name: "BeeSwarm",
+	Damage: 10,
+	Spread: 2 * math.Pi,
+	Range: 3,
+	ClipSize: 1337,
+	ShotReload: time.Second * 0,
+	ClipReload: time.Second * 0,
 }
 
 // Helper functions, mostly for conversions
@@ -346,7 +362,7 @@ func PICKUPRESPAWNTIME() time.Duration {
 	return 15 * time.Second
 }
 
-// returns the baseRadius given the games x and y dimensions
+// returns the baseRadius given the game's x and y dimensions
 // default is 3m, but size is adjusted down if dimensions are too small
 func BASERADIUS(x, y float64) float64 {
 	if x < 14 || y < 14 {
@@ -376,4 +392,8 @@ func MAXHEALTH() int {
 
 func MAXARMOR() int {
 	return 100
+}
+
+func MAXSPEED() float64 {
+	return 0.5
 }
