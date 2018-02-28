@@ -196,9 +196,6 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
             //Put on Cooldown. Not necessary for Iteration 1
         }
-        redScore.text = "\(game.getRedPoints())"
-        blueScore.text = "\(game.getBluePoints())"
-        tick()
     }
     
     var updateTimer = Timer()
@@ -212,6 +209,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             print(gameState.getUser().getLocation())
         }
         
+        redScore.text = "\(game.getRedPoints())"
+        blueScore.text = "\(game.getBluePoints())"
         tick()
         
         // update the locations of other players on the map
