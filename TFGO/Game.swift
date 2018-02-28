@@ -116,6 +116,10 @@ class Player {
         self.weapons.append(weapon)
     }
     
+    func getWeaponsList() -> [String] {
+        return weapons
+    }
+    
     func updateAnnotation() {
         self.annotation.coordinate = loc.coordinate
         self.annotation.title = name
@@ -134,7 +138,7 @@ class Player {
         self.name = name
         self.icon = icon
         self.orientation = 0
-        self.weapon = "Sword" // later
+        self.weapon = "BeeSwarm" // later
         self.status = "" // later
         self.health = 100 // later
         self.armor = 0 // later
@@ -248,6 +252,7 @@ public class Game {
     private var bluePoints: Int = 0
     private var description: String
     private var password: String?
+    private var hasPassword: Bool = false
     private var startTime: [String] = []
     
     private var objectives: [Objective]
@@ -369,9 +374,18 @@ public class Game {
     func setPassword(to password: String) -> Bool {
         if validDescription(password) {
             self.password = password
+            self.hasPassword = true
             return true
         }
         return false
+    }
+    
+    func isPrivate() -> Bool {
+        return hasPassword
+    }
+    
+    func setHasPassword(to hasPassword: Bool) {
+        self.hasPassword = hasPassword
     }
     
     func getPlayers() -> [Player] {

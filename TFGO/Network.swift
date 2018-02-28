@@ -12,7 +12,7 @@ import SwiftyJSON
 import MapKit
 
 class Connection {
-    private var servadd: String = "10.150.119.166" // to be replaced with real server ip
+    private var servadd: String = "10.150.160.52" // to be replaced with real server ip
     private var servport: Int32 = 9265
     private var client: TCPClient
 
@@ -124,7 +124,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]] {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]], let hasPassword = game["HasPassword"] as? Bool {
                         
                         let newGame = Game()
                         newGame.setID(to: id)
@@ -134,6 +134,8 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
                             newGame.setLocation(to: MKMapPointMake(x, y))
                         }
+                        
+                        newGame.setHasPassword(to: hasPassword)
                         
                         for player in players {
                             if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
@@ -405,8 +407,8 @@ func ShowGamesMsg() -> Data {
 func ShowGameInfoMsg(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
 }
-func JoinGameMsg(IDtoJoin: String) -> Data {
-    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+func JoinGameMsg(IDtoJoin: String, password: String) -> Data {
+    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin, "Password": password]).toJson()
 }
 func LeaveGameMsg() -> Data {
     return MsgToServer(action: "LeaveGame", data: [:]).toJson()
