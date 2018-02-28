@@ -76,9 +76,9 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         switch game.getMode() {
         case .cp:
             cell.gamemodeLabel.text = "◆"
-        case .multi:
-            cell.gamemodeLabel.text = "⇥"
         case .payload:
+            cell.gamemodeLabel.text = "⇥"
+        case .multi:
             cell.gamemodeLabel.text = "❖"
         }
         cell.gameNameLabel.text = game.getName()!

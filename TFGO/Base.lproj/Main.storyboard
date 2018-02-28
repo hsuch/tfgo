@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="triangle" translatesAutoresizingMaskIntoConstraints="NO" id="ouk-Mg-hHW">
-                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pDX-eO-ApH">
@@ -32,7 +32,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="146" height="48.666666666666664"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Host Game">
-                                            <color key="titleColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="0.78342390641127113" green="0.93066097155867422" blue="0.46930549270538963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="ZEs-Lf-FFb" kind="show" identifier="Host Game" id="jkD-TJ-GTL"/>
@@ -42,7 +42,7 @@
                                         <rect key="frame" x="0.0" y="56.666666666666686" width="146" height="48"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Join Game">
-                                            <color key="titleColor" red="0.0" green="0.98106676339999999" blue="0.57369142770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="1" green="0.76775226082042691" blue="0.44680859675164286" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="mDp-nZ-Q9M" kind="show" identifier="Game Lobby" id="sNw-Co-70M"/>
@@ -52,7 +52,7 @@
                                         <rect key="frame" x="0.0" y="112.66666666666667" width="146" height="48.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Player Info">
-                                            <color key="titleColor" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="1" green="0.52842415646490548" blue="0.46749827107604802" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="Ibe-RX-1f9" kind="show" identifier="Player Info" id="w0N-5a-D0Z"/>
@@ -62,7 +62,7 @@
                                         <rect key="frame" x="0.0" y="169" width="146" height="48"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                         <state key="normal" title="Settings">
-                                            <color key="titleColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="titleColor" red="1" green="0.34409839771633299" blue="0.4541931867964043" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <segue destination="6k5-FI-bQK" kind="show" identifier="Settings" id="2n9-BF-tBN"/>
@@ -81,13 +81,13 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TFGO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-qu-lXV">
                                         <rect key="frame" x="4.3333333333333428" y="0.0" width="180" height="86"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="72"/>
-                                        <color key="textColor" red="0.0" green="0.99143940210000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" red="0.34565921598863669" green="1" blue="0.9450000720392463" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Fun Game Online" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7oH-mt-UXU">
                                         <rect key="frame" x="0.0" y="86" width="188.33333333333334" height="24"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" red="1" green="0.52120530610000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" red="0.4640167276646" green="0.9839722056335225" blue="0.73086953736384963" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -100,7 +100,7 @@
                         <constraints>
                             <constraint firstItem="ouk-Mg-hHW" firstAttribute="leading" secondItem="h6T-vy-hJt" secondAttribute="leading" id="08l-Og-D5R"/>
                             <constraint firstItem="Caz-Jg-YC7" firstAttribute="top" secondItem="h6T-vy-hJt" secondAttribute="top" constant="56" id="9K2-Bs-ayO"/>
-                            <constraint firstItem="ouk-Mg-hHW" firstAttribute="top" secondItem="h6T-vy-hJt" secondAttribute="top" id="AjY-w0-iv4"/>
+                            <constraint firstItem="ouk-Mg-hHW" firstAttribute="top" secondItem="h6T-vy-hJt" secondAttribute="top" constant="-88" id="AjY-w0-iv4"/>
                             <constraint firstItem="h6T-vy-hJt" firstAttribute="bottom" secondItem="pDX-eO-ApH" secondAttribute="bottom" constant="173" id="KfP-R8-SqT"/>
                             <constraint firstItem="ouk-Mg-hHW" firstAttribute="trailing" secondItem="h6T-vy-hJt" secondAttribute="trailing" id="SM4-hc-xRR"/>
                             <constraint firstItem="pDX-eO-ApH" firstAttribute="centerX" secondItem="h6T-vy-hJt" secondAttribute="centerX" id="Wwp-Gu-HQC"/>
@@ -541,7 +541,7 @@
                                         <rect key="frame" x="0.0" y="921.66666666666674" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Lv-V4-XYw" id="m2F-u0-ReT">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2B0-5m-xSs">
@@ -1082,7 +1082,7 @@
                                     <navigationItem title="Inventory" id="07j-va-lxH">
                                         <barButtonItem key="leftBarButtonItem" title="Back" id="gy1-An-GqB">
                                             <connections>
-                                                <segue destination="mhV-e7-hMe" kind="show" id="4cG-7q-7tp"/>
+                                                <segue destination="mhV-e7-hMe" kind="show" identifier="back" id="4cG-7q-7tp"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -1090,7 +1090,6 @@
                             </navigationBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="e0l-aH-1fW">
                                 <rect key="frame" x="16" y="88" width="343" height="690"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="afJ-z6-9nL">
                                     <size key="itemSize" width="85" height="85"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1105,15 +1104,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgV-af-J7s">
-                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
-                                                </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ctr-Br-SKN">
                                                     <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
                                                     <connections>
                                                         <action selector="selectItem:" destination="Wa6-Ia-L1j" eventType="touchUpInside" id="T9d-H7-x7P"/>
                                                     </connections>
                                                 </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CgV-af-J7s">
+                                                    <rect key="frame" x="0.0" y="0.0" width="85" height="85"/>
+                                                </imageView>
                                             </subviews>
                                         </view>
                                         <constraints>
@@ -1127,6 +1126,7 @@
                                             <constraint firstItem="CgV-af-J7s" firstAttribute="top" secondItem="RFh-be-Mkn" secondAttribute="top" id="vOq-WT-WWH"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="button" destination="ctr-Br-SKN" id="La2-r5-gZW"/>
                                             <outlet property="image" destination="CgV-af-J7s" id="GDA-z6-m8M"/>
                                         </connections>
                                     </collectionViewCell>
@@ -1406,6 +1406,7 @@
                     <connections>
                         <outlet property="descriptionLbl" destination="BH5-To-4Tg" id="VUC-x7-Qwh"/>
                         <outlet property="gameNameLbl" destination="ZZz-9f-GYc" id="I6b-Hh-Moc"/>
+                        <outlet property="game_map" destination="liN-h8-OE8" id="nkS-kS-avv"/>
                         <outlet property="gamemodeLbl" destination="bTE-6P-LNw" id="f62-sW-9R2"/>
                         <outlet property="minutesLbl" destination="V3t-of-7gm" id="XKF-pV-bXO"/>
                         <outlet property="pointsLbl" destination="8ZQ-JA-xzw" id="HDz-T2-5vE"/>
@@ -1581,7 +1582,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="xzX-Iq-bnB"/>
-        <segue reference="2n9-BF-tBN"/>
+        <segue reference="Th9-pw-b0x"/>
         <segue reference="FNE-Lr-RRh"/>
         <segue reference="Snh-On-Wk1"/>
     </inferredMetricsTieBreakers>
