@@ -134,7 +134,7 @@ class Player {
         self.name = name
         self.icon = icon
         self.orientation = 0
-        self.weapon = "Sword" // later
+        self.weapon = "BeeSwarm" // later
         self.status = "" // later
         self.health = 100 // later
         self.armor = 0 // later
