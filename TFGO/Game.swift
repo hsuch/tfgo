@@ -116,6 +116,10 @@ class Player {
         self.weapons.append(weapon)
     }
     
+    func getWeaponsList() -> [String] {
+        return weapons
+    }
+    
     func updateAnnotation() {
         self.annotation.coordinate = loc.coordinate
         self.annotation.title = name
