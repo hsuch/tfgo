@@ -396,8 +396,7 @@ func RegisterPlayerMsg() -> Data {
     return MsgToServer(action: "RegisterPlayer", data: payload).toJson()
 }
 func CreateGameMsg(game: Game) -> Data {
-    let minutes = game.getTimeLimit()
-    let timelimit = "0h" + "\(minutes)" + "m0s"
+    let timelimit = game.getTimeLimit()
     let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "NumCP": game.getMaxObjectives()] as [String : Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
