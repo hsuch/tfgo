@@ -10,7 +10,9 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate {
+//
+
+class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate, MKMapViewDelegate {
     
     private let game = Game()
     
@@ -46,6 +48,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
             game.setBoundaries([MKMapPointMake(myLat + 0.1, myLon + 0.1), MKMapPointMake(myLat + 0.1, myLon - 0.1), MKMapPointMake(myLat - 0.1, myLon + 0.1), MKMapPointMake(myLat - 0.1, myLon - 0.1)])
             
             initialized = true
+            
+            host_map.delegate = self
         }
     }
     
@@ -61,11 +65,10 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let region = MKCoordinateRegionMake(center, span)
         self.host_map.setRegion(region, animated: true)
         
-        /*
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action:Selector(("handleTap:")))
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleLongPress))
         gestureRecognizer.delegate = self as? UIGestureRecognizerDelegate
         host_map.addGestureRecognizer(gestureRecognizer)
-        */
         
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -81,7 +84,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
    /*
     func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
         
-        let location = gestureReconizer.location(in: host_map)
+        let location = gestureReconizer.locationc(in: host_map)
         let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
         
         // Add annotation:
@@ -94,23 +97,41 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     */
     
     //@IBOutlet weak var host_map: MKMapView!
+    var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
     
-    func handleLongPress (gestureRecognizer: UILongPressGestureRecognizer) {
-        if gestureRecognizer.state == UIGestureRecognizerState.began {
+    var boundaries = [MKMapPoint]()
+    
+    @objc func handleLongPress (gestureRecognizer: UITapGestureRecognizer) {
+        //print("test if running")
+        //if gestureRecognizer.state == UIGestureRecognizerState.began {
         
         let touchPoint: CGPoint = gestureRecognizer.location(in: host_map)
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
-        
+        testpoint = newCoordinate
+        print(testpoint)
+        boundaries.append(MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
+        //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
-        }
+        //}
+    }
+    
+    var annotations = [MKAnnotationView]()
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        //print(view.tag)
     }
     
     func addAnnotationOnLocation(pointedCoordinate: CLLocationCoordinate2D) {
         
+        let customAnnotation = MKAnnotationView()
         let annotation = MKPointAnnotation()
         annotation.coordinate = pointedCoordinate
-        annotation.title = "Loading..."
-        annotation.subtitle = "Loading..."
+        annotation.title = "Boundary Point"
+        //annotation.subtitle = "Loading..."
+        customAnnotation.annotation = annotation
+        
+        customAnnotation.tag = 1
+        annotations.append(customAnnotation)
         host_map.addAnnotation(annotation)
     }
     
