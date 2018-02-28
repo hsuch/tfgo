@@ -38,7 +38,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         // we only want to set the span the first time we locate the user;
         // we want to keep the current span otherwise
         if (initialized == false) {
-            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
+            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.0015, 0.0015)
             region = MKCoordinateRegionMake(myLocation, span)
             game_map.isRotateEnabled = false
             initialized = true
@@ -87,9 +87,6 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
-        
-        // we want to mark objective locations with pins
-        let game = gameState.getCurrentGame()
         
         // used to differentiate between objectives if we have more than one
         var objectiveNumber = 1

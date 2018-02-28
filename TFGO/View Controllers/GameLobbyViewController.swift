@@ -61,11 +61,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         gamesPrivate = []
         gamesPublic = []
         for game in gameState.getFoundGames() {
-            if game.getPassword() == nil {
-                gamesPublic.append(game)
-            } else {
-                gamesPrivate.append(game)
-            }
+            game.isPrivate() ? gamesPrivate.append(game) : gamesPublic.append(game)
         }
         table.reloadData()
     }
@@ -80,9 +76,9 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         switch game.getMode() {
         case .cp:
             cell.gamemodeLabel.text = "◆"
-        case .multi:
-            cell.gamemodeLabel.text = "⇥"
         case .payload:
+            cell.gamemodeLabel.text = "⇥"
+        case .multi:
             cell.gamemodeLabel.text = "❖"
         }
         cell.gameNameLabel.text = game.getName()!
@@ -124,9 +120,9 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
             let game = gamesList[(table.indexPath(for: cell)?.row)!]
             if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: game.getID()!)).isSuccess {
                 if gameState.setCurrentGame(to: game) {
-                    DispatchQueue.global(qos: .userInitiated).async {
+                    //DispatchQueue.global(qos: .userInitiated).async {
                         if handleMsgFromServer() {}
-                    }
+                    //}
                     performSegue(withIdentifier: "gameSelect", sender: nil)
                 }
             }
