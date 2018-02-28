@@ -167,6 +167,11 @@ func sendAvailableGames(player *Player) {
 			gameInfo := make(map[string]interface{})
 			gameInfo["ID"] = game.HostID
 			gameInfo["Name"] = game.Name
+			if game.Password == "" {
+				gameInfo["HasPassword"] = false
+			} else {
+				gameInfo["HasPassword"] = true
+			}
 			gameInfo["Mode"] = modeToString[game.Mode]
 			gameInfo["Location"] = game.findCenter().locationToDegrees()
 			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Icon"})

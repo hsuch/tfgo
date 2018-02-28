@@ -56,6 +56,9 @@ func serveClient(conn net.Conn) {
 		switch msg.Action {
 		case "RegisterPlayer":
 			p = createPlayer(conn, msg.Data["Name"].(string), msg.Data["Icon"].(string))
+		case "ChangePlayerInfo":
+			p.Name = msg.Data["Name"].(string)
+			p.Icon = msg.Data["Icon"].(string)
 		case "CreateGame":
 			g = p.createGame(conn, msg.Data)
 			sendPlayerListUpdate(g)
@@ -64,7 +67,8 @@ func serveClient(conn net.Conn) {
 		case "ShowGameInfo":
 			sendGameInfo(p, msg.Data["GameID"].(string))
 		case "JoinGame":
-			g = p.joinGame(msg.Data["GameID"].(string), msg.Data["Password"].(string))
+			pw, _ := msg.Data["Password"].(string)
+			g = p.joinGame(msg.Data["GameID"].(string), pw)
 		case "LeaveGame":
 			p.leaveGame(g)
 		case "StartGame":
