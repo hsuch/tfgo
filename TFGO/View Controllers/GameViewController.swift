@@ -23,6 +23,12 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var playerLocs: [MKPointAnnotation] = []
     
+    /* time variables */
+    let calendar = Calendar.current
+    var startcomponents = DateComponents()
+    var startArr: [String] = []
+    var starttime = Date()
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // we want the most recent position of our user
@@ -87,6 +93,17 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         manager.requestWhenInUseAuthorization()
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
+        
+        // set start time variables
+        startcomponents = DateComponents()
+        startArr = game.getStartTime()
+        startcomponents.year = Int(startArr[0])
+        startcomponents.month = Int(startArr[1])
+        startcomponents.day = Int(startArr[2])
+        startcomponents.hour = Int(startArr[3])
+        startcomponents.minute = Int(startArr[4])
+        startcomponents.second = Int(startArr[5])
+        starttime = calendar.date(from: startcomponents)!
         
         // used to differentiate between objectives if we have more than one
         var objectiveNumber = 1
@@ -181,16 +198,16 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBOutlet weak var blueScore: UILabel!
     
     private func tick() {
-//        let calender = Calendar.current
-//        let date = calender.dateComponents([.year,.month,.day,.hour,.minute,.second], from: Date())
-//
-//
-//        let year = date.year
-//        let month = date.month
-//        let day = date.day
-//        let hour = date.hour
-//        let minute = date.minute
-//        let second = date.second
+        let curtime = Date()
+        
+        if(curtime < starttime) { // game has not started yet
+            let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
+            clock.text = "-" + String(diff.minute!) + ":" + String(diff.second!)
+        }
+        else { // game started
+            let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
+            clock.text = String(diff.minute!) + ":" + String(diff.second!)
+        }
     }
     
     @IBAction func fireButton(_ sender: UIButton) {
@@ -212,6 +229,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
         }
+        
+        tick()
         
         // update the locations of other players on the map
         gameState.getCurrentGame().updatePlayerAnnotations()
