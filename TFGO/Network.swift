@@ -12,7 +12,7 @@ import SwiftyJSON
 import MapKit
 
 class Connection {
-    private var servadd: String = "10.150.119.166" // to be replaced with real server ip
+    private var servadd: String = "10.150.67.159" // to be replaced with real server ip
     private var servport: Int32 = 9265
     private var client: TCPClient
 
@@ -124,7 +124,7 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
         for game in info {
             if let id = game["ID"] as? String {
                 if !gameState.hasGame(to: id) {
-                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]] {
+                    if let name = game["Name"] as? String, let mode = game["Mode"] as? String, let loc = game["Location"] as? [String: Any], let players = game["PlayerList"] as? [[String: Any]], let hasPassword = game["HasPassword"] as? Bool {
                         
                         let newGame = Game()
                         newGame.setID(to: id)
@@ -134,6 +134,8 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
                             newGame.setLocation(to: MKMapPointMake(x, y))
                         }
+                        
+                        newGame.setHasPassword(to: hasPassword)
                         
                         for player in players {
                             if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
@@ -156,12 +158,13 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
 func parseGameInfo(data: [String: Any]) -> Bool {
     
     if let info = data["Data"] as? [String: Any] {
-        if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? String {
+        if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? Int {
             
             let newGame = Game()
             newGame.setMaxPlayers(to: playerNum)
             if newGame.setDescription(to: desc) {}
             newGame.setMaxPoints(to: pointLim)
+            newGame.setTimeLimit(to: timeLim)
             
             // we hard code the name here because we will only have 1 game for iteration 1
             if newGame.setName(to: "Test Game") {}
@@ -394,8 +397,7 @@ func RegisterPlayerMsg() -> Data {
     return MsgToServer(action: "RegisterPlayer", data: payload).toJson()
 }
 func CreateGameMsg(game: Game) -> Data {
-    let minutes = game.getTimeLimit()
-    let timelimit = "0h" + "\(minutes)" + "m0s"
+    let timelimit = game.getTimeLimit()
     let payload = ["Name": game.getName()!, "Password": game.getPassword() ?? "", "Description": game.getDescription(), "PlayerLimit": game.getMaxPlayers(), "PointLimit": game.getMaxPoints(), "TimeLimit": timelimit, "Mode": game.getMode().rawValue, "Boundaries": boundariesToArray(boundaries: game.getBoundaries()), "NumCP": game.getMaxObjectives()] as [String : Any]
     return MsgToServer(action: "CreateGame", data: payload).toJson()
 }
@@ -405,8 +407,8 @@ func ShowGamesMsg() -> Data {
 func ShowGameInfoMsg(IDtoShow: String) -> Data {
     return MsgToServer(action: "ShowGameInfo", data: ["GameID": IDtoShow]).toJson()
 }
-func JoinGameMsg(IDtoJoin: String) -> Data {
-    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin]).toJson()
+func JoinGameMsg(IDtoJoin: String, password: String) -> Data {
+    return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin, "Password": password]).toJson()
 }
 func LeaveGameMsg() -> Data {
     return MsgToServer(action: "LeaveGame", data: [:]).toJson()

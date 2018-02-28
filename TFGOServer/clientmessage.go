@@ -167,6 +167,11 @@ func sendAvailableGames(player *Player) {
 			gameInfo := make(map[string]interface{})
 			gameInfo["ID"] = game.HostID
 			gameInfo["Name"] = game.Name
+			if game.Password == "" {
+				gameInfo["HasPassword"] = false
+			} else {
+				gameInfo["HasPassword"] = true
+			}
 			gameInfo["Mode"] = modeToString[game.Mode]
 			gameInfo["Location"] = game.findCenter().locationToDegrees()
 			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Icon"})
@@ -187,7 +192,7 @@ func sendGameInfo(player *Player, gameID string) {
 	gameInfo["Description"] = target.Description
 	gameInfo["PlayerLimit"] = target.PlayerLimit
 	gameInfo["PointLimit"] = target.PointLimit
-	gameInfo["TimeLimit"] = target.TimeLimit.String()
+	gameInfo["TimeLimit"] = target.TimeLimit.Minutes()
 	gameInfo["Boundaries"] = target.getBoundaryVertices()
 	gameInfo["PlayerList"] = target.getPlayerInfo([]string{"Name", "Icon"})
 

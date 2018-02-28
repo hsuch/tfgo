@@ -28,12 +28,13 @@ class Player {
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     private var orientation: Float
     private var weapon: String
-    private var weapons: [String] = []
+    private var weapons: [String]
     private var pickups: [Pickup] = []
     private var status: String
     private var health: Int
     private var armor: Int
     private var host: Bool = false
+    private var annotation: MKPointAnnotation = MKPointAnnotation()
     
     func getName() -> String {
         return name
@@ -115,6 +116,24 @@ class Player {
         self.weapons.append(weapon)
     }
     
+    func setWeapon(to weapon: String) {
+        self.weapon = weapon
+    }
+    
+    func getWeaponsList() -> [String] {
+        return weapons
+    }
+    
+    func updateAnnotation() {
+        self.annotation.coordinate = loc.coordinate
+        self.annotation.title = name
+        self.annotation.subtitle = team
+    }
+    
+    func getAnnotation() -> MKPointAnnotation {
+        return annotation
+    }
+    
     func isValid() -> Bool {
         return name != "" && icon.count == 1
     }
@@ -123,11 +142,12 @@ class Player {
         self.name = name
         self.icon = icon
         self.orientation = 0
-        self.weapon = "Sword" // later
+        self.weapon = "BeeSwarm" // later
         self.status = "" // later
         self.health = 100 // later
         self.armor = 0 // later
         self.team = ""
+        self.weapons = ["BeeSwarm", "Sword", "Shotgun"]
     }
 }
 
@@ -237,6 +257,7 @@ public class Game {
     private var bluePoints: Int = 0
     private var description: String
     private var password: String?
+    private var hasPassword: Bool = false
     private var startTime: [String] = []
     
     private var objectives: [Objective]
@@ -358,9 +379,18 @@ public class Game {
     func setPassword(to password: String) -> Bool {
         if validDescription(password) {
             self.password = password
+            self.hasPassword = true
             return true
         }
         return false
+    }
+    
+    func isPrivate() -> Bool {
+        return hasPassword
+    }
+    
+    func setHasPassword(to hasPassword: Bool) {
+        self.hasPassword = hasPassword
     }
     
     func getPlayers() -> [Player] {
@@ -483,6 +513,20 @@ public class Game {
     
     func setRedBaseRad(to radius: Double) {
         self.redBaseRad = radius
+    }
+    
+    func updatePlayerAnnotations() {
+        for player in players {
+            player.updateAnnotation()
+        }
+    }
+    
+    func getPlayerAnnotations() -> [MKPointAnnotation] {
+        var annotations: [MKPointAnnotation] = []
+        for player in players {
+            annotations.append(player.getAnnotation())
+        }
+        return annotations
     }
     
     private func validName(_ name: String?) -> Bool {

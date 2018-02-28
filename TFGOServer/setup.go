@@ -246,11 +246,11 @@ func (g *Game) generateObjectives(numCP int) {
 		yOffset = (yRange- baseRadius * 2) / 4 + baseRadius
 	}
 	if xRange > yRange {
-		mid := yRange / 2
+		mid := minY + yRange / 2
 		g.RedTeam.Base = Location{maxX - xOffset, mid}
 		g.BlueTeam.Base = Location{minX + xOffset, mid}
 	} else {
-		mid := xRange / 2
+		mid := minX + xRange / 2
 		g.RedTeam.Base = Location{mid, maxY - yOffset}
 		g.BlueTeam.Base = Location{mid, minY + yOffset}
 	}
@@ -314,7 +314,7 @@ func (p *Player) createGame(conn net.Conn, data map[string]interface{}) *Game {
 	if g.Mode != PAYLOAD {
 		g.PointLimit = int(data["PointLimit"].(float64))
 	}
-	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
+	g.TimeLimit = time.Duration(data["TimeLimit"].(float64)) * time.Minute
 	g.setBoundaries(data["Boundaries"].([]interface{}))
 
 	g.RedTeam = &Team{Name: "Red"}

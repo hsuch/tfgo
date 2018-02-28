@@ -23,6 +23,12 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var playerLocs: [MKPointAnnotation] = []
     
+    /* time variables */
+    let calendar = Calendar.current
+    var startcomponents = DateComponents()
+    var startArr: [String] = []
+    var starttime = Date()
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // we want the most recent position of our user
@@ -38,7 +44,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         // we only want to set the span the first time we locate the user;
         // we want to keep the current span otherwise
         if (initialized == false) {
-            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.01, 0.01)
+            let span:MKCoordinateSpan = MKCoordinateSpanMake(0.0015, 0.0015)
             region = MKCoordinateRegionMake(myLocation, span)
             game_map.isRotateEnabled = false
             initialized = true
@@ -88,25 +94,50 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
         
-        // we want to mark objective locations with pins
-        let game = gameState.getCurrentGame()
-        let annotation = MKPointAnnotation()
+        // set start time variables
+        startcomponents = DateComponents()
+        startArr = game.getStartTime()
+        startcomponents.year = Int(startArr[0])
+        startcomponents.month = Int(startArr[1])
+        startcomponents.day = Int(startArr[2])
+        startcomponents.hour = Int(startArr[3])
+        startcomponents.minute = Int(startArr[4])
+        startcomponents.second = Int(startArr[5])
+        starttime = calendar.date(from: startcomponents)!
         
         // used to differentiate between objectives if we have more than one
         var objectiveNumber = 1
         
         // now we make a pin on the map for each objective
         for objective in game.getObjectives() {
+            let annotation = MKPointAnnotation()
             annotation.coordinate = CLLocationCoordinate2D(latitude: objective.getXLoc(), longitude: objective.getYLoc())
             annotation.title = "OBJECTIVE"
             annotation.subtitle = String(objectiveNumber)
             game_map.addAnnotation(annotation)
             
-            var center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
+            let center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
             addRadiusCircle(location: center, radius: objective.getRadius())
             
             objectiveNumber = objectiveNumber + 1
         }
+        
+        // next, we set pins for the bases
+        let redBaseLoc = gameState.getCurrentGame().getRedBaseLoc()
+        let blueBaseLoc = gameState.getCurrentGame().getBlueBaseLoc()
+        let rbAnnotation = MKPointAnnotation()
+        let bbAnnotation = MKPointAnnotation()
+        rbAnnotation.coordinate = CLLocationCoordinate2D(latitude: redBaseLoc.x, longitude: redBaseLoc.y)
+        rbAnnotation.title = "RED BASE"
+        game_map.addAnnotation(rbAnnotation)
+        bbAnnotation.coordinate = CLLocationCoordinate2D(latitude: blueBaseLoc.x, longitude: blueBaseLoc.y)
+        bbAnnotation.title = "BLUE BASE"
+        game_map.addAnnotation(bbAnnotation)
+        
+        // now we set pins for each player in the game
+        gameState.getCurrentGame().updatePlayerAnnotations()
+        let annotations = gameState.getCurrentGame().getPlayerAnnotations()
+        game_map.addAnnotations(annotations)
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
@@ -149,16 +180,16 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBOutlet weak var blueScore: UILabel!
     
     private func tick() {
-//        let calender = Calendar.current
-//        let date = calender.dateComponents([.year,.month,.day,.hour,.minute,.second], from: Date())
-//
-//
-//        let year = date.year
-//        let month = date.month
-//        let day = date.day
-//        let hour = date.hour
-//        let minute = date.minute
-//        let second = date.second
+        let curtime = Date()
+        
+        if(curtime < starttime) { // game has not started yet
+            let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
+            clock.text = "-" + String(diff.minute!) + ":" + String(diff.second!)
+        }
+        else { // game started
+            let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
+            clock.text = String(diff.minute!) + ":" + String(diff.second!)
+        }
     }
     
     @IBAction func fireButton(_ sender: UIButton) {
@@ -181,26 +212,31 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             print(gameState.getUser().getLocation())
         }
         
-        // update the locations of other players on the map
-        // first we remove all the previous player annotations
-        for playerLoc in playerLocs {
-            let annotation = playerLoc as MKAnnotation
-            self.game_map.removeAnnotation(annotation)
-        }
+        tick()
         
-        // then we build a new list of player annotations
-        let playerList = gameState.getCurrentGame().getPlayers()
-        for player in playerList {
-            if player.getName() != gameState.getUser().getName() {
-                let annotation = MKPointAnnotation()
-                let loc = player.getLocation().coordinate
-                annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
-                annotation.title = player.getName()
-                annotation.subtitle = player.getTeam()
-                game_map.addAnnotation(annotation)
-                playerLocs.append(annotation)
-            }
-        }
+        // update the locations of other players on the map
+        gameState.getCurrentGame().updatePlayerAnnotations()
+        
+        
+//        // first we remove all the previous player annotations
+//        for playerLoc in playerLocs {
+//            let annotation = playerLoc as MKAnnotation
+//            self.game_map.removeAnnotation(annotation)
+//        }
+//
+//        // then we build a new list of player annotations
+//        let playerList = gameState.getCurrentGame().getPlayers()
+//        for player in playerList {
+//            if player.getName() != gameState.getUser().getName() {
+//                let annotation = MKPointAnnotation()
+//                let loc = player.getLocation().coordinate
+//                annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
+//                annotation.title = player.getName()
+//                annotation.subtitle = player.getTeam()
+//                game_map.addAnnotation(annotation)
+//                playerLocs.append(annotation)
+//            }
+//        }
         
     }
     

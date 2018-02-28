@@ -10,7 +10,9 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate {
+//
+
+class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate, MKMapViewDelegate {
     
     private let game = Game()
     
@@ -46,6 +48,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
             game.setBoundaries([MKMapPointMake(myLat + 0.1, myLon + 0.1), MKMapPointMake(myLat + 0.1, myLon - 0.1), MKMapPointMake(myLat - 0.1, myLon + 0.1), MKMapPointMake(myLat - 0.1, myLon - 0.1)])
             
             initialized = true
+            
+            host_map.delegate = self
         }
     }
     
@@ -58,6 +62,11 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let region = MKCoordinateRegionMake(center, span)
         self.host_map.setRegion(region, animated: true)
         
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleLongPress))
+        gestureRecognizer.delegate = self as? UIGestureRecognizerDelegate
+        host_map.addGestureRecognizer(gestureRecognizer)
+        
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()
@@ -69,34 +78,64 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+   /*
+    func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
+        
+        let location = gestureReconizer.locationc(in: host_map)
+        let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
+        
+        // Add annotation:
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = "corner"
+        annotation.subtitle = "tbd"
+        host_map.addAnnotation(annotation)
+    }
+    */
+    
+    //@IBOutlet weak var host_map: MKMapView!
+    var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
+    
+    var boundaries = [MKMapPoint]()
+    
+    @objc func handleLongPress (gestureRecognizer: UITapGestureRecognizer) {
+        //print("test if running")
+        //if gestureRecognizer.state == UIGestureRecognizerState.began {
+        
+        let touchPoint: CGPoint = gestureRecognizer.location(in: host_map)
+        let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
+        testpoint = newCoordinate
+        print(testpoint)
+        boundaries.append(MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
+        //print(testpoint)
+        addAnnotationOnLocation(pointedCoordinate: newCoordinate)
+        //}
+    }
+    
+    var annotations = [MKAnnotationView]()
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        //print(view.tag)
+    }
+    
+    func addAnnotationOnLocation(pointedCoordinate: CLLocationCoordinate2D) {
+        
+        let customAnnotation = MKAnnotationView()
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = pointedCoordinate
+        annotation.title = "Boundary Point"
+        //annotation.subtitle = "Loading..."
+        customAnnotation.annotation = annotation
+        
+        customAnnotation.tag = 1
+        annotations.append(customAnnotation)
+        host_map.addAnnotation(annotation)
+    }
+    
     
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-    
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        var name = game.getName() ?? ""
-//        name.append(string)
-//        if textField == nameField {
-//            if !game.setName(to: name) {
-//                //give invalid name message
-//                return false
-//            }
-//        } else if textField == descriptionField {
-//            if !game.setDescription(to: name) {
-//                //give invalid description message
-//                return false
-//            }
-//        } else if textField == passwordField {
-//            if usePassword {
-//                if !game.setPassword(to: name) {
-//                    //give invalid password message
-//                    return false
-//                }
-//            }
-//        }
-//        return true
-//    }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
