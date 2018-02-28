@@ -268,7 +268,7 @@ func (p *Player) createGame(conn net.Conn, data map[string]interface{}) *Game {
 	if g.Mode != PAYLOAD {
 		g.PointLimit = int(data["PointLimit"].(float64))
 	}
-	g.TimeLimit, _ = time.ParseDuration(data["TimeLimit"].(string))
+	g.TimeLimit = time.Duration(data["TimeLimit"].(float64)) * time.Minute
 	g.setBoundaries(data["Boundaries"].([]interface{}))
 
 	g.RedTeam = &Team{Name: "Red"}
