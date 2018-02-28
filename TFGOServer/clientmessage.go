@@ -192,7 +192,7 @@ func sendGameInfo(player *Player, gameID string) {
 	gameInfo["Description"] = target.Description
 	gameInfo["PlayerLimit"] = target.PlayerLimit
 	gameInfo["PointLimit"] = target.PointLimit
-	gameInfo["TimeLimit"] = target.TimeLimit.String()
+	gameInfo["TimeLimit"] = target.TimeLimit.Minutes()
 	gameInfo["Boundaries"] = target.getBoundaryVertices()
 	gameInfo["PlayerList"] = target.getPlayerInfo([]string{"Name", "Icon"})
 
