@@ -56,6 +56,9 @@ func serveClient(conn net.Conn) {
 		switch msg.Action {
 		case "RegisterPlayer":
 			p = createPlayer(conn, msg.Data["Name"].(string), msg.Data["Icon"].(string))
+		case "ChangePlayerInfo":
+			p.Name = msg.Data["Name"].(string)
+			p.Icon = msg.Data["Icon"].(string)
 		case "CreateGame":
 			g = p.createGame(conn, msg.Data)
 			sendPlayerListUpdate(g)
