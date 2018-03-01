@@ -137,12 +137,40 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         return cell
     }
     
+    private var password: String? = nil
+    
+    @IBAction func checkPassword(_ sender: Any) {
+        if game.getHasPassword() {
+            let alertController = UIAlertController(title: "Please Input Password", message: "", preferredStyle: .alert)
+            alertController.addTextField(configurationHandler: {(_ textField: UITextField) -> Void in
+                textField.placeholder = "Current password"
+                textField.isSecureTextEntry = true
+            })
+            let confirmAction = UIAlertAction(title: "OK", style: .default, handler: {(_ action: UIAlertAction) -> Void in
+                self.password = alertController.textFields?[0].text
+                self.performSegue(withIdentifier: "infoToWaiting", sender: nil)
+            })
+            alertController.addAction(confirmAction)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            self.present(alertController, animated: true, completion: nil)
+        } else {
+            performSegue(withIdentifier: "infoToWaiting", sender: nil)
+        }
+    }
+    
+    override func performSegue(withIdentifier identifier: String, sender: Any?) {
+        if shouldPerformSegue(withIdentifier: identifier, sender: nil) {
+            super.performSegue(withIdentifier: identifier, sender: nil)
+        }
+    }
+    
     /* shouldPerformSegue - override */
     /* Check to see if a game is still valid to join or sends an alert */
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "infoToWaiting" {
             // Perform Segue to Waiting View
-            if gameState.getConnection().sendData(data: JoinGameMsg(IDtoJoin: game.getID()!, password: "")).isSuccess {
+            if gameState.getConnection().sendData(data: JoinGameMsg(IDtoJoin: game.getID()!, password: password ?? "")).isSuccess {
                 if handleMsgFromServer() {
                     if game.isValid() {
                         return true

@@ -39,15 +39,19 @@ class InventoryViewController: UIViewController, UICollectionViewDelegate, UICol
     }
     
     @IBAction func selectItem(_ sender: UIButton) {
+        let weapon = weaponByName(name: sender.currentTitle!)
         let actionController = UIAlertController(title: nil, message:
             sender.currentTitle ?? "halp", preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Equip", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
-            self.player.setWeapon(to: weaponByName(name: sender.currentTitle ?? "BeeSwarm"))
+            self.player.setWeapon(to: weapon)
             self.performSegue(withIdentifier: "back", sender: nil)
         }))
-        actionController.addAction(UIAlertAction(title: "Discard", style: UIAlertActionStyle.default,handler: nil))
+        actionController.addAction(UIAlertAction(title: "Discard", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
+            self.player.removeWeapon(weapon: weapon)
+            self.performSegue(withIdentifier: "back", sender: nil)
+        }))
         actionController.addAction(UIAlertAction(title: "Consume?!?", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
-            print("You Chose Poorly")
+            self.player.removeWeapon(weapon: weapon)
             gameState.setUserHealth(to: 0)
             self.performSegue(withIdentifier: "back", sender: nil)
         }))

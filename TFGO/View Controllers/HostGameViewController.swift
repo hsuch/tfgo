@@ -195,31 +195,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    /* Process information from the text fields */
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        var name = game.getName() ?? ""
-        name.append(string)
-        if textField == nameField {
-            if !game.setName(to: name) {
-                //give invalid name message
-                return false
-            }
-        } else if textField == descriptionField {
-            if !game.setDescription(to: name) {
-                //give invalid description message
-                return false
-            }
-        } else if textField == passwordField {
-            if usePassword {
-                if !game.setPassword(to: name) {
-                    //give invalid password message
-                    return false
-                }
-            }
-        }
-        return true
-    }
-    
     /* Hide keyboard when the return key is pressed */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
@@ -300,6 +275,9 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     /* checkGame() - Action on Create Game button */
      /* Checks if the game is valid and causes an alert if it is not */
     @IBAction func checkGame(_ sender: UIButton) {
+        if game.setName(to: nameField.text ?? "") {}
+        if game.setDescription(to: descriptionField.text ?? "") {}
+        if game.setPassword(to: passwordField.text ?? "") {}
         if !game.isValid() || !game.validBoundaries() {
             let alertController = UIAlertController(title: "Invalid Game", message:
                 "Please ensure that you have filled all required fields", preferredStyle: UIAlertControllerStyle.alert)
