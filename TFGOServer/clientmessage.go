@@ -189,6 +189,7 @@ func sendAvailableGames(player *Player) {
 func sendGameInfo(player *Player, gameID string) {
 	target := games[gameID]
 	gameInfo := make(map[string]interface{})
+	gameInfo["ID"] = target.HostID
 	gameInfo["Description"] = target.Description
 	gameInfo["PlayerLimit"] = target.PlayerLimit
 	gameInfo["PointLimit"] = target.PointLimit
