@@ -172,9 +172,8 @@ func parseGameInfo(data: [String: Any]) -> Bool {
             if newGame.setName(to: (foundGame?.getName())!) {}
             newGame.setMode(to: (foundGame?.getMode())!)
             newGame.setLocation(to: (foundGame?.getLocation())!)
-            
-            // we hard code the name here because we will only have 1 game for iteration 1
-            if newGame.setName(to: "Test Game") {}
+            newGame.setHasPassword(to: (foundGame?.getHasPassword())!)
+
             if gameState.setCurrentGame(to: newGame) {}
             
             

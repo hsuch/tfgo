@@ -407,6 +407,10 @@ public class Game {
         return hasPassword
     }
     
+    func getHasPassword() -> Bool {
+        return hasPassword
+    }
+    
     func setHasPassword(to hasPassword: Bool) {
         self.hasPassword = hasPassword
     }
