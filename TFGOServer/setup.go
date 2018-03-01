@@ -164,26 +164,26 @@ func noIntersections(g *Game, loc Location, r float64) bool {
 }
 
 // semi-randomly places a pickup in the game
-func generatePickup(g *Game, minX, minY, halfRange float64) {
+func generatePickup(g *Game, minX, minY, halfRange, dist float64) {
 	rLock.Lock()
-	xOff := r.Float64() * PICKUPDISTRIBUTION()
-	yOff := r.Float64() * PICKUPDISTRIBUTION()
+	xOff := r.Float64() * dist
+	yOff := r.Float64() * dist
 	rLock.Unlock()
 	loc := Location{minX + xOff, minY + yOff}
 	if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
 		rLock.Lock()
-		xOff = r.Float64() * PICKUPDISTRIBUTION()
-		yOff = r.Float64() * PICKUPDISTRIBUTION()
+		xOff = r.Float64() * dist
+		yOff = r.Float64() * dist
 		rLock.Unlock()
 		loc = Location{minX + xOff, minY + yOff}
 		if !(inGameBounds(g, loc) && noIntersections(g, loc, PICKUPRADIUS())) {
 			return
 		}
 	}
-	dist := distance(g.findCenter(), loc)
-	healthProb := 50 * dist/ halfRange
-	armorProb := 50 - 25 * dist/halfRange
-	weaponProb := 50 - 10 * dist/halfRange
+	distance := distance(g.findCenter(), loc)
+	healthProb := 50 * distance/ halfRange
+	armorProb := 50 - 25 * distance/halfRange
+	weaponProb := 50 - 10 * distance/halfRange
 	totalProb := healthProb + armorProb + weaponProb
 	healthProb = healthProb / totalProb
 	armorProb = armorProb/totalProb + healthProb
@@ -267,22 +267,26 @@ func (g *Game) generateObjectives(numCP int) {
 		}
 	}
 
+	// make sure that control points and pickups don't intersect the bases
+	minX += 2 * xOffset
+	maxX -= 2 * xOffset
+	minY += 2 * yOffset
+	maxY -= 2 * yOffset
+	xRange = maxX - minX
+	yRange = maxY - minY
+
 	// set up control points
 	cpRadius := CPRADIUS()
 	g.ControlPoints = make(map[string]*ControlPoint)
 	if g.Mode == MULTICAP {
 		// make sure that control points don't intersect bases
-		minX = minX + 2 *xOffset + cpRadius
-		maxX = maxX - 2 *xOffset - cpRadius
-		minY = minY + 2 *yOffset + cpRadius
-		maxY = maxY - 2 *yOffset - cpRadius
-		xRangeM := maxX - minX
-		yRangeM := maxY - minY
+		xRangeM := xRange - 2 * cpRadius
+		yRangeM := yRange - 2 * cpRadius
 
 		// generate control points
 		rLock.Lock()
 		for i := 0; i < numCP; i++ {
-			cpLoc := Location{minX + r.Float64() * xRangeM, minY + r.Float64() * yRangeM}
+			cpLoc := Location{minX + cpRadius + r.Float64() * xRangeM, minY + cpRadius + r.Float64() * yRangeM}
 			if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
 				id := "CP" + strconv.Itoa(i+1)
 				cp := &ControlPoint{ID: id, Location: cpLoc, Radius: cpRadius}
@@ -302,12 +306,13 @@ func (g *Game) generateObjectives(numCP int) {
 	}
 
 	// generate pickups
-	xSpread := (int)(math.Floor(xRange / PICKUPDISTRIBUTION()))
-	ySpread := (int)(math.Floor(yRange / PICKUPDISTRIBUTION()))
+	dist := PICKUPDISTRIBUTION(xRange, yRange)
+	xSpread := (int)(math.Floor(xRange / dist))
+	ySpread := (int)(math.Floor(yRange / dist))
 	halfRange := math.Min(xRange, yRange)/2
 	for i := 0; i < xSpread; i++ {
 		for j := 0; j < ySpread; j++ {
-			generatePickup(g, (float64)(i) * PICKUPDISTRIBUTION(), (float64)(j) * PICKUPDISTRIBUTION(), halfRange)
+			generatePickup(g, minX + (float64)(i) * dist, minY + (float64)(j) * dist, halfRange, dist)
 		}
 	}
 }
