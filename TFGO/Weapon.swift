@@ -8,6 +8,11 @@
 
 import Foundation
 
+
+/* Weapon "Abstract" Class
+ * Contains information for weapon firing and mapping weapons to their names
+ * Initializes to the null weapon, which is overridden by its children
+ */
 class Weapon {
     var name: String
     var clipSize: Int
@@ -24,6 +29,9 @@ class Weapon {
     }
 }
 
+/* weaponByName(String) -> Weapon
+ * Returns a new weapon based on the filename of the weapon image
+ */
 func weaponByName(name: String) -> Weapon {
     switch name {
     case "Sword":

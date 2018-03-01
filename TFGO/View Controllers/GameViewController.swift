@@ -262,14 +262,12 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
                 //Put on Cooldown. Not necessary for Iteration 1
                 let weapon = gameState.getUser().getWeapon()
-                if !reloading {
-                    if weapon.clipFill > 0 {
-                        weapon.clipFill -= 1
-                    } else {
-                        reloading = true
-                        timeLeft = weapon.clipReload
-                        clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
-                    }
+                if weapon.clipFill > 0 {
+                    weapon.clipFill -= 1
+                } else {
+                    reloading = true
+                    timeLeft = weapon.clipReload
+                    clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
                 }
                 clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
             }
@@ -281,6 +279,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         let weapon = gameState.getUser().getWeapon()
         weapon.clipFill += Int(0.2 * Float(weapon.clipSize))
         clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+        if weapon.clipFill == weapon.clipSize {
+            reloading = false
+            clipTimer.invalidate()
+        }
     }
     
     var updateTimer = Timer()
