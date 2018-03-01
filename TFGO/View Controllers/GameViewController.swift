@@ -145,7 +145,6 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        statusLabel.text = "I'm on the \(player.getTeam()) team!"
         
         game_map.delegate = self
         
@@ -253,6 +252,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         if(curtime < starttime) { // game has not started yet
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
             clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+            statusLabel.text = "Head to the \(player.getTeam()) team's base!"
         }
         else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
             clock.text = "00:00"
