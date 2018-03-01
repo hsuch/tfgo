@@ -290,9 +290,12 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
                     
                     let objIndex = gameState.getCurrentGame().findObjectiveIndex(id: id)
                     if objIndex > -1 {
-                        gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
                         gameState.getCurrentGame().getObjectives()[objIndex].setProgress(to: progress)
                         gameState.getCurrentGame().getObjectives()[objIndex].setOccupants(to: occupants)
+                        if gameState.getCurrentGame().getObjectives()[objIndex].getOwner() != owner {
+                            gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
+                            gameState.getCurrentGame().getObjectives()[objIndex].setRedraw(to: true)
+                        }
                     }
                 }
             }

@@ -160,6 +160,8 @@ public class Objective {
     private var owner: String
     private var progress: Int
     private var id: String
+    private var annotation: MKPointAnnotation = MKPointAnnotation()
+    private var needsRedraw: Bool = false
     
     func getXLoc() -> Double {
         return xLoc
@@ -201,6 +203,22 @@ public class Objective {
         self.id = id
     }
     
+    func updateAnnotation() {
+        self.annotation.subtitle = owner
+    }
+    
+    func getAnnotation() -> MKPointAnnotation {
+        return annotation
+    }
+    
+    func setRedraw(to needsRedraw: Bool) {
+        self.needsRedraw = needsRedraw
+    }
+    
+    func getRedraw() -> Bool {
+        return needsRedraw
+    }
+    
     init(x: Double, y: Double, radius: Double, id: String) {
         self.radius = radius
         self.occupants = []
@@ -209,6 +227,10 @@ public class Objective {
         self.xLoc = x
         self.yLoc = y
         self.id = id
+        
+        self.annotation.title = "OBJECTIVE"
+        self.annotation.subtitle = "Neutral"
+        self.annotation.coordinate = CLLocationCoordinate2D(latitude: x, longitude: y)
     }
     
 }
