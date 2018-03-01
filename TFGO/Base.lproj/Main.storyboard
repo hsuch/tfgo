@@ -1514,9 +1514,9 @@
         <image name="triangle" width="1080" height="1920"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="dxN-aI-FWj"/>
         <segue reference="4cG-7q-7tp"/>
-        <segue reference="FNE-Lr-RRh"/>
-        <segue reference="OUK-q5-70x"/>
+        <segue reference="2n9-BF-tBN"/>
+        <segue reference="XJj-c5-6F9"/>
+        <segue reference="Snh-On-Wk1"/>
     </inferredMetricsTieBreakers>
 </document>
