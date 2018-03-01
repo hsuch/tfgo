@@ -211,7 +211,7 @@ var SWORD = Weapon {
 	Name: "Sword",
 	Damage: 25,
 	Spread: math.Pi,
-	Range: 1,
+	Range: 3,
 	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
@@ -221,7 +221,7 @@ var SHOTGUN = Weapon {
 	Name: "Shotgun",
 	Damage: 25,
 	Spread: math.Pi/2,
-	Range: 5,
+	Range: 12,
 	ClipSize: 2,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
@@ -231,7 +231,7 @@ var PISTOL = Weapon {
 	Name: "Pistol",
 	Damage: 25,
 	Spread: math.Pi/2,
-	Range: 5,
+	Range: 10,
 	ClipSize: 6,
 	ShotReload: time.Millisecond * 500,
 	ClipReload: time.Second * 3,
@@ -241,7 +241,7 @@ var BLASTER = Weapon {
 	Name: "Blaster",
 	Damage: 35,
 	Spread: math.Pi/3,
-	Range: 10,
+	Range: 16,
 	ClipSize: 10,
 	ShotReload: time.Millisecond * 300,
 	ClipReload: time.Second * 5,
@@ -251,7 +251,7 @@ var CROSSBOW = Weapon {
 	Name: "Crossbow",
 	Damage: 20,
 	Spread: math.Pi/2,
-	Range: 5,
+	Range: 10,
 	ClipSize: 20,
 	ShotReload: time.Second * 3,
 	ClipReload: time.Second * 20,
@@ -261,7 +261,7 @@ var RIFLE = Weapon {
 	Name: "SniperRifle",
 	Damage: 30,
 	Spread: math.Pi/8,
-	Range: 30,
+	Range: 40,
 	ClipSize: 10,
 	ShotReload: time.Millisecond * 300,
 	ClipReload: time.Second * 3,
@@ -281,7 +281,7 @@ var LIGHTSABER = Weapon {
 	Name: "Lightsaber",
 	Damage: 50,
 	Spread: math.Pi,
-	Range: 1,
+	Range: 3,
 	ClipSize: 1337,
 	ShotReload: time.Second * 0,
 	ClipReload: time.Second * 0,
@@ -363,23 +363,24 @@ func PICKUPRESPAWNTIME() time.Duration {
 }
 
 // returns the baseRadius given the game's x and y dimensions
-// default is 3m, but size is adjusted down if dimensions are too small
+// default is 7m, but size is adjusted down if dimensions are too small
 func BASERADIUS(x, y float64) float64 {
-	if x < 14 || y < 14 {
-		return math.Min(x, y) * 5 / 14
-	} else if x < 28 && y < 28 {
-		return math.Max(x, y) * 5 / 28
+	minLen := 4.0 + 7.0 * 2.0
+	if x < minLen || y < minLen {
+		return math.Min(x, y) * 7 / minLen
+	} else if x < (minLen * 2) && y < (minLen * 2) {
+		return math.Max(x, y) * 7 / (minLen * 2)
 	} else {
-		return 5.0
+		return 7.0
 	}
 }
 
 func CPRADIUS() float64 {
-	return 3.0
+	return 5.0
 }
 
 func PICKUPRADIUS() float64 {
-	return 1.0
+	return 3.0
 }
 
 func PICKUPDISTRIBUTION() float64 {
