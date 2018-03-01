@@ -134,6 +134,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let touchPoint: CGPoint = gestureRecognizer.location(in: host_map)
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
         testpoint = newCoordinate
+        print(testpoint)
+        game.addBounary(to: MKMapPoint(x: testpoint.latitude, y: testpoint.longitude))
         //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
         //}

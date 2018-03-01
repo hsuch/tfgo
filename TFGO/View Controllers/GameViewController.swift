@@ -65,6 +65,49 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    func addBoundary() {
+        let bounds = game.getBoundaries()
+        var polyBounds: [CLLocationCoordinate2D] = []
+        for bound in bounds {
+            let polyBound = CLLocationCoordinate2DMake(bound.x, bound.y)
+            polyBounds.append(polyBound)
+        }
+        let polygon = MKPolygon(coordinates: polyBounds, count: polyBounds.count)
+        game_map.add(polygon)
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
+        if overlay is MKPolygon {
+            let polygonView = MKPolygonRenderer(overlay: overlay)
+            polygonView.strokeColor = UIColor.purple
+            polygonView.lineWidth = 2.0
+            
+            return polygonView
+        }
+        
+        return nil
+    }
+    
+//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        let annotationView = MKAnnotationView()
+//        annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+//        if annotation.title == "OBJECTIVE" {
+//            annotationView.image = UIImage(named: "cap_gray")
+//        }
+//        else if annotation.title == "RED BASE" {
+//            annotationView.image = UIImage(named: "cap_gray")
+//        }
+//        else if annotation.title == "BLUE BASE" {
+//            annotationView.image = UIImage(named: "cap_gray")
+//        }
+//        else if annotation.subtitle == "Red" {
+//            annotationView.image = UIImage(named: "player_red")
+//        }
+//        else if annotation.subtitle == "Blue" {
+//            annotationView.image = UIImage(named: "player_blue")
+//        }
+//    }
+    
     func game_map(game_map: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {
             var circleRenderer = MKCircleRenderer(overlay: overlay)
@@ -87,6 +130,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        game_map.delegate = self
         
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -140,24 +185,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         game_map.addAnnotations(annotations)
         
         // finally, we draw the games boundaries
-        let gameBounds = game.getBoundaries()
-        let drawBounds = UIBezierPath.init()
-        var first = true
-        
-        for bound in gameBounds {
-            print("GOING THROUGH THE GAME BOUNDS")
-            if (first) {
-                drawBounds.move(to: CGPoint(x: bound.x, y: bound.y))
-                first = false
-            }
-            else {
-                drawBounds.addLine(to: CGPoint(x: bound.x, y: bound.y))
-            }
-        }
-        // connect the last and first boundaries, then draw the boundaries
-        drawBounds.addLine(to: CGPoint(x: gameBounds[0].x, y: gameBounds[0].y))
-        drawBounds.stroke()
-        drawBounds.fill()
+        addBoundary()
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
