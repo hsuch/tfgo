@@ -129,6 +129,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             else if subtitle == "Blue" {
                 annotationView.image = UIImage(named: "player_blue")
             }
+            else {
+                annotationView.image = UIImage(named: "pickup")
+            }
         }
         return annotationView
     }
