@@ -126,11 +126,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             }
             else if subtitle == "Red" {
                 annotationView.image = UIImage(named: "player_red")
-                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
+                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
             else if subtitle == "Blue" {
                 annotationView.image = UIImage(named: "player_blue")
-                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
+                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
             else {
                 annotationView.image = UIImage(named: "pickup")
