@@ -9,10 +9,9 @@
 import Foundation
 
 
-/* Weapon "Abstract" Class
- * Contains information for weapon firing and mapping weapons to their names
- * Initializes to the null weapon, which is overridden by its children
- */
+/* Weapon "Abstract" Class */
+ /* Contains information for weapon firing and mapping weapons to their names */
+ /* Initializes to the null weapon, which is overridden by its children */
 class Weapon {
     var name: String
     var clipSize: Int
@@ -29,9 +28,8 @@ class Weapon {
     }
 }
 
-/* weaponByName(String) -> Weapon
- * Returns a new weapon based on the filename of the weapon image
- */
+/* weaponByName(String) -> Weapon */
+/* Returns a new weapon based on the filename of the weapon image */
 func weaponByName(name: String) -> Weapon {
     switch name {
     case "Sword":
@@ -184,7 +182,7 @@ class BeeSwarm: Weapon {
     override init() {
         super.init()
         name = "BeeSwarm"
-        clipSize = 1337
+        clipSize = 5
         clipFill = clipSize
         shotReload = 1
         clipReload = 1

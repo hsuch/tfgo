@@ -84,15 +84,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
         if overlay is MKPolygon {
             let polygonView = MKPolygonRenderer(overlay: overlay)
-            polygonView.strokeColor = UIColor.purple
+            polygonView.strokeColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
             polygonView.lineWidth = 2.0
             
             return polygonView
         }
         else if overlay is MKCircle {
             let circleRenderer = MKCircleRenderer(overlay: overlay)
-            circleRenderer.fillColor = UIColor.gray
-            circleRenderer.strokeColor = UIColor.gray
+            circleRenderer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+            circleRenderer.strokeColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
             circleRenderer.lineWidth = 1.0
             circleRenderer.alpha = 0.5
             
@@ -107,7 +107,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         if let title = annotation.title, let subtitle = annotation.subtitle {
             if title == "OBJECTIVE" {
-                annotationView.image = UIImage(named: "cap_gray")
+                if subtitle == "Neutral" {
+                    annotationView.image = UIImage(named: "cap_gray")
+                }
+                else if subtitle == "Blue" {
+                    annotationView.image = UIImage(named: "cap_blue")
+                }
+                else {
+                    annotationView.image = UIImage(named: "cap_red")
+                }
             }
             else if title == "RED BASE" {
                 annotationView.image = UIImage(named: "base_red")
@@ -117,9 +125,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             }
             else if subtitle == "Red" {
                 annotationView.image = UIImage(named: "player_red")
+                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
             }
             else if subtitle == "Blue" {
                 annotationView.image = UIImage(named: "player_blue")
+                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
             }
         }
         return annotationView
@@ -150,21 +160,13 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         startcomponents.second = Int(startArr[5])
         starttime = calendar.date(from: startcomponents)!
         
-        // used to differentiate between objectives if we have more than one
-        var objectiveNumber = 1
-        
         // now we make a pin on the map for each objective
         for objective in game.getObjectives() {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: objective.getXLoc(), longitude: objective.getYLoc())
-            annotation.title = "OBJECTIVE"
-            annotation.subtitle = String(objectiveNumber)
-            game_map.addAnnotation(annotation)
+
+            game_map.addAnnotation(objective.getAnnotation())
             
             let center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
             addRadiusCircle(location: center, radius: objective.getRadius())
-            
-            objectiveNumber = objectiveNumber + 1
         }
         
         // next, we set pins for the bases
@@ -244,11 +246,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
         if(curtime < starttime) { // game has not started yet
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
-            clock.text = "-" + String(diff.minute!) + ":" + String(diff.second!)
+            clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+        }
+        else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
+            clock.text = "00:00"
         }
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
-            clock.text = String(diff.minute!) + ":" + String(diff.second!)
+            clock.text = String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
         }
     }
     
@@ -262,14 +267,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
                 //Put on Cooldown. Not necessary for Iteration 1
                 let weapon = gameState.getUser().getWeapon()
-                if weapon.clipFill > 0 {
+                if weapon.clipFill > 1 {
                     weapon.clipFill -= 1
+                    clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+                } else if weapon.clipFill == 1 {
+                    reloading = true
+                    weapon.clipFill -= 1
+                    timeLeft = weapon.clipReload
+                    clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+                    clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
                 } else {
                     reloading = true
-                    timeLeft = weapon.clipReload
-                    clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
                 }
-                clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
             }
         }
     }
@@ -303,6 +312,16 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
         gameState.getCurrentGame().updatePickupAnnotations()
+        
+        // update objective status in the case that the owner changes
+        let objectives = gameState.getCurrentGame().getObjectives()
+        for objective in objectives {
+            if objective.getRedraw() {
+                game_map.removeAnnotation(objective.getAnnotation())
+                objective.updateAnnotation()
+                game_map.addAnnotation(objective.getAnnotation())
+            }
+        }
     }
     
     @IBAction func leaveGame(_ sender: UIButton) {
