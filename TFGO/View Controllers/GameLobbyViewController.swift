@@ -8,6 +8,8 @@
 
 import UIKit
 
+/* LobbyCustomViewCell class */
+/* Class for prototype custom cell used for lobby table */
 class LobbyCustomViewCell: UITableViewCell {
     @IBOutlet weak var gamemodeLabel: UILabel!
     @IBOutlet weak var gameNameLabel: UILabel!
@@ -24,9 +26,12 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         self.table.dataSource = self;
         self.table.delegate = self;
+        
+        // Update the list to include all elements
         runTimer()
         updateGames()
 
+        // Repeatedly check for new games in a different thread
         DispatchQueue.global(qos: .background).async {
             if  gameState.getConnection().sendData(data: ShowGamesMsg()).isSuccess {
                 while !self.hasChosenGame {
@@ -36,6 +41,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    /* Game list variables */
     private var gamesPrivate: [Game] = []
     private var gamesPublic: [Game] = []
     private var gamesList: [Game] {
@@ -44,19 +50,25 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    /* segmentedButtonPress() - Action on the segmented button */
+    /* Switch between showing public and private games */
     @IBAction func segmentButtonPress(_ sender: UISegmentedControl) {
         showPublic = !showPublic
         table.reloadData()
     }
     
+    /* Timer to check for new games */
     private var updateTimer = Timer()
     
+    /* Start timer function */
     private func runTimer() {
         updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameLobbyViewController.updateGames)), userInfo: nil, repeats: true)
     }
     
     @IBOutlet weak var table: UITableView!
     
+    /* updateGames() - Timer called function */
+    /* Updates the games list according to the visibility chosen */
     @objc private func updateGames() {
         gamesPrivate = []
         gamesPublic = []
@@ -66,10 +78,12 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
         table.reloadData()
     }
     
+    /* Determines the number of elements in the table view */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return gamesList.count
     }
     
+    /* Designates the attributes of the elements in the table view */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Game", for: indexPath) as! LobbyCustomViewCell
         let game = gamesList[indexPath.row]

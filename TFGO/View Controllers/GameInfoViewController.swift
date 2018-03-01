@@ -12,6 +12,7 @@ import CoreLocation
 
 class GameInfoViewController: UITableViewController, UICollectionViewDelegate, UICollectionViewDataSource, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    /* List of UI outlets */
     @IBOutlet weak var game_map: MKMapView!
     @IBOutlet weak var gameNameLbl: UILabel!
     @IBOutlet weak var gamemodeLbl: UILabel!
@@ -20,6 +21,7 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     @IBOutlet weak var minutesLbl: UILabel!
     @IBOutlet weak var pointsLbl: UILabel!
     
+    /* Game object being currently viewed */
     private var game = gameState.getCurrentGame()
     
     let manager = CLLocationManager()
@@ -87,6 +89,7 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set up table elements according to game values
         gameNameLbl.text = game.getName()
         switch game.getMode() {
         case .cp:
@@ -147,10 +150,12 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         addBoundary()
     }
     
+    /* Determine number of icons to be displayed in collection view */
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return game.getPlayers().count
     }
     
+    /* Designate attributes for icons within collection view */
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Icon", for: indexPath) as! IconViewCell
         cell.label.text = game.getPlayers()[indexPath.row].getIcon()
@@ -160,13 +165,17 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         return cell
     }
     
+    /* shouldPerformSegue - override */
+    /* Check to see if a game is still valid to join or sends an alert */
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "infoToWaiting" {
+            // Perform Segue to Waiting View
             if gameState.getConnection().sendData(data: JoinGameMsg(IDtoJoin: game.getID()!, password: "")).isSuccess {
                 if handleMsgFromServer() {
                     if game.isValid() {
                         return true
                     } else {
+                        // Game is no longer valid
                         let alertController = UIAlertController(title: "This game is no longer valid", message:
                             "Please select a different game", preferredStyle: UIAlertControllerStyle.alert)
                         alertController.addAction(UIAlertAction(title: "It was hubris to try and join", style: UIAlertActionStyle.default,handler: nil))

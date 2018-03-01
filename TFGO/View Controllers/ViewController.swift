@@ -16,7 +16,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //background.image = UIImage(named: "bg2")
     }
     
     override func viewWillAppear(_ animated: Bool) {
