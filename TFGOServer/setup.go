@@ -307,7 +307,7 @@ func (g *Game) generateObjectives(numCP int) {
 	halfRange := math.Min(xRange, yRange)/2
 	for i := 0; i < xSpread; i++ {
 		for j := 0; j < ySpread; j++ {
-			generatePickup(g, minX + (float64)(i) * PICKUPDISTRIBUTION(), minY + (float64)(j) * PICKUPDISTRIBUTION(), halfRange)
+			generatePickup(g, (float64)(i) * PICKUPDISTRIBUTION(), (float64)(j) * PICKUPDISTRIBUTION(), halfRange)
 		}
 	}
 }
