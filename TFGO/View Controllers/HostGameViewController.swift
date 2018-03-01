@@ -63,6 +63,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     override func viewDidLoad() {
         super.viewDidLoad()
         game.setMode(to: .cp)
+        game.addPlayer(toGame: gameState.getUser())
 //        
 //        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
 //        let span = MKCoordinateSpanMake(0.1, 0.1)

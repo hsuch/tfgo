@@ -11,12 +11,14 @@ import Foundation
 class Weapon {
     var name: String
     var clipSize: Int
+    var clipFill: Int
     var shotReload: Float
     var clipReload: Float
     
     init () {
         name = ""
         clipSize = 0
+        clipFill = 0
         shotReload = 0
         clipReload = 0
     }
@@ -28,6 +30,7 @@ class Sword: Weapon {
         super.init()
         name = "Sword"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -39,6 +42,7 @@ class Shotgun: Weapon {
         super.init()
         name = "Shotgun"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -50,6 +54,7 @@ class Pistol: Weapon {
         super.init()
         name = "Pistol"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -61,6 +66,7 @@ class Blaster: Weapon {
         super.init()
         name = "Blaster"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -72,6 +78,7 @@ class Crossbow: Weapon {
         super.init()
         name = "Crossbow"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -83,6 +90,7 @@ class Rifle: Weapon {
         super.init()
         name = "Rifle"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -94,6 +102,7 @@ class Boomerang: Weapon {
         super.init()
         name = "Boomerang"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -105,6 +114,7 @@ class Lightsaber: Weapon {
         super.init()
         name = "Lightsaber"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -116,6 +126,7 @@ class Spear: Weapon {
         super.init()
         name = "Spear"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -127,6 +138,7 @@ class Banhammer: Weapon {
         super.init()
         name = "BanHammer"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
@@ -138,6 +150,7 @@ class BeeSwarm: Weapon {
         super.init()
         name = "BeeSwarm"
         clipSize = 1337
+        clipFill = clipSize
         shotReload = 1
         clipReload = 1
     }
