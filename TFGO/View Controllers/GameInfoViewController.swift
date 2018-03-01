@@ -155,7 +155,7 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
             alertController.addAction(cancelAction)
             self.present(alertController, animated: true, completion: nil)
         } else {
-            performSegue(withIdentifier: "infoTofWaiting", sender: nil)
+            performSegue(withIdentifier: "infoToWaiting", sender: nil)
         }
     }
     
