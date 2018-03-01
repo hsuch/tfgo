@@ -57,6 +57,7 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
 
+    @IBOutlet weak var waitingLabel: UILabel!
     @IBOutlet weak var table: UITableView!
     
     private var playersTimer = Timer()
@@ -65,8 +66,19 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         playersTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(checkPlayers)), userInfo: nil, repeats: true)
     }
     
+    private var dots = "..."
+    
     @objc private func checkPlayers() {
         self.table.reloadData()
+        waitingLabel.textColor = randomColor()
+        waitingLabel.text = "Waiting For Players\(dots)"
+        if dots == "..." {
+            dots = "."
+        } else if dots == "." {
+            dots = ".."
+        } else {
+            dots = "..."
+        }
         if game.getStartTime() != [] {
             performSegue(withIdentifier: "startGame", sender: nil)
         }

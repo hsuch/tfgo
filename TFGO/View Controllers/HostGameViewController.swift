@@ -60,6 +60,13 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
             region = MKCoordinateRegionMake(myLocation, span)
             host_map.isRotateEnabled = false
             initialized = true
+        
+            host_map.setRegion(region, animated: false)
+            self.host_map.showsUserLocation = true
+            
+            initialized = true
+            
+            host_map.delegate = self
         }
         else {
             region = host_map.region

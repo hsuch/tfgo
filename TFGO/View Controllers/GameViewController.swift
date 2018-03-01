@@ -173,14 +173,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     @IBOutlet weak var armorBar: UIProgressView!
     @IBOutlet weak var healthBar: UIProgressView!
+    @IBOutlet weak var clipBar: UIProgressView!
     
     override func viewWillAppear(_ animated: Bool) {
-        armorBar.layer.cornerRadius = 2.0
+        armorBar.layer.cornerRadius = 3.0
         armorBar.layer.borderWidth = 3.0
         armorBar.layer.borderColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
-        healthBar.layer.cornerRadius = 2.0
+        healthBar.layer.cornerRadius = 3.0
         healthBar.layer.borderWidth = 3.0
         healthBar.layer.borderColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
+        clipBar.layer.cornerRadius = 3.0
+        clipBar.layer.borderWidth = 3.0
+        clipBar.layer.borderColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
     }
     
     private func talkShitGetHit() {
@@ -215,10 +219,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBAction func fireButton(_ sender: UIButton) {
         if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
             //Put on Cooldown. Not necessary for Iteration 1
+            //clipBar.setProgress(<#T##progress: Float##Float#>, animated: <#T##Bool#>)
         }
-        redScore.text = "\(game.getRedPoints())"
-        blueScore.text = "\(game.getBluePoints())"
-        tick()
     }
     
     var updateTimer = Timer()
@@ -232,36 +234,28 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             print(gameState.getUser().getLocation())
         }
         
+        redScore.text = "\(game.getRedPoints())"
+        blueScore.text = "\(game.getBluePoints())"
         tick()
         
         // update the locations of other players on the map
         gameState.getCurrentGame().updatePlayerAnnotations()
-        
-        
-//        // first we remove all the previous player annotations
-//        for playerLoc in playerLocs {
-//            let annotation = playerLoc as MKAnnotation
-//            self.game_map.removeAnnotation(annotation)
-//        }
-//
-//        // then we build a new list of player annotations
-//        let playerList = gameState.getCurrentGame().getPlayers()
-//        for player in playerList {
-//            if player.getName() != gameState.getUser().getName() {
-//                let annotation = MKPointAnnotation()
-//                let loc = player.getLocation().coordinate
-//                annotation.coordinate = CLLocationCoordinate2D(latitude: loc.latitude, longitude: loc.longitude)
-//                annotation.title = player.getName()
-//                annotation.subtitle = player.getTeam()
-//                game_map.addAnnotation(annotation)
-//                playerLocs.append(annotation)
-//            }
-//        }
-        
+    }
+    
+    @IBAction func leaveGame(_ sender: UIButton) {
+        let actionController = UIAlertController(title: nil, message:
+            "Are you sure you want to leave?", preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionController.addAction(UIAlertAction(title: "Yep", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
+            self.performSegue(withIdentifier: "leaveGame", sender: nil)
+        }))
+        actionController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.cancel,handler: nil))
+        self.present(actionController, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        updateTimer.invalidate()
+        if segue.identifier != "inventory" {
+            updateTimer.invalidate()
+        }
     }
     
 }
