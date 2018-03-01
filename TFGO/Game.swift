@@ -219,11 +219,16 @@ public class Pickup {
     private var type : String
     private var amount : Int
     private var available : Bool = true
+    private var annotation: MKPointAnnotation = MKPointAnnotation()
     
     init(loc: MKMapPoint, type: String, amount: Int) {
         self.loc = loc
         self.type = type
         self.amount = amount
+        
+        self.annotation.coordinate = CLLocationCoordinate2D(latitude: loc.x, longitude: loc.y)
+        self.annotation.title = type
+        self.annotation.subtitle = "Available"
     }
     
     func getX() -> Double {
@@ -236,6 +241,19 @@ public class Pickup {
     
     func getAvailability() -> Bool {
         return available
+    }
+    
+    func updateAnnotation() {
+        if (available) {
+            self.annotation.subtitle = "Available"
+        }
+        else {
+            self.annotation.subtitle = "Unavailable"
+        }
+    }
+    
+    func getAnnotation() -> MKPointAnnotation {
+        return annotation
     }
     
     func setAvailability(to availability: Bool) {
@@ -525,10 +543,24 @@ public class Game {
         }
     }
     
+    func updatePickupAnnotations() {
+        for pickup in pickups {
+            pickup.updateAnnotation()
+        }
+    }
+    
     func getPlayerAnnotations() -> [MKPointAnnotation] {
         var annotations: [MKPointAnnotation] = []
         for player in players {
             annotations.append(player.getAnnotation())
+        }
+        return annotations
+    }
+    
+    func getPickupAnnotations() -> [MKPointAnnotation] {
+        var annotations: [MKPointAnnotation] = []
+        for pickup in pickups {
+            annotations.append(pickup.getAnnotation())
         }
         return annotations
     }
