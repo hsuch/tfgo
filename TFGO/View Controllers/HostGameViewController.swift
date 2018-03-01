@@ -288,7 +288,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     /* Segue only if the game was able to send the game to the server */
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "Create Game" {
-            if gameState.setCurrentGame(to: game) {
+            if game.validBoundaries() && gameState.setCurrentGame(to: game) {
                 if gameState.getConnection().sendData(data: CreateGameMsg(game: game)).isSuccess {
                     return true
                 }
@@ -300,7 +300,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     /* checkGame() - Action on Create Game button */
      /* Checks if the game is valid and causes an alert if it is not */
     @IBAction func checkGame(_ sender: UIButton) {
-        if !game.isValid() {
+        if !game.isValid() || !game.validBoundaries() {
             let alertController = UIAlertController(title: "Invalid Game", message:
                 "Please ensure that you have filled all required fields", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "I hope you can forgive me", style: UIAlertActionStyle.default,handler: nil))
