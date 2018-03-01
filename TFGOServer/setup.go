@@ -112,7 +112,7 @@ func testBorders(boundaries []Border) (int,int) {
 			break
 		}
 		for k2, v2 := range boundaries {
-			if k2 > k1 {
+			if k2 != k1 {
 				t := (v2.P.Y + (v2.D.Y * (v1.P.X - v2.P.X) / v2.D.X) - v1.P.Y) / (v1.D.Y - (v1.D.X * v2.D.Y / v2.D.X))
 				s := ((v1.P.X - v2.P.X) / v2.D.X) + (v1.D.X * t / v2.D.X)
 				if t > 0.000000001 && t < 0.999999999 && s > 0.000000001 && s < 0.999999999 {
@@ -239,14 +239,14 @@ func (g *Game) generateObjectives(numCP int) {
 	g.BlueTeam.BaseRadius = baseRadius
 	xOffset := baseRadius + 2
 	yOffset := baseRadius + 2
-	if xRange < 20 {
+	if xRange < 36 {
 		xOffset = (xRange- baseRadius * 2) / 4 + baseRadius
 	}
-	if yRange < 20 {
+	if yRange < 36 {
 		yOffset = (yRange- baseRadius * 2) / 4 + baseRadius
 	}
 	if xRange > yRange {
-		mid := minY + yRange / 2
+		mid := g.findCenter().Y
 		g.RedTeam.Base = Location{maxX - xOffset, mid}
 		g.BlueTeam.Base = Location{minX + xOffset, mid}
 		for !inGameBounds(g, g.RedTeam.Base) {
@@ -256,7 +256,7 @@ func (g *Game) generateObjectives(numCP int) {
 			g.BlueTeam.Base.X += 1
 		}
 	} else {
-		mid := minX + xRange / 2
+		mid := g.findCenter().X
 		g.RedTeam.Base = Location{mid, maxY - yOffset}
 		g.BlueTeam.Base = Location{mid, minY + yOffset}
 		for !inGameBounds(g, g.RedTeam.Base) {

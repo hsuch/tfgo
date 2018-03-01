@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="QWU-2S-ZFB">
@@ -22,7 +27,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="triangle" translatesAutoresizingMaskIntoConstraints="NO" id="ouk-Mg-hHW">
-                                <rect key="frame" x="0.0" y="-44" width="375" height="856"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pDX-eO-ApH">
@@ -73,7 +78,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Caz-Jg-YC7">
-                                <rect key="frame" x="93.333333333333329" y="100" width="188.33333333333337" height="110"/>
+                                <rect key="frame" x="93.333333333333329" y="144" width="188.33333333333337" height="110"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TFGO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nwm-qu-lXV">
                                         <rect key="frame" x="4.3333333333333428" y="0.0" width="180" height="86"/>
@@ -538,7 +543,7 @@
                                         <rect key="frame" x="0.0" y="941" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Lv-V4-XYw" id="m2F-u0-ReT">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2B0-5m-xSs">
@@ -596,7 +601,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bcI-As-hxd">
-                                <rect key="frame" x="127" y="62" width="121" height="29"/>
+                                <rect key="frame" x="127" y="106" width="121" height="29"/>
                                 <segments>
                                     <segment title="Public"/>
                                     <segment title="Private"/>
@@ -606,7 +611,7 @@
                                 </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Hvb-J6-vfC">
-                                <rect key="frame" x="16" y="108" width="343" height="670"/>
+                                <rect key="frame" x="16" y="152" width="343" height="626"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game" rowHeight="83" id="hCC-SO-bjg" customClass="LobbyCustomViewCell" customModule="TFGO" customModuleProvider="target">
@@ -760,11 +765,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="triangle" translatesAutoresizingMaskIntoConstraints="NO" id="8fy-c7-XPq">
-                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="690"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2Jg-VT-jWz">
-                                <rect key="frame" x="67" y="174.66666666666663" width="240" height="498"/>
+                                <rect key="frame" x="67" y="218.66666666666663" width="240" height="454"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player" rowHeight="70" id="Nr3-n9-G5y" customClass="WaitingViewCell" customModule="TFGO" customModuleProvider="target">
@@ -820,7 +825,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting For Players..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jml-sc-ecP">
-                                <rect key="frame" x="67" y="83" width="240" height="83.666666666666686"/>
+                                <rect key="frame" x="67" y="127" width="240" height="83.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -1023,6 +1028,7 @@
                             </navigationBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="e0l-aH-1fW">
                                 <rect key="frame" x="16" y="88" width="343" height="690"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="afJ-z6-9nL">
                                     <size key="itemSize" width="85" height="85"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -1332,7 +1338,7 @@
                     <navigationItem key="navigationItem" title="Game Info" id="od4-6r-NtM">
                         <barButtonItem key="rightBarButtonItem" title="Join" id="F7v-DI-B9u">
                             <connections>
-                                <segue destination="OjP-k2-aXS" kind="show" identifier="infoToWaiting" id="XJj-c5-6F9"/>
+                                <action selector="checkPassword:" destination="fl4-6m-JGR" id="e8L-9t-cUb"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1344,6 +1350,7 @@
                         <outlet property="minutesLbl" destination="V3t-of-7gm" id="XKF-pV-bXO"/>
                         <outlet property="pointsLbl" destination="8ZQ-JA-xzw" id="HDz-T2-5vE"/>
                         <outlet property="statusLbl" destination="2Sj-Qc-4TH" id="Kek-Q9-hTR"/>
+                        <segue destination="OjP-k2-aXS" kind="show" identifier="infoToWaiting" id="pTB-ed-xew"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fxd-YY-R0M" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1368,10 +1375,10 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="How To Play" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="hZC-bk-VM5">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="How To Play" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="hZC-bk-VM5">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="26"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1389,7 +1396,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="69.666666666666671"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="First, one player should follow the &quot;Host Game&quot; to set up the game and wait in the lobby for other players to join." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="cDM-KY-b5t">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Use the &quot;Host Game&quot; option to set up a game." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="cDM-KY-b5t">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="69.666666666666671"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
@@ -1410,10 +1417,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="93.666666666666671"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="OMF-pL-QOi">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Use the &quot;Join Game&quot; option to browse the list of available games. You can view game details and join games from here." lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="OMF-pL-QOi">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="93.666666666666671"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <string key="text">Second, other players should click "Join Game" to join the available games, note that private games are the ones require password to join.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1435,7 +1441,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="uSP-GS-faE">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="127.66666666666667"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <string key="text">Once the host hit "Start Game", the game will start and team will be assigned automatically. Players can touch the central button to shoot. Time is displayed at the top and team score is shown on the side.</string>
+                                                    <string key="text">Once the host hits "Start Game", the game will start and teams will be assigned automatically. Tap the central button to shoot. Time and team scores are displayed at the top.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1615,7 +1621,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="4cG-7q-7tp"/>
-        <segue reference="XJj-c5-6F9"/>
-        <segue reference="OUK-q5-70x"/>
+        <segue reference="pTB-ed-xew"/>
+        <segue reference="Snh-On-Wk1"/>
     </inferredMetricsTieBreakers>
 </document>

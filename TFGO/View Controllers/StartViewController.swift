@@ -82,7 +82,9 @@ class StartViewController: UIViewController, UICollectionViewDelegate, UICollect
     /* Makes sure that a players information has been sent to the server before doing the segue */
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         gameState.setUserName(to: nameField.text ?? "")
-        gameState.getConnection().sendData(data: RegisterPlayerMsg())
-        return gameState.getUser().isValid()
+        if gameState.getUser().isValid() {
+            return gameState.getConnection().sendData(data: RegisterPlayerMsg()).isSuccess
+        }
+        return false
     }
 }

@@ -126,9 +126,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             }
             else if subtitle == "Red" {
                 annotationView.image = UIImage(named: "player_red")
+                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
             }
             else if subtitle == "Blue" {
                 annotationView.image = UIImage(named: "player_blue")
+                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
             }
             else {
                 annotationView.image = UIImage(named: "pickup")
@@ -248,11 +250,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
         if(curtime < starttime) { // game has not started yet
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
-            clock.text = "-" + String(diff.minute!) + ":" + String(diff.second!)
+            clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+        }
+        else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
+            clock.text = "00:00"
         }
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
-            clock.text = String(diff.minute!) + ":" + String(diff.second!)
+            clock.text = String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
         }
     }
     
@@ -308,6 +313,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         blueScore.text = "\(game.getBluePoints())"
         tick()
         
+        if game.getGameOver() {
+            endGame()
+        }
+        
         // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
         gameState.getCurrentGame().updatePickupAnnotations()
@@ -321,6 +330,17 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 game_map.addAnnotation(objective.getAnnotation())
             }
         }
+    }
+    
+    private func endGame() {
+        let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
+        let actionController = UIAlertController(title: "Game Over", message:
+            "\(victory) team victory!", preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionController.addAction(UIAlertAction(title: "Let me leave", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
+            self.performSegue(withIdentifier: "leaveGame", sender: nil)
+        }))
+        actionController.addAction(UIAlertAction(title: "I wanna stay", style: UIAlertActionStyle.cancel,handler: nil))
+        self.present(actionController, animated: true, completion: nil)
     }
     
     @IBAction func leaveGame(_ sender: UIButton) {

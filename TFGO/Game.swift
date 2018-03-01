@@ -124,6 +124,15 @@ class Player {
         return weapons
     }
     
+    func removeWeapon(weapon: Weapon) {
+        for index in weapons.indices {
+            if weapons[index].name == weapon.name {
+                weapons.remove(at: index)
+                return
+            }
+        }
+    }
+    
     func updateAnnotation() {
         self.annotation.coordinate = loc.coordinate
         self.annotation.title = name
@@ -299,6 +308,7 @@ public class Game {
     private var password: String?
     private var hasPassword: Bool = false
     private var startTime: [String] = []
+    private var gameover = false
     
     private var objectives: [Objective]
     private var players: [Player]
@@ -429,8 +439,20 @@ public class Game {
         return hasPassword
     }
     
+    func getHasPassword() -> Bool {
+        return hasPassword
+    }
+    
     func setHasPassword(to hasPassword: Bool) {
         self.hasPassword = hasPassword
+    }
+    
+    func getGameOver() -> Bool {
+        return gameover
+    }
+    
+    func setGameOver(to bool: Bool) {
+        gameover = bool
     }
     
     func getPlayers() -> [Player] {
