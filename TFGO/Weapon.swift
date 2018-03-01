@@ -182,7 +182,7 @@ class BeeSwarm: Weapon {
     override init() {
         super.init()
         name = "BeeSwarm"
-        clipSize = 1337
+        clipSize = 5
         clipFill = clipSize
         shotReload = 1
         clipReload = 1
