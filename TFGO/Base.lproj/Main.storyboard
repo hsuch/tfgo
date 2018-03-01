@@ -941,15 +941,25 @@
                                 </constraints>
                                 <color key="progressTintColor" red="1" green="0.1055042148" blue="0.16003847879999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </progressView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="1" translatesAutoresizingMaskIntoConstraints="NO" id="QVj-2J-eJ3">
+                                <rect key="frame" x="125" y="593" width="125" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="K1O-tH-ztB"/>
+                                </constraints>
+                                <color key="progressTintColor" red="1" green="0.76775226080000003" blue="0.44680859680000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Gte-M2-hCv" firstAttribute="centerY" secondItem="wVE-TO-o2V" secondAttribute="centerY" id="3DX-GT-hI5"/>
                             <constraint firstItem="CDg-ez-zN8" firstAttribute="centerX" secondItem="oH6-PH-wpb" secondAttribute="centerX" id="3FM-xR-SUO"/>
                             <constraint firstAttribute="bottom" secondItem="Ld3-ss-D4K" secondAttribute="bottom" id="3Qy-F2-MDa"/>
+                            <constraint firstItem="CDg-ez-zN8" firstAttribute="top" secondItem="QVj-2J-eJ3" secondAttribute="bottom" id="3Rg-SZ-usa"/>
+                            <constraint firstItem="QVj-2J-eJ3" firstAttribute="width" secondItem="CDg-ez-zN8" secondAttribute="width" id="99T-Pp-ie8"/>
                             <constraint firstItem="Mxi-NA-Mod" firstAttribute="leading" secondItem="oH6-PH-wpb" secondAttribute="leading" id="AJV-Wc-u4a"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="leading" secondItem="Eo1-fu-60h" secondAttribute="trailing" constant="108" id="BI9-JG-Fwy"/>
                             <constraint firstItem="Mxi-NA-Mod" firstAttribute="trailing" secondItem="WZL-hS-MaZ" secondAttribute="trailing" id="C3v-Pm-wNH"/>
+                            <constraint firstItem="QVj-2J-eJ3" firstAttribute="leading" secondItem="CDg-ez-zN8" secondAttribute="leading" id="CPC-vu-0Ds"/>
                             <constraint firstItem="q8e-PW-GWW" firstAttribute="baseline" secondItem="Eo1-fu-60h" secondAttribute="baseline" id="DTA-ff-uHh"/>
                             <constraint firstItem="wVE-TO-o2V" firstAttribute="leading" secondItem="Gte-M2-hCv" secondAttribute="trailing" constant="8" id="EMy-Yx-ye1"/>
                             <constraint firstItem="q8e-PW-GWW" firstAttribute="centerY" secondItem="UjK-QY-EBG" secondAttribute="centerY" id="EOx-Yd-2hU"/>

@@ -551,8 +551,12 @@ public class Game {
         return description.count < 100
     }
     
+    private func validBoundaries() -> Bool {
+        return boundaries.count == 4
+    }
+    
     func isValid() -> Bool {
-        if validName(name), validNumber(of: maxTime), validNumber(of: maxPoints), validNumber(of: maxPlayers), validDescription(description) {
+        if validName(name), validNumber(of: maxTime), validNumber(of: maxPoints), validNumber(of: maxPlayers), validDescription(description), validBoundaries() {
             return true
         }
         return false
