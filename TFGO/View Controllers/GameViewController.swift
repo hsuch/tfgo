@@ -330,6 +330,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     private func endGame() {
         let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
+        updateTimer.invalidate()
         let actionController = UIAlertController(title: "Game Over", message:
             "\(victory) team victory!", preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Let me leave", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
