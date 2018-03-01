@@ -173,8 +173,6 @@ func parseGameInfo(data: [String: Any]) -> Bool {
             newGame.setMode(to: (foundGame?.getMode())!)
             newGame.setLocation(to: (foundGame?.getLocation())!)
             
-            // we hard code the name here because we will only have 1 game for iteration 1
-            if newGame.setName(to: "Test Game") {}
             if gameState.setCurrentGame(to: newGame) {}
             
             
@@ -291,9 +289,12 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
                     
                     let objIndex = gameState.getCurrentGame().findObjectiveIndex(id: id)
                     if objIndex > -1 {
-                        gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
                         gameState.getCurrentGame().getObjectives()[objIndex].setProgress(to: progress)
                         gameState.getCurrentGame().getObjectives()[objIndex].setOccupants(to: occupants)
+                        if gameState.getCurrentGame().getObjectives()[objIndex].getOwner() != owner {
+                            gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
+                            gameState.getCurrentGame().getObjectives()[objIndex].setRedraw(to: true)
+                        }
                     }
                 }
             }

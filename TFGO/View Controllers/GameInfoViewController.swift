@@ -77,8 +77,8 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
         if overlay is MKPolygon {
             let polygonView = MKPolygonRenderer(overlay: overlay)
-            polygonView.strokeColor = UIColor.purple
-            polygonView.lineWidth = 2.0
+            polygonView.strokeColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
+            polygonView.lineWidth = 1.0
             
             return polygonView
         }
@@ -117,36 +117,8 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
         
-        // used to differentiate between objectives if we have more than one
-        var objectiveNumber = 1
-        
-        // now we make a pin on the map for each objective
-        for objective in game.getObjectives() {
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = CLLocationCoordinate2D(latitude: objective.getXLoc(), longitude: objective.getYLoc())
-            annotation.title = "OBJECTIVE"
-            annotation.subtitle = String(objectiveNumber)
-            game_map.addAnnotation(annotation)
-            
-//            let center = CLLocation(latitude: objective.getXLoc(), longitude: objective.getYLoc())
-//            addRadiusCircle(location: center, radius: objective.getRadius())
-            
-            objectiveNumber = objectiveNumber + 1
-        }
-        
-        // next, we set pins for the bases
-        let redBaseLoc = gameState.getCurrentGame().getRedBaseLoc()
-        let blueBaseLoc = gameState.getCurrentGame().getBlueBaseLoc()
-        let rbAnnotation = MKPointAnnotation()
-        let bbAnnotation = MKPointAnnotation()
-        rbAnnotation.coordinate = CLLocationCoordinate2D(latitude: redBaseLoc.x, longitude: redBaseLoc.y)
-        rbAnnotation.title = "RED BASE"
-        game_map.addAnnotation(rbAnnotation)
-        bbAnnotation.coordinate = CLLocationCoordinate2D(latitude: blueBaseLoc.x, longitude: blueBaseLoc.y)
-        bbAnnotation.title = "BLUE BASE"
-        game_map.addAnnotation(bbAnnotation)
-        
-        // finally, we draw the boundaries
+        // in GameInfo, we only have Boundary information, so that's all
+        // that we need to draw
         addBoundary()
     }
     
