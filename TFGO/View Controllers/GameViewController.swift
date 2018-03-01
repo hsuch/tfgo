@@ -56,7 +56,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
 
         // update the region of the map with the appropriate information
         game_map.setRegion(region, animated: false)
-        self.game_map.showsUserLocation = true
+        self.game_map.showsUserLocation = false
         
     }
     
@@ -103,8 +103,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = MKAnnotationView()
-        annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "rahhhh")
+       // annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        annotationView.canShowCallout = true
         if let title = annotation.title, let subtitle = annotation.subtitle {
             if title == "OBJECTIVE" {
                 if subtitle == "Neutral" {
