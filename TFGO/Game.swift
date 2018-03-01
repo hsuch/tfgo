@@ -124,6 +124,15 @@ class Player {
         return weapons
     }
     
+    func removeWeapon(weapon: Weapon) {
+        for index in weapons.indices {
+            if weapons[index].name == weapon.name {
+                weapons.remove(at: index)
+                return
+            }
+        }
+    }
+    
     func updateAnnotation() {
         self.annotation.coordinate = loc.coordinate
         self.annotation.title = name
