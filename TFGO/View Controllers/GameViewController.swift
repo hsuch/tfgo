@@ -117,9 +117,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             }
             else if subtitle == "Red" {
                 annotationView.image = UIImage(named: "player_red")
+                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
             }
             else if subtitle == "Blue" {
                 annotationView.image = UIImage(named: "player_blue")
+                annotationView.transform = CGAffineTransform(scaleX: 0.2, y: 0.2)
             }
         }
         return annotationView
@@ -244,11 +246,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
         if(curtime < starttime) { // game has not started yet
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
-            clock.text = "-" + String(diff.minute!) + ":" + String(diff.second!)
+            clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+        }
+        else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
+            clock.text = "00:00"
         }
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
-            clock.text = String(diff.minute!) + ":" + String(diff.second!)
+            clock.text = String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
         }
     }
     
