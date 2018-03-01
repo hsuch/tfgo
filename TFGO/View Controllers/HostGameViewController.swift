@@ -56,11 +56,11 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     override func viewDidLoad() {
         super.viewDidLoad()
         game.setMode(to: .cp)
-//        
-//        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
-//        let span = MKCoordinateSpanMake(0.1, 0.1)
-//        let region = MKCoordinateRegionMake(center, span)
-//        self.host_map.setRegion(region, animated: true)
+        
+        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
+        let span = MKCoordinateSpanMake(0.1, 0.1)
+        let region = MKCoordinateRegionMake(center, span)
+        self.host_map.setRegion(region, animated: true)
         
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleLongPress))
@@ -103,7 +103,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
         testpoint = newCoordinate
         print(testpoint)
-        game.addBounary(to: MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
+        game.addBounary(to: MKMapPoint(x: testpoint.latitude, y: testpoint.longitude))
         //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
         //}

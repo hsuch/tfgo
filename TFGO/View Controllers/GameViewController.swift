@@ -143,7 +143,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         let gameBounds = game.getBoundaries()
         let drawBounds = UIBezierPath.init()
         var first = true
-        
+
         for bound in gameBounds {
             print("GOING THROUGH THE GAME BOUNDS")
             if (first) {
