@@ -262,14 +262,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
                 //Put on Cooldown. Not necessary for Iteration 1
                 let weapon = gameState.getUser().getWeapon()
-                if weapon.clipFill > 0 {
+                if weapon.clipFill > 1 {
                     weapon.clipFill -= 1
+                    clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+                } else if weapon.clipFill == 1 {
+                    reloading = true
+                    weapon.clipFill -= 1
+                    timeLeft = weapon.clipReload
+                    clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+                    clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
                 } else {
                     reloading = true
-                    timeLeft = weapon.clipReload
-                    clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
                 }
-                clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
             }
         }
     }
