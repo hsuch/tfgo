@@ -157,14 +157,16 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     }
     var counter = 0
     func addAnnotationOnLocation(pointedCoordinate: CLLocationCoordinate2D) {
-        
-        let annotation = CusAnnotation(title: "Boundary Point", subtitle: "", discipline: "\(pointedCoordinate.latitude),\(pointedCoordinate.longitude)", coordinate: pointedCoordinate)
+        //var title1 = "Boundary Point"
+        //title1 +=
+        let annotation = CusAnnotation(title: "Boundary Point" + String((counter % 4 + 1)), subtitle: "", discipline: "\(pointedCoordinate.latitude),\(pointedCoordinate.longitude)", coordinate: pointedCoordinate)
         //        annotation.discipline =
         annotations.append(annotation)
         if annotations.count <= 4 {
             boundaries.append(MKMapPoint(x: pointedCoordinate.latitude, y: pointedCoordinate.longitude))
             print(pointedCoordinate)
             counter += 1
+            game.setBoundaries(boundaries)
         }
         if annotations.count > 4 {
             host_map.removeAnnotation(annotations.first!)
