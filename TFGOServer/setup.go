@@ -249,10 +249,22 @@ func (g *Game) generateObjectives(numCP int) {
 		mid := minY + yRange / 2
 		g.RedTeam.Base = Location{maxX - xOffset, mid}
 		g.BlueTeam.Base = Location{minX + xOffset, mid}
+		for !inGameBounds(g, g.RedTeam.Base) {
+			g.RedTeam.Base.X -= 1
+		}
+		for !inGameBounds(g, g.BlueTeam.Base) {
+			g.BlueTeam.Base.X += 1
+		}
 	} else {
 		mid := minX + xRange / 2
 		g.RedTeam.Base = Location{mid, maxY - yOffset}
 		g.BlueTeam.Base = Location{mid, minY + yOffset}
+		for !inGameBounds(g, g.RedTeam.Base) {
+			g.RedTeam.Base.Y -= 1
+		}
+		for !inGameBounds(g, g.BlueTeam.Base) {
+			g.BlueTeam.Base.Y += 1
+		}
 	}
 
 	// set up control points
