@@ -158,13 +158,20 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
 func parseGameInfo(data: [String: Any]) -> Bool {
     
     if let info = data["Data"] as? [String: Any] {
-        if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? Int {
+        if let desc = info["Description"] as? String, let playerNum = info["PlayerLimit"] as? Int, let pointLim = info["PointLimit"] as? Int, let timeLim = info["TimeLimit"] as? Int, let id = info["ID"] as? String {
             
             let newGame = Game()
             newGame.setMaxPlayers(to: playerNum)
             if newGame.setDescription(to: desc) {}
             newGame.setMaxPoints(to: pointLim)
             newGame.setTimeLimit(to: timeLim)
+            newGame.setID(to: id)
+            
+            // we need to find the given game's corresponding info in the gameState's available games
+            let foundGame = gameState.findGame(to: id)
+            if newGame.setName(to: (foundGame?.getName())!) {}
+            newGame.setMode(to: (foundGame?.getMode())!)
+            newGame.setLocation(to: (foundGame?.getLocation())!)
             
             // we hard code the name here because we will only have 1 game for iteration 1
             if newGame.setName(to: "Test Game") {}
