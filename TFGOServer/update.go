@@ -28,7 +28,7 @@ func inGameBounds(game *Game, loc Location) bool {
 		}
 		t := val.P.Y + (val.D.Y * (loc.X - val.P.X) / val.D.X) - loc.Y
 		s := (loc.X - val.P.X) / val.D.X
-		if t > 0 && s >= 0 && s <= 1 {
+		if t > 0.00000000001 && s >= 0 && s <= 1 {
 			intersections += 1
 		}
 	}

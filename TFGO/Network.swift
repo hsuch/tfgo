@@ -86,7 +86,7 @@ func parse(data: [String: Any], type: String) -> Bool {
         return parseStatusUpdate(data: data)
     case "VitalsUpdate":
         return parseVitalsUpdate(data: data)
-    case "Gameover":
+    case "GameOver":
         return parseGameOver(data: data)
     case "AcquireWeapon":
         return parseAcquireWeapon(data: data)
@@ -308,13 +308,13 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
 func parseGameOver(data: [String: Any]) -> Bool {
     
     // not necessary for iteration 1
-    if let gameOver = data["Data"] as? String {
+    //if let gameOver = data["Data"] as? String {
         
         gameState.getCurrentGame().setGameOver(to: true)
         
         return true
-    }
-    return false
+   // }
+    //return false
 }
 
 func parseStatusUpdate(data: [String: Any]) -> Bool {
