@@ -320,7 +320,7 @@ func TestNoIntersections(t *testing.T) {
 	g.ControlPoints["CP1"] = &CP1
 	g.Pickups = append(g.Pickups, &Pickup1)
 	loc1 := Location{14.0,10.0}
-	loc2 := Location{20.0, 32.0}
+	loc2 := Location{20.0, 34.0}
 	loc3 := Location{50.0,50.0}
 	if noIntersections(g, loc1, 2.0) {
 		t.Errorf("TestNoIntersections(1) failed, expected FALSE, got TRUE")
