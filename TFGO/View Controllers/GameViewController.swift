@@ -16,6 +16,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBOutlet weak var game_map: MKMapView!
     
     private var game = gameState.getCurrentGame()
+    private var player = gameState.getUser()
     
     let manager = CLLocationManager() // used to track the user's location
     
@@ -140,6 +141,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        statusLabel.text = "I'm on the \(player.getTeam()) team!"
         
         game_map.delegate = self
         
@@ -297,7 +299,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     var updateTimer = Timer()
     
     func runTimer() {
-        updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: 0.25, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
     
     @objc func update() {
@@ -312,6 +314,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         if game.getGameOver() {
             endGame()
         }
+        
+        handleStatus()
         
         // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
@@ -328,6 +332,32 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    @IBOutlet weak var statusLabel: UILabel!
+    
+    private func handleStatus() {
+        switch player.getStatus() {
+        case "OutOfBounds":
+            statusLabel.text = "Out of Bounds!"
+            statusLabel.textColor = randomColor()
+            break
+        case "BackInBounds":
+            statusLabel.text = ""
+            break
+        case "Respawn":
+            statusLabel.text = "Return to Base"
+            statusLabel.textColor = randomColor()
+            player.setHealth(to: 0)
+            break
+        case "Respawned":
+            statusLabel.text = ""
+            break
+        default:
+            break
+        }
+    }
+    
+    /* endGame() */
+    /* Processes the end of game when it receives the end of game message */
     private func endGame() {
         let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
         updateTimer.invalidate()
