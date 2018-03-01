@@ -24,15 +24,19 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+        // we want the most recent position of our user
+        let location = locations [0]
         
+        var region:MKCoordinateRegion
+        
+        let myLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
+        
+        // update the user's location information
+        gameState.getUser().setLocation(to: myLocation.latitude, to: myLocation.longitude)
+        
+        // we only want to set the span the first time we locate the user;
+        // we want to keep the current span otherwise
         if (initialized == false) {
-            // we want the most recent position of our user
-            let location = locations [0]
-        
-            var region:MKCoordinateRegion
-        
-            let myLocation = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
-        
             let span:MKCoordinateSpan = MKCoordinateSpanMake(0.0015, 0.0015)
             region = MKCoordinateRegionMake(myLocation, span)
             host_map.isRotateEnabled = false
@@ -41,26 +45,29 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
             host_map.setRegion(region, animated: false)
             self.host_map.showsUserLocation = true
             
-            let myLat = myLocation.latitude
-            let myLon = myLocation.longitude
-            
-            // These are hardcoded boundaries for the purpose of testing iteration 1 code
-            game.setBoundaries([MKMapPointMake(myLat + 0.1, myLon + 0.1), MKMapPointMake(myLat + 0.1, myLon - 0.1), MKMapPointMake(myLat - 0.1, myLon + 0.1), MKMapPointMake(myLat - 0.1, myLon - 0.1)])
-            
             initialized = true
             
             host_map.delegate = self
         }
+        else {
+            region = host_map.region
+            region.center = myLocation
+        }
+        
+        // update the region of the map with the appropriate information
+        host_map.setRegion(region, animated: false)
+        self.host_map.showsUserLocation = true
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         game.setMode(to: .cp)
-        
-        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
-        let span = MKCoordinateSpanMake(0.1, 0.1)
-        let region = MKCoordinateRegionMake(center, span)
-        self.host_map.setRegion(region, animated: true)
+//        
+//        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
+//        let span = MKCoordinateSpanMake(0.1, 0.1)
+//        let region = MKCoordinateRegionMake(center, span)
+//        self.host_map.setRegion(region, animated: true)
         
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleLongPress))
@@ -92,11 +99,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         host_map.addAnnotation(annotation)
     }
     */
-    
-    //@IBOutlet weak var host_map: MKMapView!
+
     var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
-    
-    var boundaries = [MKMapPoint]()
     
     @objc func handleLongPress (gestureRecognizer: UITapGestureRecognizer) {
         //print("test if running")
@@ -106,7 +110,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
         testpoint = newCoordinate
         print(testpoint)
-        boundaries.append(MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
+        game.addBounary(to: MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
         //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
         //}

@@ -23,6 +23,12 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var playerLocs: [MKPointAnnotation] = []
     
+    /* time variables */
+    let calendar = Calendar.current
+    var startcomponents = DateComponents()
+    var startArr: [String] = []
+    var starttime = Date()
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // we want the most recent position of our user
@@ -88,6 +94,17 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
         
+        // set start time variables
+        startcomponents = DateComponents()
+        startArr = game.getStartTime()
+        startcomponents.year = Int(startArr[0])
+        startcomponents.month = Int(startArr[1])
+        startcomponents.day = Int(startArr[2])
+        startcomponents.hour = Int(startArr[3])
+        startcomponents.minute = Int(startArr[4])
+        startcomponents.second = Int(startArr[5])
+        starttime = calendar.date(from: startcomponents)!
+        
         // used to differentiate between objectives if we have more than one
         var objectiveNumber = 1
         
@@ -121,6 +138,26 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         gameState.getCurrentGame().updatePlayerAnnotations()
         let annotations = gameState.getCurrentGame().getPlayerAnnotations()
         game_map.addAnnotations(annotations)
+        
+        // finally, we draw the games boundaries
+        let gameBounds = game.getBoundaries()
+        let drawBounds = UIBezierPath.init()
+        var first = true
+        
+        for bound in gameBounds {
+            print("GOING THROUGH THE GAME BOUNDS")
+            if (first) {
+                drawBounds.move(to: CGPoint(x: bound.x, y: bound.y))
+                first = false
+            }
+            else {
+                drawBounds.addLine(to: CGPoint(x: bound.x, y: bound.y))
+            }
+        }
+        // connect the last and first boundaries, then draw the boundaries
+        drawBounds.addLine(to: CGPoint(x: gameBounds[0].x, y: gameBounds[0].y))
+        drawBounds.stroke()
+        drawBounds.fill()
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
@@ -163,25 +200,22 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBOutlet weak var blueScore: UILabel!
     
     private func tick() {
-//        let calender = Calendar.current
-//        let date = calender.dateComponents([.year,.month,.day,.hour,.minute,.second], from: Date())
-//
-//
-//        let year = date.year
-//        let month = date.month
-//        let day = date.day
-//        let hour = date.hour
-//        let minute = date.minute
-//        let second = date.second
+        let curtime = Date()
+        
+        if(curtime < starttime) { // game has not started yet
+            let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
+            clock.text = "-" + String(diff.minute!) + ":" + String(diff.second!)
+        }
+        else { // game started
+            let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
+            clock.text = String(diff.minute!) + ":" + String(diff.second!)
+        }
     }
     
     @IBAction func fireButton(_ sender: UIButton) {
         if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
             //Put on Cooldown. Not necessary for Iteration 1
         }
-        redScore.text = "\(game.getRedPoints())"
-        blueScore.text = "\(game.getBluePoints())"
-        tick()
     }
     
     var updateTimer = Timer()
@@ -194,6 +228,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
         }
+        
+        redScore.text = "\(game.getRedPoints())"
+        blueScore.text = "\(game.getBluePoints())"
+        tick()
         
         // update the locations of other players on the map
         gameState.getCurrentGame().updatePlayerAnnotations()
@@ -221,8 +259,20 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
     }
     
+    @IBAction func leaveGame(_ sender: UIButton) {
+        let actionController = UIAlertController(title: nil, message:
+            "Are you sure you want to leave?", preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionController.addAction(UIAlertAction(title: "Yep", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
+            self.performSegue(withIdentifier: "leaveGame", sender: nil)
+        }))
+        actionController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.cancel,handler: nil))
+        self.present(actionController, animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        updateTimer.invalidate()
+        if segue.identifier != "inventory" {
+            updateTimer.invalidate()
+        }
     }
     
 }
