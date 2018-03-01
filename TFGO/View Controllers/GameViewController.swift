@@ -88,6 +88,26 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         return nil
     }
     
+//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        let annotationView = MKAnnotationView()
+//        annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+//        if annotation.title == "OBJECTIVE" {
+//            annotationView.image = UIImage(named: "cap_gray")
+//        }
+//        else if annotation.title == "RED BASE" {
+//            annotationView.image = UIImage(named: "cap_gray")
+//        }
+//        else if annotation.title == "BLUE BASE" {
+//            annotationView.image = UIImage(named: "cap_gray")
+//        }
+//        else if annotation.subtitle == "Red" {
+//            annotationView.image = UIImage(named: "player_red")
+//        }
+//        else if annotation.subtitle == "Blue" {
+//            annotationView.image = UIImage(named: "player_blue")
+//        }
+//    }
+    
     func game_map(game_map: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {
             var circleRenderer = MKCircleRenderer(overlay: overlay)
