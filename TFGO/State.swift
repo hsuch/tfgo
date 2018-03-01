@@ -93,6 +93,15 @@ class GameState {
         return false
     }
     
+    func findGame(to id: String) -> Game! {
+        for game in foundGames {
+            if id == game.getID() {
+                return game
+            }
+        }
+        return nil
+    }
+    
     func setFoundGames(to games: [Game]) {
         self.foundGames = games
     }
