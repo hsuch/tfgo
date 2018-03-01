@@ -10,7 +10,26 @@ import UIKit
 import MapKit
 import CoreLocation
 
-//
+class CusAnnotation: NSObject, MKAnnotation {
+    let title: String?
+    let subtitle: String?
+    let discipline: String
+    let coordinate: CLLocationCoordinate2D
+    var count = 0
+    
+    init(title: String, subtitle: String?, discipline: String, coordinate: CLLocationCoordinate2D) {
+        self.title = title
+        self.subtitle = subtitle
+        self.discipline = discipline
+        self.coordinate = coordinate
+        
+        super.init()
+    }
+    
+    //    var subtitle: String? {
+    //        return locationName
+    //    }
+}
 
 class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate, MKMapViewDelegate {
     
@@ -62,13 +81,15 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        gameState.getUser().makeHost()
+        
         game.setMode(to: .cp)
-        game.addPlayer(toGame: gameState.getUser())
-//        
-//        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
-//        let span = MKCoordinateSpanMake(0.1, 0.1)
-//        let region = MKCoordinateRegionMake(center, span)
-//        self.host_map.setRegion(region, animated: true)
+        
+        let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
+        let span = MKCoordinateSpanMake(0.1, 0.1)
+        let region = MKCoordinateRegionMake(center, span)
+        self.host_map.setRegion(region, animated: true)
         
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleLongPress))
@@ -86,54 +107,87 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-   /*
-    func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
-        
-        let location = gestureReconizer.locationc(in: host_map)
-        let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
-        
-        // Add annotation:
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        annotation.title = "corner"
-        annotation.subtitle = "tbd"
-        host_map.addAnnotation(annotation)
-    }
-    */
-
+    /*
+     func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
+     
+     let location = gestureReconizer.locationc(in: host_map)
+     let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
+     
+     // Add annotation:
+     let annotation = MKPointAnnotation()
+     annotation.coordinate = coordinate
+     annotation.title = "corner"
+     annotation.subtitle = "tbd"
+     host_map.addAnnotation(annotation)
+     }
+     */
+    
+    //@IBOutlet weak var host_map: MKMapView!
     var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
     
+    var boundaries = [MKMapPoint]()
+    
     @objc func handleLongPress (gestureRecognizer: UITapGestureRecognizer) {
-        //print("test if running")
+        print("test if running")
         //if gestureRecognizer.state == UIGestureRecognizerState.began {
         
         let touchPoint: CGPoint = gestureRecognizer.location(in: host_map)
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
         testpoint = newCoordinate
-        print(testpoint)
-        game.addBounary(to: MKMapPoint(x: testpoint.longitude, y: testpoint.latitude))
         //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
         //}
     }
     
-    var annotations = [MKAnnotationView]()
+    var annotations = [CusAnnotation]()
+    
+    //    mapview
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        //print(view.tag)
+        //        print(view.annotation)
+        let a = view.annotation as! CusAnnotation
+        //        print(a.discipline)
+        a.count += 1
+        //        print(annotations.index(of: a))
+        if a.count > 1 {
+            let p = MKMapPoint(x: a.coordinate.longitude, y: a.coordinate.latitude)
+            for (index, b) in boundaries.enumerated() {
+                if b.x == p.x && b.y == p.y {
+                    boundaries.remove(at: index)
+                }
+            }
+            annotations.remove(at: annotations.index(of: a)!)
+            mapView.removeAnnotation(a)
+            print("called")
+        }
+        
     }
-    
+    var counter = 0
     func addAnnotationOnLocation(pointedCoordinate: CLLocationCoordinate2D) {
-        
-        let customAnnotation = MKAnnotationView()
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = pointedCoordinate
-        annotation.title = "Boundary Point"
-        //annotation.subtitle = "Loading..."
-        customAnnotation.annotation = annotation
-        
-        customAnnotation.tag = 1
-        annotations.append(customAnnotation)
+        //var title1 = "Boundary Point"
+        //title1 +=
+        let annotation = CusAnnotation(title: "Boundary Point" + String((counter % 4 + 1)), subtitle: "", discipline: "\(pointedCoordinate.latitude),\(pointedCoordinate.longitude)", coordinate: pointedCoordinate)
+        //        annotation.discipline =
+        annotations.append(annotation)
+        if annotations.count <= 4 {
+            boundaries.append(MKMapPoint(x: pointedCoordinate.latitude, y: pointedCoordinate.longitude))
+            print(pointedCoordinate)
+            counter += 1
+            game.setBoundaries(boundaries)
+        }
+        if annotations.count > 4 {
+            host_map.removeAnnotation(annotations.first!)
+            annotations.removeFirst()
+            print(counter % 4)
+            boundaries[counter % 4] = MKMapPoint(x: pointedCoordinate.latitude, y: pointedCoordinate.longitude)
+            print(pointedCoordinate)
+            print(boundaries[0])
+            print(boundaries[1])
+            print(boundaries[2])
+            print(boundaries[3])
+            counter += 1
+            game.setBoundaries(boundaries)
+        }
         host_map.addAnnotation(annotation)
     }
     
@@ -141,7 +195,31 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        var name = game.getName() ?? ""
+        name.append(string)
+        if textField == nameField {
+            if !game.setName(to: name) {
+                //give invalid name message
+                return false
+            }
+        } else if textField == descriptionField {
+            if !game.setDescription(to: name) {
+                //give invalid description message
+                return false
+            }
+        } else if textField == passwordField {
+            if usePassword {
+                if !game.setPassword(to: name) {
+                    //give invalid password message
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }
@@ -204,7 +282,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         if identifier == "Create Game" {
             if gameState.setCurrentGame(to: game) {
                 if gameState.getConnection().sendData(data: CreateGameMsg(game: game)).isSuccess {
-                    gameState.getUser().makeHost()
                     return true
                 }
             }
@@ -214,10 +291,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     }
     
     @IBAction func checkGame(_ sender: UIButton) {
-        if game.setName(to: nameField.text ?? ""), game.setDescription(to: descriptionField.text ?? "") {}
-        if usePassword {
-            if game.setPassword(to: passwordField.text ?? "") {}
-        }
         if !game.isValid() {
             let alertController = UIAlertController(title: "Invalid Game", message:
                 "Please ensure that you have filled all required fields", preferredStyle: UIAlertControllerStyle.alert)
