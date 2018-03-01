@@ -4,7 +4,7 @@ package main
 
 import (
 	"testing"
-	"time"
+//	"time"
 )
 
 func TestFindCenter(t *testing.T) {
@@ -52,9 +52,34 @@ func TestSetBoundaries(t *testing.T) {
 				g.Boundaries[i].P.X, g.Boundaries[i].P.Y, g.Boundaries[i].D.X, g.Boundaries[i].D.Y)
 		}
 	}
+
+	boundaries2 := []interface{} {
+		map[string]interface{} {"X": -87.60297864920827, "Y": 41.79065419236258},
+		map[string]interface{} {"X": -87.60284629074036, "Y": 41.79021301330286},
+		map[string]interface{} {"X": -87.6026866819996, "Y": 41.79092412279011},
+		map[string]interface{} {"X": -87.60193924594547, "Y": 41.7901317431449},
+	}
+	/*borders := []Border {
+		{Location{0.0,0.0}, Direction{100.0,0.0}},
+		{Location{100.0,0.0}, Direction{0.0,100.0}},
+		{Location{100.0,100.0}, Direction{-100.0,0.0}},
+		{Location{0.0,100.0}, Direction{0.0,-100.0}},
+	}*/
+	g2 := &Game{Name: "TestGame"}
+	g2.setBoundaries(boundaries2)
+	if len(g2.Boundaries) != 4 {
+		t.Errorf("TestSetBoundaries(1) failed, expected 4 borders, got %d", len(g2.Boundaries))
+	}
+/*	for i, v := range borders {
+		if g.Boundaries[i] != v {
+			t.Errorf("TestSetBoundaries(2.%d) failed, expected Border{{%f, %f} {%f, %f}}, got Border{{%f, %f} {%f, %f}}",
+				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
+				g.Boundaries[i].P.X, g.Boundaries[i].P.Y, g.Boundaries[i].D.X, g.Boundaries[i].D.Y)
+		}
+	}*/
 }
 
-func TestCreateGame(t *testing.T) {
+/*func TestCreateGame(t *testing.T) {
 	isTesting = true
 	borders := []Border {
 		{Location{0.0,0.0}, Direction{100.0,0.0}},
@@ -122,7 +147,7 @@ func TestCreateGame(t *testing.T) {
 		t.Errorf("TestCreateGame(14) failed, expected Player %s to be in Game Player List, got Player %s",
 			p.Name, g.Players[p.ID])
 	}
-}
+}*/
 
 func TestGenerateObjectives(t *testing.T) {
 	isTesting = true

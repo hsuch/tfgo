@@ -115,7 +115,7 @@ func testBorders(boundaries []Border) (int,int) {
 			if k2 > k1 {
 				t := (v2.P.Y + (v2.D.Y * (v1.P.X - v2.P.X) / v2.D.X) - v1.P.Y) / (v1.D.Y - (v1.D.X * v2.D.Y / v2.D.X))
 				s := ((v1.P.X - v2.P.X) / v2.D.X) + (v1.D.X * t / v2.D.X)
-				if t > 0 && t < 1 && s > 0 && s < 1 {
+				if t > 0.000000001 && t < 0.999999999 && s > 0.000000001 && s < 0.999999999 {
 					return k1 + 1, k2
 				}
 			}
