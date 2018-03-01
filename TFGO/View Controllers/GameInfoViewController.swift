@@ -12,6 +12,7 @@ import CoreLocation
 
 class GameInfoViewController: UITableViewController, UICollectionViewDelegate, UICollectionViewDataSource, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    /* List of UI outlets */
     @IBOutlet weak var game_map: MKMapView!
     @IBOutlet weak var gameNameLbl: UILabel!
     @IBOutlet weak var gamemodeLbl: UILabel!
@@ -20,6 +21,7 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
     @IBOutlet weak var minutesLbl: UILabel!
     @IBOutlet weak var pointsLbl: UILabel!
     
+    /* Game object being currently viewed */
     private var game = gameState.getCurrentGame()
     
     let manager = CLLocationManager()
@@ -61,9 +63,33 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    func addBoundary() {
+        let bounds = game.getBoundaries()
+        var polyBounds: [CLLocationCoordinate2D] = []
+        for bound in bounds {
+            let polyBound = CLLocationCoordinate2DMake(bound.x, bound.y)
+            polyBounds.append(polyBound)
+        }
+        let polygon = MKPolygon(coordinates: polyBounds, count: polyBounds.count)
+        game_map.add(polygon)
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
+        if overlay is MKPolygon {
+            let polygonView = MKPolygonRenderer(overlay: overlay)
+            polygonView.strokeColor = UIColor.purple
+            polygonView.lineWidth = 2.0
+            
+            return polygonView
+        }
+        
+        return nil
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set up table elements according to game values
         gameNameLbl.text = game.getName()
         switch game.getMode() {
         case .cp:
@@ -81,6 +107,8 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         statusLbl.text = "Waiting for players - [\(game.getPlayers().count)/\(game.getMaxPlayers())]"
         minutesLbl.text = "\(game.getTimeLimit()) Minutes"
         pointsLbl.text = "\(game.getMaxPoints()) Points"
+        
+        game_map.delegate = self
         
         // now we have to set up the GameInfo Map
         manager.delegate = self
@@ -117,12 +145,17 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         bbAnnotation.coordinate = CLLocationCoordinate2D(latitude: blueBaseLoc.x, longitude: blueBaseLoc.y)
         bbAnnotation.title = "BLUE BASE"
         game_map.addAnnotation(bbAnnotation)
+        
+        // finally, we draw the boundaries
+        addBoundary()
     }
     
+    /* Determine number of icons to be displayed in collection view */
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return game.getPlayers().count
     }
     
+    /* Designate attributes for icons within collection view */
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Icon", for: indexPath) as! IconViewCell
         cell.label.text = game.getPlayers()[indexPath.row].getIcon()
@@ -132,13 +165,17 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         return cell
     }
     
+    /* shouldPerformSegue - override */
+    /* Check to see if a game is still valid to join or sends an alert */
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "infoToWaiting" {
+            // Perform Segue to Waiting View
             if gameState.getConnection().sendData(data: JoinGameMsg(IDtoJoin: game.getID()!, password: "")).isSuccess {
                 if handleMsgFromServer() {
                     if game.isValid() {
                         return true
                     } else {
+                        // Game is no longer valid
                         let alertController = UIAlertController(title: "This game is no longer valid", message:
                             "Please select a different game", preferredStyle: UIAlertControllerStyle.alert)
                         alertController.addAction(UIAlertAction(title: "It was hubris to try and join", style: UIAlertActionStyle.default,handler: nil))

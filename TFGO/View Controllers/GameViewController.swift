@@ -65,21 +65,64 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
-    func game_map(game_map: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
-        if overlay is MKCircle {
-            var circleRenderer = MKCircleRenderer(overlay: overlay)
-            circleRenderer.fillColor = UIColor.blue
-            circleRenderer.strokeColor = UIColor.red
-            circleRenderer.lineWidth = 1
-            return circleRenderer
+    func addBoundary() {
+        let bounds = game.getBoundaries()
+        var polyBounds: [CLLocationCoordinate2D] = []
+        for bound in bounds {
+            let polyBound = CLLocationCoordinate2DMake(bound.x, bound.y)
+            polyBounds.append(polyBound)
         }
-        return MKOverlayRenderer(overlay: overlay)
+        let polygon = MKPolygon(coordinates: polyBounds, count: polyBounds.count)
+        game_map.add(polygon)
     }
     
     func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
-        self.game_map.delegate = self
-        var circle = MKCircle(center: location.coordinate, radius: radius)
-        self.game_map.add(circle)
+        let circle = MKCircle(center: location.coordinate, radius: radius)
+        game_map.add(circle)
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
+        if overlay is MKPolygon {
+            let polygonView = MKPolygonRenderer(overlay: overlay)
+            polygonView.strokeColor = UIColor.purple
+            polygonView.lineWidth = 2.0
+            
+            return polygonView
+        }
+        else if overlay is MKCircle {
+            let circleRenderer = MKCircleRenderer(overlay: overlay)
+            circleRenderer.fillColor = UIColor.gray
+            circleRenderer.strokeColor = UIColor.gray
+            circleRenderer.lineWidth = 1.0
+            circleRenderer.alpha = 0.5
+            
+            return circleRenderer
+        }
+        
+        return nil
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let annotationView = MKAnnotationView()
+        annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        if let title = annotation.title, let subtitle = annotation.subtitle {
+            if title == "OBJECTIVE" {
+                annotationView.image = UIImage(named: "cap_gray")
+            }
+            else if title == "RED BASE" {
+                annotationView.image = UIImage(named: "base_red")
+            }
+            else if title == "BLUE BASE" {
+                annotationView.image = UIImage(named: "base_blue")
+            }
+            else if subtitle == "Red" {
+                annotationView.image = UIImage(named: "player_red")
+            }
+            else if subtitle == "Blue" {
+                annotationView.image = UIImage(named: "player_blue")
+            }
+        }
+        return annotationView
     }
     
     private var status = (100, 0)
@@ -87,6 +130,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        game_map.delegate = self
         
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -134,30 +179,21 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         bbAnnotation.title = "BLUE BASE"
         game_map.addAnnotation(bbAnnotation)
         
+        // we also want to draw circles representing each base's range
+        addRadiusCircle(location: CLLocation(latitude: redBaseLoc.x, longitude: redBaseLoc.y), radius: gameState.getCurrentGame().getRedBaseRad())
+        addRadiusCircle(location: CLLocation(latitude: blueBaseLoc.x, longitude: blueBaseLoc.y), radius: gameState.getCurrentGame().getBlueBaseRad())
+        
+        // next, we need pins for the pickups in the game
+        let pickupAnnotations = gameState.getCurrentGame().getPickupAnnotations()
+        game_map.addAnnotations(pickupAnnotations)
+        
         // now we set pins for each player in the game
         gameState.getCurrentGame().updatePlayerAnnotations()
-        let annotations = gameState.getCurrentGame().getPlayerAnnotations()
-        game_map.addAnnotations(annotations)
+        let playerAnnotations = gameState.getCurrentGame().getPlayerAnnotations()
+        game_map.addAnnotations(playerAnnotations)
         
         // finally, we draw the games boundaries
-        let gameBounds = game.getBoundaries()
-        let drawBounds = UIBezierPath.init()
-        var first = true
-        
-        for bound in gameBounds {
-            print("GOING THROUGH THE GAME BOUNDS")
-            if (first) {
-                drawBounds.move(to: CGPoint(x: bound.x, y: bound.y))
-                first = false
-            }
-            else {
-                drawBounds.addLine(to: CGPoint(x: bound.x, y: bound.y))
-            }
-        }
-        // connect the last and first boundaries, then draw the boundaries
-        drawBounds.addLine(to: CGPoint(x: gameBounds[0].x, y: gameBounds[0].y))
-        drawBounds.stroke()
-        drawBounds.fill()
+        addBoundary()
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
@@ -216,10 +252,36 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    private var clipTimer = Timer()
+    
+    private var reloading = false
+    private var timeLeft: TimeInterval = 0
+    
     @IBAction func fireButton(_ sender: UIButton) {
-        if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
-            //Put on Cooldown. Not necessary for Iteration 1
-            //clipBar.setProgress(<#T##progress: Float##Float#>, animated: <#T##Bool#>)
+        if !reloading {
+            if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
+                //Put on Cooldown. Not necessary for Iteration 1
+                let weapon = gameState.getUser().getWeapon()
+                if weapon.clipFill > 0 {
+                    weapon.clipFill -= 1
+                } else {
+                    reloading = true
+                    timeLeft = weapon.clipReload
+                    clipTimer = Timer.scheduledTimer(timeInterval: 1/5, target: self,   selector: (#selector(GameViewController.clipUpdate)), userInfo: nil, repeats: true)
+                }
+                clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+            }
+        }
+    }
+    
+    @objc func clipUpdate() {
+        timeLeft -= 1/5
+        let weapon = gameState.getUser().getWeapon()
+        weapon.clipFill += Int(0.2 * Float(weapon.clipSize))
+        clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
+        if weapon.clipFill == weapon.clipSize {
+            reloading = false
+            clipTimer.invalidate()
         }
     }
     
@@ -238,8 +300,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         blueScore.text = "\(game.getBluePoints())"
         tick()
         
-        // update the locations of other players on the map
+        // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
+        gameState.getCurrentGame().updatePickupAnnotations()
     }
     
     @IBAction func leaveGame(_ sender: UIButton) {

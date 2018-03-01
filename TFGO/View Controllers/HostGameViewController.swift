@@ -25,14 +25,11 @@ class CusAnnotation: NSObject, MKAnnotation {
         
         super.init()
     }
-    
-    //    var subtitle: String? {
-    //        return locationName
-    //    }
 }
 
 class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    /* New game object */
     private let game = Game()
     
     @IBOutlet weak var host_map: MKMapView!
@@ -82,8 +79,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Initial game setup
         gameState.getUser().makeHost()
-        
         game.setMode(to: .cp)
         
         let center = CLLocationCoordinate2DMake(41.794409, -87.595241)
@@ -134,6 +131,8 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         let touchPoint: CGPoint = gestureRecognizer.location(in: host_map)
         let newCoordinate: CLLocationCoordinate2D = host_map.convert(touchPoint, toCoordinateFrom: host_map)
         testpoint = newCoordinate
+        print(testpoint)
+        game.addBounary(to: MKMapPoint(x: testpoint.latitude, y: testpoint.longitude))
         //print(testpoint)
         addAnnotationOnLocation(pointedCoordinate: newCoordinate)
         //}
@@ -191,11 +190,12 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         host_map.addAnnotation(annotation)
     }
     
-    
+    /* Text field variables */
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var descriptionField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
+    /* Process information from the text fields */
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         var name = game.getName() ?? ""
         name.append(string)
@@ -220,18 +220,19 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         return true
     }
     
+    /* Hide keyboard when the return key is pressed */
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }
     
+    /* Gamemode information variables */
     @IBOutlet private var gamemodeButtons: [UIButton]!
-    
     @IBOutlet weak var gamemodeLabel: UILabel!
-    
     private var gamemodes = [Gamemode.cp, .payload, .multi]
-    
     @IBOutlet weak var objectiveCell: UITableViewCell!
     
+    /* chooseGamemode() - Action on any gamemode button */
+    /* Sets gamemode to the button clicked and displays any additional information if required */
     @IBAction private func chooseGamemode(_ sender: UIButton) {
         if let modeIndex = gamemodeButtons.index(of: sender) {
             gamemodeLabel.text = gamemodes[modeIndex].rawValue
@@ -244,11 +245,14 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         }
     }
     
+    /* Game information labels */
     @IBOutlet weak var playerLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var pointLabel: UILabel!
     @IBOutlet weak var objectiveLabel: UILabel!
     
+    /* step() - Action on any stepper */
+    /* Changes the value of a game information label according to a stepper press */
     @IBAction func step(_ sender: UIStepper) {
         let value = Int(sender.value)
         switch sender.maximumValue {
@@ -269,15 +273,19 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         }
     }
     
-    
+    /* Password variables */
     private var usePassword = false
     @IBOutlet weak var passwordCell: UITableViewCell!
     
+    /* passwordSwitch() - Action on password switch */
+    /* Shows or hides the password table cell when needed */
     @IBAction func passwordSwitch(_ sender: UISwitch) {
         usePassword = sender.isOn
         passwordCell.isHidden = !sender.isOn
     }
     
+    /* shouldPerformSegue() - override */
+    /* Segue only if the game was able to send the game to the server */
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         if identifier == "Create Game" {
             if gameState.setCurrentGame(to: game) {
@@ -286,10 +294,11 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
                 }
             }
         }
-        //Give incomplete gamestate alert
         return false
     }
     
+    /* checkGame() - Action on Create Game button */
+     /* Checks if the game is valid and causes an alert if it is not */
     @IBAction func checkGame(_ sender: UIButton) {
         if !game.isValid() {
             let alertController = UIAlertController(title: "Invalid Game", message:

@@ -59,7 +59,7 @@ class GameState {
         user.setArmor(to: armor)
     }
     
-    func getUserWeapon() -> String {
+    func getUserWeapon() -> Weapon {
         return user.getWeapon()
     }
     

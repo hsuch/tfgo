@@ -282,13 +282,11 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
             for objective in objectives {
                 if let id = objective["ID"] as? String, let occupants = objective["Occupying"] as? [String], let owner = objective["BelongsTo"] as? String, let progress = objective["Progress"] as? Int {
                     
-  //                  if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {  TODO Dont think we need this
                     let objIndex = gameState.getCurrentGame().findObjectiveIndex(id: id)
                     if objIndex > -1 {
                         gameState.getCurrentGame().getObjectives()[objIndex].setOwner(to: owner)
                         gameState.getCurrentGame().getObjectives()[objIndex].setProgress(to: progress)
                         gameState.getCurrentGame().getObjectives()[objIndex].setOccupants(to: occupants)
-                    //    }
                     }
                 }
             }
@@ -422,7 +420,7 @@ func LocUpMsg() -> Data {
     return MsgToServer(action: "LocationUpdate", data: payload).toJson()
 }
 func FireMsg() -> Data {
-    let weapon = gameState.getUserWeapon()
+    let weapon = gameState.getUserWeapon().name
     let direction = gameState.getUserOrientation()
     let payload = ["Weapon": weapon, "Direction": direction] as [String: Any]
     return MsgToServer(action: "Fire", data: payload).toJson()

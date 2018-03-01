@@ -27,8 +27,8 @@ class Player {
     private var team: String
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     private var orientation: Float
-    private var weapon: String
-    private var weapons: [String]
+    private var weapon: Weapon
+    private var weapons: [Weapon]
     private var pickups: [Pickup] = []
     private var status: String
     private var health: Int
@@ -38,10 +38,6 @@ class Player {
     
     func getName() -> String {
         return name
-    }
-    
-    func getWeapon() -> String {
-        return weapon
     }
     
     func isHost() -> Bool {
@@ -113,14 +109,18 @@ class Player {
     }
     
     func addWeapon(to weapon: String) {
-        self.weapons.append(weapon)
+        self.weapons.append(weaponByName(name: name))
     }
     
-    func setWeapon(to weapon: String) {
+    func getWeapon() -> Weapon {
+        return weapon
+    }
+    
+    func setWeapon(to weapon: Weapon) {
         self.weapon = weapon
     }
     
-    func getWeaponsList() -> [String] {
+    func getWeaponsList() -> [Weapon] {
         return weapons
     }
     
@@ -142,12 +142,12 @@ class Player {
         self.name = name
         self.icon = icon
         self.orientation = 0
-        self.weapon = "BeeSwarm" // later
+        self.weapon = BeeSwarm() // later
         self.status = "" // later
         self.health = 100 // later
         self.armor = 0 // later
         self.team = ""
-        self.weapons = ["BeeSwarm", "Sword", "Shotgun"]
+        self.weapons = [BeeSwarm(), Sword(), Shotgun()]
     }
 }
 
@@ -219,11 +219,16 @@ public class Pickup {
     private var type : String
     private var amount : Int
     private var available : Bool = true
+    private var annotation: MKPointAnnotation = MKPointAnnotation()
     
     init(loc: MKMapPoint, type: String, amount: Int) {
         self.loc = loc
         self.type = type
         self.amount = amount
+        
+        self.annotation.coordinate = CLLocationCoordinate2D(latitude: loc.x, longitude: loc.y)
+        self.annotation.title = type
+        self.annotation.subtitle = "Available"
     }
     
     func getX() -> Double {
@@ -236,6 +241,19 @@ public class Pickup {
     
     func getAvailability() -> Bool {
         return available
+    }
+    
+    func updateAnnotation() {
+        if (available) {
+            self.annotation.subtitle = "Available"
+        }
+        else {
+            self.annotation.subtitle = "Unavailable"
+        }
+    }
+    
+    func getAnnotation() -> MKPointAnnotation {
+        return annotation
     }
     
     func setAvailability(to availability: Bool) {
@@ -525,10 +543,24 @@ public class Game {
         }
     }
     
+    func updatePickupAnnotations() {
+        for pickup in pickups {
+            pickup.updateAnnotation()
+        }
+    }
+    
     func getPlayerAnnotations() -> [MKPointAnnotation] {
         var annotations: [MKPointAnnotation] = []
         for player in players {
             annotations.append(player.getAnnotation())
+        }
+        return annotations
+    }
+    
+    func getPickupAnnotations() -> [MKPointAnnotation] {
+        var annotations: [MKPointAnnotation] = []
+        for pickup in pickups {
+            annotations.append(pickup.getAnnotation())
         }
         return annotations
     }

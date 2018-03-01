@@ -8,12 +8,17 @@
 
 import Foundation
 
+
+/* Weapon "Abstract" Class
+ * Contains information for weapon firing and mapping weapons to their names
+ * Initializes to the null weapon, which is overridden by its children
+ */
 class Weapon {
     var name: String
     var clipSize: Int
     var clipFill: Int
-    var shotReload: Float
-    var clipReload: Float
+    var shotReload: TimeInterval
+    var clipReload: TimeInterval
     
     init () {
         name = ""
@@ -21,6 +26,36 @@ class Weapon {
         clipFill = 0
         shotReload = 0
         clipReload = 0
+    }
+}
+
+/* weaponByName(String) -> Weapon
+ * Returns a new weapon based on the filename of the weapon image
+ */
+func weaponByName(name: String) -> Weapon {
+    switch name {
+    case "Sword":
+        return Sword()
+    case "Shotgun":
+        return Shotgun()
+    case "Pistol":
+        return Pistol()
+    case "Blaster":
+        return Blaster()
+    case "Crossbow":
+        return Crossbow()
+    case"Rifle":
+        return Rifle()
+    case "Boomerange":
+        return Boomerang()
+    case "Lightsaber":
+        return Lightsaber()
+    case "Spear":
+        return Spear()
+    case "Banhammer":
+        return Banhammer()
+    default:
+        return BeeSwarm()
     }
 }
 
