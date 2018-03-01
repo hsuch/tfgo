@@ -76,6 +76,11 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         game_map.add(polygon)
     }
     
+    func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
+        let circle = MKCircle(center: location.coordinate, radius: radius)
+        game_map.add(circle)
+    }
+    
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
         if overlay is MKPolygon {
             let polygonView = MKPolygonRenderer(overlay: overlay)
@@ -84,45 +89,40 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             
             return polygonView
         }
+        else if overlay is MKCircle {
+            let circleRenderer = MKCircleRenderer(overlay: overlay)
+            circleRenderer.fillColor = UIColor.gray
+            circleRenderer.strokeColor = UIColor.gray
+            circleRenderer.lineWidth = 1.0
+            circleRenderer.alpha = 0.5
+            
+            return circleRenderer
+        }
         
         return nil
     }
     
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        let annotationView = MKAnnotationView()
-//        annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-//        if annotation.title == "OBJECTIVE" {
-//            annotationView.image = UIImage(named: "cap_gray")
-//        }
-//        else if annotation.title == "RED BASE" {
-//            annotationView.image = UIImage(named: "cap_gray")
-//        }
-//        else if annotation.title == "BLUE BASE" {
-//            annotationView.image = UIImage(named: "cap_gray")
-//        }
-//        else if annotation.subtitle == "Red" {
-//            annotationView.image = UIImage(named: "player_red")
-//        }
-//        else if annotation.subtitle == "Blue" {
-//            annotationView.image = UIImage(named: "player_blue")
-//        }
-//    }
-    
-    func game_map(game_map: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
-        if overlay is MKCircle {
-            var circleRenderer = MKCircleRenderer(overlay: overlay)
-            circleRenderer.fillColor = UIColor.blue
-            circleRenderer.strokeColor = UIColor.red
-            circleRenderer.lineWidth = 1
-            return circleRenderer
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let annotationView = MKAnnotationView()
+        annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        if let title = annotation.title, let subtitle = annotation.subtitle {
+            if title == "OBJECTIVE" {
+                annotationView.image = UIImage(named: "cap_gray")
+            }
+            else if title == "RED BASE" {
+                annotationView.image = UIImage(named: "base_red")
+            }
+            else if title == "BLUE BASE" {
+                annotationView.image = UIImage(named: "base_blue")
+            }
+            else if subtitle == "Red" {
+                annotationView.image = UIImage(named: "player_red")
+            }
+            else if subtitle == "Blue" {
+                annotationView.image = UIImage(named: "player_blue")
+            }
         }
-        return MKOverlayRenderer(overlay: overlay)
-    }
-    
-    func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
-        self.game_map.delegate = self
-        var circle = MKCircle(center: location.coordinate, radius: radius)
-        self.game_map.add(circle)
+        return annotationView
     }
     
     private var status = (100, 0)
@@ -179,10 +179,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         bbAnnotation.title = "BLUE BASE"
         game_map.addAnnotation(bbAnnotation)
         
+        // we also want to draw circles representing each base's range
+        addRadiusCircle(location: CLLocation(latitude: redBaseLoc.x, longitude: redBaseLoc.y), radius: gameState.getCurrentGame().getRedBaseRad())
+        addRadiusCircle(location: CLLocation(latitude: blueBaseLoc.x, longitude: blueBaseLoc.y), radius: gameState.getCurrentGame().getBlueBaseRad())
+        
+        // next, we need pins for the pickups in the game
+        let pickupAnnotations = gameState.getCurrentGame().getPickupAnnotations()
+        game_map.addAnnotations(pickupAnnotations)
+        
         // now we set pins for each player in the game
         gameState.getCurrentGame().updatePlayerAnnotations()
-        let annotations = gameState.getCurrentGame().getPlayerAnnotations()
-        game_map.addAnnotations(annotations)
+        let playerAnnotations = gameState.getCurrentGame().getPlayerAnnotations()
+        game_map.addAnnotations(playerAnnotations)
         
         // finally, we draw the games boundaries
         addBoundary()
@@ -290,8 +298,9 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         blueScore.text = "\(game.getBluePoints())"
         tick()
         
-        // update the locations of other players on the map
+        // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
+        gameState.getCurrentGame().updatePickupAnnotations()
     }
     
     @IBAction func leaveGame(_ sender: UIButton) {
