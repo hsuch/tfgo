@@ -405,7 +405,7 @@ func (g *Game) randomizeTeams() {
 // starting goroutines that will run for the duration of the game
 func (g *Game) start() {
 	g.randomizeTeams()
-	startTime := time.Now().Add(time.Second * 5)
+	startTime := time.Now().Add(time.Second * 30)
 	sendGameStartInfo(g, startTime)
 	go g.awaitStart(startTime)
 }
