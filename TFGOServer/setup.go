@@ -115,7 +115,7 @@ func testBorders(boundaries []Border) (int,int) {
 			if k2 > k1 {
 				t := (v2.P.Y + (v2.D.Y * (v1.P.X - v2.P.X) / v2.D.X) - v1.P.Y) / (v1.D.Y - (v1.D.X * v2.D.Y / v2.D.X))
 				s := ((v1.P.X - v2.P.X) / v2.D.X) + (v1.D.X * t / v2.D.X)
-				if t > 0 && t < 1 && s > 0 && s < 1 {
+				if t > 0.000000001 && t < 0.999999999 && s > 0.000000001 && s < 0.999999999 {
 					return k1 + 1, k2
 				}
 			}
@@ -249,10 +249,22 @@ func (g *Game) generateObjectives(numCP int) {
 		mid := minY + yRange / 2
 		g.RedTeam.Base = Location{maxX - xOffset, mid}
 		g.BlueTeam.Base = Location{minX + xOffset, mid}
+		for !inGameBounds(g, g.RedTeam.Base) {
+			g.RedTeam.Base.X -= 1
+		}
+		for !inGameBounds(g, g.BlueTeam.Base) {
+			g.BlueTeam.Base.X += 1
+		}
 	} else {
 		mid := minX + xRange / 2
 		g.RedTeam.Base = Location{mid, maxY - yOffset}
 		g.BlueTeam.Base = Location{mid, minY + yOffset}
+		for !inGameBounds(g, g.RedTeam.Base) {
+			g.RedTeam.Base.Y -= 1
+		}
+		for !inGameBounds(g, g.BlueTeam.Base) {
+			g.BlueTeam.Base.Y += 1
+		}
 	}
 
 	// set up control points

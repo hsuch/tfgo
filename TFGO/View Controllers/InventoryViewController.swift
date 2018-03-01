@@ -27,7 +27,7 @@ class InventoryViewController: UIViewController, UICollectionViewDelegate, UICol
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Item", for: indexPath) as! PickupViewCell
-        let name = player.getWeaponsList()[indexPath.row]
+        let name = player.getWeaponsList()[indexPath.row].name
         let color = randomColor()
         cell.image.image = UIImage(named: name)
         cell.button.setTitle(name, for: .normal)
@@ -42,7 +42,7 @@ class InventoryViewController: UIViewController, UICollectionViewDelegate, UICol
         let actionController = UIAlertController(title: nil, message:
             sender.currentTitle ?? "halp", preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Equip", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
-            self.player.setWeapon(to: sender.currentTitle ?? "BeeSwarm")
+            self.player.setWeapon(to: weaponByName(name: sender.currentTitle ?? "BeeSwarm"))
             self.performSegue(withIdentifier: "back", sender: nil)
         }))
         actionController.addAction(UIAlertAction(title: "Discard", style: UIAlertActionStyle.default,handler: nil))

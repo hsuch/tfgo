@@ -420,7 +420,7 @@ func LocUpMsg() -> Data {
     return MsgToServer(action: "LocationUpdate", data: payload).toJson()
 }
 func FireMsg() -> Data {
-    let weapon = gameState.getUserWeapon()
+    let weapon = gameState.getUserWeapon().name
     let direction = gameState.getUserOrientation()
     let payload = ["Weapon": weapon, "Direction": direction] as [String: Any]
     return MsgToServer(action: "Fire", data: payload).toJson()
