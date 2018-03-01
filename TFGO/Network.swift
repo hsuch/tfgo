@@ -310,10 +310,7 @@ func parseGameOver(data: [String: Any]) -> Bool {
     // not necessary for iteration 1
     if let gameOver = data["Data"] as? String {
         
-        let alert = UIAlertController(title: gameOver, message: "Has won the game", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Return to game select", style: .cancel, handler: nil))
-        
-        //self.present(alert, animated: true)  TODO figure out how to send message without extension UIViewController
+        gameState.getCurrentGame().setGameOver(to: true)
         
         return true
     }
