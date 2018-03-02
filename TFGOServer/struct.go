@@ -347,7 +347,7 @@ func intMax(a, b int) int {
 // constants defined via functions, as Go does not allow
 // for non-primitive constants
 func TICK() time.Duration {
-	return 200 * time.Millisecond
+	return 500 * time.Millisecond
 }
 
 func OUTOFBOUNDSTIME() time.Duration {

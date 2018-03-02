@@ -152,7 +152,7 @@ func (g *Game) getObjectiveUpdate() []map[string]interface{} {
 // "Action": X in https://github.com/hsuch/tfgo/wiki/Network-Messages
 
 func sendPlayerListUpdate(game *Game) {
-	playerList := game.getPlayerInfo([]string{"Name", "Icon"})
+	playerList := game.getPlayerInfo([]string{"ID", "Name", "Icon"})
 	msg := map[string]interface{} {
 		"Type" : "PlayerListUpdate",
 		"Data" : playerList,
@@ -174,7 +174,7 @@ func sendAvailableGames(player *Player) {
 			}
 			gameInfo["Mode"] = modeToString[game.Mode]
 			gameInfo["Location"] = game.findCenter().locationToDegrees()
-			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Icon"})
+			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Icon"})
 			gameList = append(gameList, gameInfo)
 		}
 	}
@@ -199,7 +199,7 @@ func sendGameInfo(player *Player, gameID string) {
 	gameInfo["PointLimit"] = target.PointLimit
 	gameInfo["TimeLimit"] = target.TimeLimit.Minutes()
 	gameInfo["Boundaries"] = target.getBoundaryVertices()
-	gameInfo["PlayerList"] = target.getPlayerInfo([]string{"Name", "Icon"})
+	gameInfo["PlayerList"] = target.getPlayerInfo([]string{"ID", "Name", "Icon"})
 
 	msg := map[string]interface{} {
 		"Type" : "GameInfo",
@@ -230,7 +230,7 @@ func sendLeaveGame(game *Game) {
 
 func sendGameStartInfo(game *Game, startTime time.Time) {
 	gameInfo := make(map[string]interface{})
-	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Team"})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Team"})
 	gameInfo["Boundaries"] = game.getBoundaryVertices()
 	gameInfo["RedBase"] = game.RedTeam.getLocInfo()
 	gameInfo["BlueBase"] = game.BlueTeam.getLocInfo()
@@ -255,7 +255,7 @@ func sendGameStartInfo(game *Game, startTime time.Time) {
 
 func sendGameUpdate(game *Game) {
 	gameInfo := make(map[string]interface{})
-	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Orientation", "Location"})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Orientation", "Location"})
 	gameInfo["Points"] = map[string]int {
 		"Red" : game.RedTeam.Points,
 		"Blue" : game.BlueTeam.Points,

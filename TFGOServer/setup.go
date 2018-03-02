@@ -312,7 +312,7 @@ func (g *Game) generateObjectives(numCP int) {
 	halfRange := math.Min(xRange, yRange)/2
 	for i := 0; i < xSpread; i++ {
 		for j := 0; j < ySpread; j++ {
-			generatePickup(g, minX + (float64)(i) * dist, minY + (float64)(j) * dist, halfRange, dist)
+			generatePickup(g, minX+(float64)(i)*dist, minY+(float64)(j)*dist, halfRange, dist)
 		}
 	}
 }
@@ -436,13 +436,16 @@ func (g *Game) start() {
 
 func (g *Game) awaitStart(startTime time.Time) {
 	time.Sleep(time.Until(startTime))
+	if games[g.HostID] == nil {
+		return
+	}
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
 	})
 	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
-		go cp.updateTicker(g)
+		go cp.updateGame(g)
 	}
 }
 

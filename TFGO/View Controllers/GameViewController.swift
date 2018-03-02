@@ -260,8 +260,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
 //            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
 //            present(alertController, animated: true, completion: nil)
         }
-        armorBar.setProgress(Float(self.status.0)/100, animated: true)
-        healthBar.setProgress(Float(self.status.1)/100, animated: true)
+        armorBar.setProgress(Float(self.status.1)/100, animated: true)
+        healthBar.setProgress(Float(self.status.0)/100, animated: true)
     }
     
     /* Upper display labels */
@@ -278,14 +278,17 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
             clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
             statusLabel.text = "Head to the \(player.getTeam()) team's base!"
+            statusLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         }
         else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
             clock.text = "00:00"
-            statusLabel.text = ""
         }
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
             clock.text = String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+            if statusLabel.textColor == #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
+                statusLabel.text = ""
+            }
         }
     }
     
