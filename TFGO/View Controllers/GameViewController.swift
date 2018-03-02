@@ -56,6 +56,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
 
         // update the region of the map with the appropriate information
         game_map.setRegion(region, animated: false)
+        
+        // we don't want to show the user's location, since it will be marked by a player pin
         self.game_map.showsUserLocation = false
         
     }
@@ -65,6 +67,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    // same as in GameInfoViewController, we use this helper to construct a polugon, and then
+    // create an overlay renderer for the mapView
     func addBoundary() {
         let bounds = game.getBoundaries()
         var polyBounds: [CLLocationCoordinate2D] = []
@@ -76,13 +80,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         game_map.add(polygon)
     }
     
+    // this helper is used to draw a circle around bases and objectives to represent
+    // their bounds/areas
     func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
         let circle = MKCircle(center: location.coordinate, radius: radius)
         game_map.add(circle)
     }
     
+    // Used to draw the boundaries or a circle overlay on the map,
+    // depending on what the input is
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
         if overlay is MKPolygon {
+            // The input is the boundary polygon
             let polygonView = MKPolygonRenderer(overlay: overlay)
             polygonView.strokeColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
             polygonView.lineWidth = 2.0
@@ -90,6 +99,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             return polygonView
         }
         else if overlay is MKCircle {
+            // The input is a circle that represents an objective or base's area
             let circleRenderer = MKCircleRenderer(overlay: overlay)
             circleRenderer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
             circleRenderer.strokeColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
@@ -103,11 +113,12 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "rahhhh")
-       // annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-        annotationView.canShowCallout = true
+        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "")
+        annotationView.canShowCallout = true    // need this so that an icon's info can be accessed when touched
         if let title = annotation.title, let subtitle = annotation.subtitle {
             if title == "OBJECTIVE" {
+                // the input pin is an objective pin. We determine what color image to use
+                // depending on the current owner of the objective
                 if subtitle == "Neutral" {
                     annotationView.image = UIImage(named: "cap_gray")
                 }
@@ -119,21 +130,27 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 }
             }
             else if title == "RED BASE" {
+                // the input pin is a red base pin
                 annotationView.image = UIImage(named: "base_red")
             }
             else if title == "BLUE BASE" {
+                // the input pin is a blue base pin
                 annotationView.image = UIImage(named: "base_blue")
             }
             else if subtitle == "Red" {
+                // the input pin is a read team player
                 annotationView.image = UIImage(named: "player_red")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
             else if subtitle == "Blue" {
+                // the input team is a blue team player
                 annotationView.image = UIImage(named: "player_blue")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
+            // otherwise, the pin must be a pickup pin
             else {
                 annotationView.image = UIImage(named: "pickup")
+                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
         }
         return annotationView

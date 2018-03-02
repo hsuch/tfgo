@@ -38,6 +38,7 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     var initialized = false  // boolean set to true after the first tracking of user's position
     
+    // locationManager is used to track the user's location and orient the map accordingly
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // we want the most recent position of our user
@@ -104,20 +105,6 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    /*
-     func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
-     
-     let location = gestureReconizer.locationc(in: host_map)
-     let coordinate = host_map.convert(location,toCoordinateFrom: host_map)
-     
-     // Add annotation:
-     let annotation = MKPointAnnotation()
-     annotation.coordinate = coordinate
-     annotation.title = "corner"
-     annotation.subtitle = "tbd"
-     host_map.addAnnotation(annotation)
-     }
-     */
     
     //@IBOutlet weak var host_map: MKMapView!
     var testpoint = CLLocationCoordinate2D(latitude: 1, longitude: 0)
