@@ -230,7 +230,7 @@ func sendLeaveGame(game *Game) {
 
 func sendGameStartInfo(game *Game, startTime time.Time) {
 	gameInfo := make(map[string]interface{})
-	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Team"})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Team"})
 	gameInfo["Boundaries"] = game.getBoundaryVertices()
 	gameInfo["RedBase"] = game.RedTeam.getLocInfo()
 	gameInfo["BlueBase"] = game.BlueTeam.getLocInfo()
@@ -255,7 +255,7 @@ func sendGameStartInfo(game *Game, startTime time.Time) {
 
 func sendGameUpdate(game *Game) {
 	gameInfo := make(map[string]interface{})
-	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Orientation", "Location"})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Orientation", "Location"})
 	gameInfo["Points"] = map[string]int {
 		"Red" : game.RedTeam.Points,
 		"Blue" : game.BlueTeam.Points,

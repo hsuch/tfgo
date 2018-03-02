@@ -56,6 +56,9 @@ func movePayload(game *Game) {
  // set player location, updating respawn, out-of-bounds, and control point
  // info as necessary
 func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
+	if game == nil || game.Status != PLAYING {
+		return
+	}
 	p.Location = Location{X: degreeToMeter(loc.X), Y: degreeToMeter(loc.Y)}
 	p.Orientation = orientation
 

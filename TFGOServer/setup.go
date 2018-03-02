@@ -436,6 +436,9 @@ func (g *Game) start() {
 
 func (g *Game) awaitStart(startTime time.Time) {
 	time.Sleep(time.Until(startTime))
+	if games[g.HostID] == nil {
+		return
+	}
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
