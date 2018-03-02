@@ -445,7 +445,7 @@ func (g *Game) awaitStart(startTime time.Time) {
 	})
 	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
-		go cp.updateTicker(g)
+		go cp.updateGame(g)
 	}
 }
 
