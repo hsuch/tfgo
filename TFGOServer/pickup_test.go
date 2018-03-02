@@ -11,8 +11,11 @@ func TestConsumePickup(t *testing.T) {
 	p := ps.Pickup
 	ps.consumePickup(brad, g)
 	if brad.Armor != bradAP + p.(ArmorPickup).AP {
-		t.Errorf("TestPickupArmor(1) failed, expected (Armor: %d), got (Armor: %d)",
+		t.Errorf("TestConsumePickup(1) failed, expected (Armor: %d), got (Armor: %d)",
 			bradAP + p.(*ArmorPickup).AP, brad.Armor)
+	}
+	if ps.Available {
+		t.Errorf("TestConsumePickup(2) failed, expected Pickup state UNAVAILABLE, got AVAILABLE")
 	}
 }
 
