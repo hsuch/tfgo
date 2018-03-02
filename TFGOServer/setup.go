@@ -455,6 +455,9 @@ func (g *Game) awaitStart(startTime time.Time) {
 // end a game, signalling and performing resource cleanup
 func (g *Game) stop() {
 	g.Status = GAMEOVER
+	if g.Timer != nil {
+		g.Timer.Stop()
+	}
 	for _, player := range g.Players {
 		player.reset()
 	}
