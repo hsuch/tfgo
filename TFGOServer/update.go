@@ -174,7 +174,7 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 }
 
 // repeatedly calls updateStatus
-func (cp *ControlPoint) updateTicker(game *Game) {
+func (cp *ControlPoint) updateGame(game *Game) {
 	for game.Status == PLAYING {
 		cp.updateStatus(game)
 		time.Sleep(time.Second)
