@@ -20,11 +20,15 @@ class Connection {
         return client.send(data: data)
     }
 
+    private func noNewline(data: String) -> Bool {
+        return !data.contains("\n")
+    }
+    
     func recvData() -> Data {
         var response = Data()
-        while true {
-            guard let data = client.read(1024*10, timeout: 1)
-                else { break }
+        while noNewline(data: String(data: response, encoding: .utf8) ?? "") {
+            guard let data = client.read(1024*10)
+                else { continue }
             response += data
         }
         return response
@@ -330,7 +334,7 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
         if let players = info["PlayerList"] as? [[String: Any]], let points = info["Points"] as? [String: Any], let objectives = info["Objectives"] as? [[String: Any]] {
             
             for player in players {
-                if let name = player["Name"] as? String, let orientation = player["Orientation"] as? Double, let loc = player["Location"] as? [String: Any] {
+                if let name = player["Name"] as? String, let id = player["ID"] as? String, let orientation = player["Orientation"] as? Float, let loc = player["Location"] as? [String: Any] {
                     
                     let index = gameState.getCurrentGame().findPlayerIndex(id: id)
                     if index > -1 {
