@@ -111,9 +111,7 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
         gameState.getCurrentGame().setPlayers(toGame: players)
         return true
     }
-    
     return false
-    
 }
 
 func parseAvailableGames(data: [String: Any]) -> Bool {
