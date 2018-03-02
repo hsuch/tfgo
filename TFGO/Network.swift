@@ -72,6 +72,8 @@ func handleMsgFromServer() -> Bool {
 /* URL for the structure of the messages : https://github.com/hsuch/tfgo/wiki/Network-Messages */
 func parse(data: [String: Any], type: String) -> Bool {
     switch type {
+    case "PlayerID":
+        return parsePlayerID(data: data)
     case "PlayerListUpdate":
         return parsePlayerListUpdate(data: data)
     case "AvailableGames":
@@ -99,6 +101,15 @@ func parse(data: [String: Any], type: String) -> Bool {
     default:
         return false
     }
+}
+
+/* The parser for obtaining the user's unique ID following login */
+func parsePlayerID(data: [String: Any]) -> Bool {
+    if let id = data["Data"] as? String {
+        gameState.getUser().setID(to: id)
+        return true
+    }
+    return false
 }
 
 /* The parser for the PlayerListUpdate message */
@@ -236,11 +247,11 @@ func parseGameStartInfo(data: [String: Any]) -> Bool {
             for player in players {
                 // we want to update the playerList of the game, i.e. we want to make sure that
                 // every member of the game has the completed playerList
-                if let name = player["Name"] as? String, let id = player["ID"] as? String, let team = player["Team"] as? String {
+                if let id = player["ID"] as? String, let team = player["Team"] as? String {
                     let index = gameState.getCurrentGame().findPlayerIndex(id: id)
                     if index > -1 {
                         gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
-                        if gameState.getCurrentGame().getPlayers()[index].getName() == gameState.getUser().getName() {
+                        if gameState.getCurrentGame().getPlayers()[index].getID() == gameState.getUser().getID() {
                             gameState.getUser().setTeam(to: team)
                         }
                     }

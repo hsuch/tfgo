@@ -155,7 +155,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
             // otherwise, the pin must be a pickup pin
-            else {
+            else if subtitle == "Available" || subtitle == "Unavailable" {
                 annotationView.image = UIImage(named: "pickup")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
