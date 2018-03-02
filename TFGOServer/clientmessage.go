@@ -151,6 +151,14 @@ func (g *Game) getObjectiveUpdate() []map[string]interface{} {
 // each sendX function corresponds to the server to client message with
 // "Action": X in https://github.com/hsuch/tfgo/wiki/Network-Messages
 
+func sendPlayerID(player *Player) {
+	msg := map[string]interface{} {
+		"Type" : "PlayerID",
+		"Data" : player.ID,
+	}
+	player.safeSend(msg)
+}
+
 func sendPlayerListUpdate(game *Game) {
 	playerList := game.getPlayerInfo([]string{"ID", "Name", "Icon"})
 	msg := map[string]interface{} {
