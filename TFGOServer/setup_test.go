@@ -4,7 +4,7 @@ package main
 
 import (
 	"testing"
-//	"time"
+	"time"
 )
 
 func TestFindCenter(t *testing.T) {
@@ -87,7 +87,7 @@ func TestSetBoundaries(t *testing.T) {
 	}
 }
 
-/*func TestCreateGame(t *testing.T) {
+func TestCreateGame(t *testing.T) {
 	isTesting = true
 	borders := []Border {
 		{Location{0.0,0.0}, Direction{100.0,0.0}},
@@ -101,7 +101,7 @@ func TestSetBoundaries(t *testing.T) {
 		"Description" : "G1Description",
 		"PlayerLimit" : 8.0,
 		"PointLimit" : 42.0,
-		"TimeLimit" : "60m",
+		"TimeLimit" : 60.0,
 		"Mode" : "SingleCapture",
 		"Boundaries" : []interface{} {
 			map[string]interface{} {"X": 0.0, "Y": 0.0},
@@ -155,7 +155,7 @@ func TestSetBoundaries(t *testing.T) {
 		t.Errorf("TestCreateGame(14) failed, expected Player %s to be in Game Player List, got Player %s",
 			p.Name, g.Players[p.ID])
 	}
-}*/
+}
 
 func TestGenerateObjectives(t *testing.T) {
 	isTesting = true
@@ -173,6 +173,7 @@ func TestGenerateObjectives(t *testing.T) {
 		Mode: SINGLECAP,
 	}
 	g1.generateObjectives(1)
+	time.Sleep(200 * time.Millisecond)
 	if (g1.RedTeam.Base != Location{491.0, 350.0}) {
 		t.Errorf("TestGenerateObjectives(1) failed, expected Location{491,350}, got Location{%f,%f}", g1.RedTeam.Base.X, g1.RedTeam.Base.Y)
 	}
@@ -209,6 +210,7 @@ func TestGenerateObjectives(t *testing.T) {
 		Mode: MULTICAP,
 	}
 	g2.generateObjectives(2)
+	time.Sleep(200 * time.Millisecond)
 	if (g2.RedTeam.Base != Location{50.0, 191.0}) {
 		t.Errorf("TestGenerateObjectives(8) failed, expected Location{50, 191}, got Location{%f,%f}", g2.RedTeam.Base.X, g2.RedTeam.Base.Y)
 	}
@@ -248,6 +250,7 @@ func TestGenerateObjectives(t *testing.T) {
 		Mode: PAYLOAD,
 	}
 	g3.generateObjectives(1)
+	time.Sleep(200 * time.Millisecond)
 	if (g3.RedTeam.Base != Location{50.0, 91.0}) {
 		t.Errorf("TestGenerateObjectives(16) failed, expected Location{50, 91}, got Location{%f,%f}", g3.RedTeam.Base.X, g3.RedTeam.Base.Y)
 	}
