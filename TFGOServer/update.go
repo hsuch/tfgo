@@ -56,6 +56,9 @@ func movePayload(game *Game) {
  // set player location, updating respawn, out-of-bounds, and control point
  // info as necessary
 func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
+	if game == nil || game.Status != PLAYING {
+		return
+	}
 	p.Location = Location{X: degreeToMeter(loc.X), Y: degreeToMeter(loc.Y)}
 	p.Orientation = orientation
 
@@ -87,7 +90,7 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 	// check if player if on a pickup
 	if p.Status == NORMAL {
 		for _, pickup := range game.Pickups {
-			if inRange(p.Location, pickup.Location, PICKUPRADIUS()) {
+			if pickup.Available && inRange(p.Location, pickup.Location, PICKUPRADIUS()) {
 				pickup.consumePickup(p, game)
 				break
 			}
@@ -174,7 +177,7 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 }
 
 // repeatedly calls updateStatus
-func (cp *ControlPoint) updateTicker(game *Game) {
+func (cp *ControlPoint) updateGame(game *Game) {
 	for game.Status == PLAYING {
 		cp.updateStatus(game)
 		time.Sleep(time.Second)

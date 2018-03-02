@@ -76,6 +76,8 @@ func handleMsgFromServer() -> Bool {
 /* URL for the structure of the messages : https://github.com/hsuch/tfgo/wiki/Network-Messages */
 func parse(data: [String: Any], type: String) -> Bool {
     switch type {
+    case "PlayerID":
+        return parsePlayerID(data: data)
     case "PlayerListUpdate":
         return parsePlayerListUpdate(data: data)
     case "AvailableGames":
@@ -105,6 +107,15 @@ func parse(data: [String: Any], type: String) -> Bool {
     }
 }
 
+/* The parser for obtaining the user's unique ID following login */
+func parsePlayerID(data: [String: Any]) -> Bool {
+    if let id = data["Data"] as? String {
+        gameState.getUser().setID(to: id)
+        return true
+    }
+    return false
+}
+
 /* The parser for the PlayerListUpdate message */
 func parsePlayerListUpdate(data: [String: Any]) -> Bool {
     print("starting parsePlayerListUpdate")
@@ -114,9 +125,9 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
         var players = [Player]()
         
         for player in info {
-            if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+            if let name = player["Name"] as? String, let icon = player["Icon"] as? String, let id = player["ID"] as? String {
                 // build a list of the passed in players
-                players.append(Player(name: name, icon: icon))
+                players.append(Player(name: name, icon: icon, id: id))
             }
         }
         
@@ -153,9 +164,9 @@ func parseAvailableGames(data: [String: Any]) -> Bool {
                     newGame.setHasPassword(to: hasPassword)
                         
                     for player in players {
-                        if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
+                        if let name = player["Name"] as? String, let icon = player["Icon"] as? String, let id = player["ID"] as? String {
                             // add the player to the game's list of players
-                            newGame.addPlayer(toGame: Player(name: name, icon: icon))
+                            newGame.addPlayer(toGame: Player(name: name, icon: icon, id: id))
                         }
                     }
                     // append the created game to our new array of found games
@@ -213,8 +224,8 @@ func parseGameInfo(data: [String: Any]) -> Bool {
         // finally, we also want to set the list of players in the game
         if let players = info["PlayerList"] as? [[String: Any]] {
             for player in players {
-                if let name = player["Name"] as? String, let icon = player["Icon"] as? String {
-                    gameState.getCurrentGame().addPlayer(toGame: Player(name: name, icon: icon))
+                if let name = player["Name"] as? String, let icon = player["Icon"] as? String, let id = player["ID"] as? String {
+                    gameState.getCurrentGame().addPlayer(toGame: Player(name: name, icon: icon, id: id))
                 }
             }
             return true
@@ -241,11 +252,11 @@ func parseGameStartInfo(data: [String: Any]) -> Bool {
             for player in players {
                 // we want to update the playerList of the game, i.e. we want to make sure that
                 // every member of the game has the completed playerList
-                if let name = player["Name"] as? String, let team = player["Team"] as? String {
-                    let index = gameState.getCurrentGame().findPlayerIndex(name: name)
+                if let id = player["ID"] as? String, let team = player["Team"] as? String {
+                    let index = gameState.getCurrentGame().findPlayerIndex(id: id)
                     if index > -1 {
                         gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
-                        if gameState.getCurrentGame().getPlayers()[index].getName() == gameState.getUser().getName() {
+                        if gameState.getCurrentGame().getPlayers()[index].getID() == gameState.getUser().getID() {
                             gameState.getUser().setTeam(to: team)
                         }
                     }
@@ -318,11 +329,10 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
     if let info = data["Data"] as? [String: Any] {
         if let players = info["PlayerList"] as? [[String: Any]], let points = info["Points"] as? [String: Any], let objectives = info["Objectives"] as? [[String: Any]] {
             
-            // Update the liest of players in case anyone left the game
             for player in players {
                 if let name = player["Name"] as? String, let orientation = player["Orientation"] as? Double, let loc = player["Location"] as? [String: Any] {
                     
-                    let index = gameState.getCurrentGame().findPlayerIndex(name: name)
+                    let index = gameState.getCurrentGame().findPlayerIndex(id: id)
                     if index > -1 {
                         gameState.getCurrentGame().getPlayers()[index].setOrientation(to: Float(orientation))
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {

@@ -21,6 +21,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     let manager = CLLocationManager() // used to track the user's location
     
     var initialized = false  // boolean set to true after the first tracking of user's position
+    var gameStart = false    // boolean to see if the game has started
     
     var playerLocs: [MKPointAnnotation] = []
     
@@ -58,9 +59,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         // update the region of the map with the appropriate information
         game_map.setRegion(region, animated: false)
         
-        // we don't want to show the user's location, since it will be marked by a player pin
-        self.game_map.showsUserLocation = false
-        
+        // we only want to track the user's location on the map before the game starts, since
+        // team pins won't have been printed until then
+        if gameStart == false {
+            self.game_map.showsUserLocation = true
+        }
+        else {
+            self.game_map.showsUserLocation = false
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -148,8 +154,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 annotationView.image = UIImage(named: "player_blue")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
-            // otherwise, the pin must be a pickup pin
-            else {
+            else if subtitle == "Available" || subtitle == "Unavailable" {
+                // the pin a pickup pin
                 annotationView.image = UIImage(named: "pickup")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
