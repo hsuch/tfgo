@@ -229,6 +229,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         DispatchQueue.global(qos: .userInitiated).async {
             while true {
                 if handleMsgFromServer() {
+                    print("jdsakjflsdjafkljksldafjls;dkafjlk;sjfl;sdjskafdhdslhfklsdhfkljsdhfjklsadhlfjkhsadkjfsdjkalfhklsdjahfkjlsahfkjlhsdalfhsaklfhskljfhkjslahfkjshfklhsdjhflsakjfhksjhflkjsadhfjklhasdlkjfhskjahfkjhsdajkfhskldjfhjlsdahf")
                     DispatchQueue.main.async {
                         self.talkShitGetHit()
                     }
@@ -343,7 +344,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     /* runTimer() */
     /* Start the update timer */
     func runTimer() {
-        updateTimer = Timer.scheduledTimer(timeInterval: 0.25, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
     
     /* update() - Timer Function */

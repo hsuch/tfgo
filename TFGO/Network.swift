@@ -20,11 +20,15 @@ class Connection {
         return client.send(data: data)
     }
 
+    private func noNewline(data: String) -> Bool {
+        return !data.contains("\n")
+    }
+    
     func recvData() -> Data {
         var response = Data()
-        while true {
-            guard let data = client.read(1024*10, timeout: 3)
-                else { break }
+        while noNewline(data: String(data: response, encoding: .utf8) ?? "") {
+            guard let data = client.read(1024*10)
+                else { usleep(10000); continue }
             response += data
         }
         return response
@@ -47,12 +51,15 @@ class Connection {
  * then parses all of them
  */
 func handleMsgFromServer() -> Bool {
+    print("just got in handle")
     let conn = gameState.getConnection()
     var received: Data? = nil
     while(received == nil)
     {
+        print("whiling")
         received = conn.recvData()
     }
+    print("got message from server")
     let recvStr: String = String(data: received!, encoding: .utf8)!
     var strArray: [String] = []
     recvStr.enumerateLines { line, _ in
@@ -61,6 +68,7 @@ func handleMsgFromServer() -> Bool {
     for line in strArray {
         var data = try! JSONSerialization.jsonObject(with: line.data(using: .utf8)!, options: []) as! [String: Any]
         let type = data.removeValue(forKey: "Type") as! String
+        print("starting parsing message")
         if (!parse(data: data, type: type)) {
             return false
         }
@@ -114,7 +122,7 @@ func parsePlayerID(data: [String: Any]) -> Bool {
 
 /* The parser for the PlayerListUpdate message */
 func parsePlayerListUpdate(data: [String: Any]) -> Bool {
-    
+    print("starting parsePlayerListUpdate")
     if let info = data["Data"] as? [[String: Any]] {
         
         // we want to build a list of the players from the given JSON message
@@ -129,6 +137,7 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
         
         // set the gameState's current game's player list to the built list
         gameState.getCurrentGame().setPlayers(toGame: players)
+        print("finished updating players")
         return true
     }
     return false
@@ -329,7 +338,7 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
                     
                     let index = gameState.getCurrentGame().findPlayerIndex(id: id)
                     if index > -1 {
-                        gameState.getCurrentGame().getPlayers()[index].setOrientation(to: orientation)
+                        gameState.getCurrentGame().getPlayers()[index].setOrientation(to: Float(orientation))
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
                             gameState.getCurrentGame().getPlayers()[index].setLocation(to: x, to: y)
                         }
@@ -477,6 +486,7 @@ func JoinGameMsg(IDtoJoin: String, password: String) -> Data {
     return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin, "Password": password]).toJson()
 }
 func LeaveGameMsg() -> Data {
+    gameState.getUser().setStatus(to: "")
     return MsgToServer(action: "LeaveGame", data: [:]).toJson()
 }
 func StartGameMsg() -> Data {
