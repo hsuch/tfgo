@@ -52,16 +52,17 @@ To test individual functions (such as `testGame()` and `testParse()`), go to the
 Note that since the structure of some messages changed since Milestone 4a, the unit tests that were made at that time have changed.
  
 ## Suggested Acceptance Tests
-Since the application is a multiplayer game, it would be a bit difficult to perform any Acceptance Tests with only one phone. If you have two location-enabled iPhones, or a friend to bother, here’s what you can do:
+Since the application is a multiplayer game, acceptance testing is best performed with multiple devices. If you have two location-enabled iPhones, or a friend to bother, here’s what you can do:
 1. Start the TFGOServer on the IP and port of your choice according to the instructions above.
 2. Open the TFGO.xcworkspace file in Xcode. Navigate to the file named “network.swift” and locate the two private variables within the `Connection` class named `address` and `port`. Replace these with the IP and port of your choice.
 3. Sign, build, and install the code onto both iPhones according to the instructions above.
 4. Start the game on both iPhones. Pick your names and icons.
 5. On one iPhone, tap “Host Game” and fill out the “Name” field; others have default values. Remember to set your boundaries appropriately. We are not responsible if any game objectives happen to be in bodies of water or private properties or whatever.
 6. Create the game and have the other user join your game.
-7. Press “Start Game” to begin. The game will give you a short period of time to move to your base. Once the game has begun, you can attempt to capture the control point, or gather weapons and other helpful items from pickups scattered around the map.
+7. Press “Start Game” to begin. The game will give you a short period of time to move to your base. Once the game has begun, you can attempt to capture the control point, fire your weapon, or gather weapons and other helpful items from pickups scattered around the map.
 8. The game ends once time is up or one team has reached the maximum number of points to win.
- 
+
+It is also possible to do some simple acceptance testing with only one phone. In particular, it is possible to perform everything described above except for joining games and hitting other players (although if you're running the server with at least -v=1, you can see the fire messages being sent from client to server every time you fire your weapon). We suggest hosting two games - one where the boundaries are relatively small and centered on you so you can test capturing points and acquiring pickups, and another where the boundaries are entirely outside your location so you can test being out of bounds and needing to respawn.
  
 ## Text Description of What is Implemented
 ### Overview
