@@ -383,8 +383,9 @@ func PICKUPRADIUS() float64 {
 	return 3.0
 }
 
-func PICKUPDISTRIBUTION() float64 {
-	return 10.0
+func PICKUPDISTRIBUTION(xRange, yRange float64) float64 {
+	dist := math.Sqrt((xRange * yRange) / 25)
+	return math.Max(dist, 5.0)
 }
 
 func MAXHEALTH() int {

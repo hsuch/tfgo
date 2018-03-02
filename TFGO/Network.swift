@@ -223,6 +223,9 @@ func parseGameStartInfo(data: [String: Any]) -> Bool {
                     let index = gameState.getCurrentGame().findPlayerIndex(name: name)
                     if index > -1 {
                         gameState.getCurrentGame().getPlayers()[index].setTeam(to: team)
+                        if gameState.getCurrentGame().getPlayers()[index].getName() == gameState.getUser().getName() {
+                            gameState.getUser().setTeam(to: team)
+                        }
                     }
                 }
             }
