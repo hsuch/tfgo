@@ -311,11 +311,9 @@ func (g *Game) generateObjectives(numCP int) {
 	ySpread := (int)(math.Floor(yRange / dist))
 	halfRange := math.Min(xRange, yRange)/2
 	for i := 0; i < xSpread; i++ {
-		go func() {
-			for j := 0; j < ySpread; j++ {
-				generatePickup(g, minX+(float64)(i)*dist, minY+(float64)(j)*dist, halfRange, dist)
-			}
-		}()
+		for j := 0; j < ySpread; j++ {
+			generatePickup(g, minX+(float64)(i)*dist, minY+(float64)(j)*dist, halfRange, dist)
+		}
 	}
 }
 
@@ -438,6 +436,9 @@ func (g *Game) start() {
 
 func (g *Game) awaitStart(startTime time.Time) {
 	time.Sleep(time.Until(startTime))
+	if games[g.HostID] == nil {
+		return
+	}
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
