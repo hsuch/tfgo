@@ -90,7 +90,7 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 	// check if player if on a pickup
 	if p.Status == NORMAL {
 		for _, pickup := range game.Pickups {
-			if inRange(p.Location, pickup.Location, PICKUPRADIUS()) {
+			if pickup.Available && inRange(p.Location, pickup.Location, PICKUPRADIUS()) {
 				pickup.consumePickup(p, game)
 				break
 			}
