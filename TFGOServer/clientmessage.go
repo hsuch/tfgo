@@ -115,7 +115,7 @@ func (p *PickupSpot) getInfo() map[string]interface{} {
 	}
 
 	return map[string]interface{} {
-		"Location" : p.Location,
+		"Location" : p.Location.locationToDegrees(),
 		"Type" : pickupType,
 		"Amount" : pickupAmt,
 	}
