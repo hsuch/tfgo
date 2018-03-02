@@ -355,7 +355,10 @@ func (p *Player) createGame(conn net.Conn, data map[string]interface{}) *Game {
 // add a player to a game if possible
 func (p *Player) joinGame(gameID string, password string) *Game {
 	target := games[gameID]
-	if len(target.Players) == target.PlayerLimit {
+	if target == nil {
+		sendJoinGameError(p, "GameClosed")
+		return nil
+	} else if len(target.Players) == target.PlayerLimit {
 		sendJoinGameError(p, "GameFull")
 		return nil
 	} else if target.Status != CREATING {
@@ -376,17 +379,33 @@ func (p *Player) joinGame(gameID string, password string) *Game {
 
 // remove a player from a game
 func (p *Player) leaveGame(game *Game) {
-	// nil game return, remove player from game, if host end game and kick out everyone
 	if game == nil {
 		return
 	}
 
-	if game.HostID == p.ID {
-		delete(games, game.HostID)
-		sendLeaveGame(game)
-		game.Players = nil
-	} else {
+	if game.Status == CREATING {
+		if game.HostID == p.ID {
+			delete(games, game.HostID)
+			sendLeaveGame(game)
+			game.Players = nil
+			return
+		} else {
+			delete(game.Players, p.ID)
+			return
+		}
+	} else if game.Status == PLAYING {
 		delete(game.Players, p.ID)
+		if len(game.Players) == 0 {
+			game.stop()
+			return
+		} else if p.OccupyingPoint != nil {
+			if p.Team == game.RedTeam {
+				p.OccupyingPoint.RedCount--
+			} else if p.Team == game.BlueTeam {
+				p.OccupyingPoint.BlueCount--
+			}
+		}
+		p.reset()
 	}
 }
 
