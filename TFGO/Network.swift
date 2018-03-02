@@ -12,7 +12,7 @@ import SwiftyJSON
 import MapKit
 
 class Connection {
-    private var servadd: String = "10.150.67.159" // to be replaced with real server ip
+    private var servadd: String = "10.150.236.157" // to be replaced with real server ip
     private var servport: Int32 = 9265
     private var client: TCPClient
 
