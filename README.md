@@ -1,7 +1,7 @@
 # TFGO: The Fun Game Online
  
 ## How to Compile
-To compile the server, make sure that Go (ver 1.8 or higher) is installed on your computer. Create a folder go/src, and clone the Git repository there. Navigate to the TFGOServer directory, then run “go build” from the command line to compile.
+To compile the server, make sure that Go (ver 1.8 or higher) is installed on your computer. Navigate to go/src, and clone the Git repository there. Navigate to the TFGOServer directory, then run “go build” from the command line to compile.
  
 To compile the xcode project, you must have cocoapods installed (instructions can be found online). After installing cocoapods and cloning the Git repository, navigate to the “tfgo” folder and run “pod install”. Then open the xcode project via TFGO.xcworkspace; opening it via TFGO.xcodeproj won’t work.
  
@@ -16,14 +16,16 @@ Usage of `./TFGOServer`:
     	ip address on which to run server (default "127.0.0.1")
   -port string
     	port on which to run server (default "9265")
-  -v	print sent and received JSON
+  -v	int
+     verbosity level
+     0: print only high-level information
+     1: also print all non-periodic JSON messages between client and server
+     2: also print periodic JSON messages between client and server
   ```
  
-To properly run the server and make it accessible from devices on the same network, determine the IP address of your host machine (this can be found on MacOS by running `ifconfig` and using the `inet` field of `en0`), and supply this as the value of `-host` when entering the command. The port should not need to be changed from 9265. 
+To properly run the server and make it accessible from devices on the same network, determine the IP address of your host machine (on MacOS, running `ifconfig` and use the `inet` field of `en0`; on Windows, run `ipconfig` and look for your IPv4 Address), and supply this as the value of `-host` when entering the command. The port should not need to be changed from 9265. 
  
-`-v` enables verbose server-side logging, which displays all JSON messages received and sent by the server
- 
-Example usage: `./TFGOServer -host 192.168.0.101 -port 9265 -v`
+Example usage: `./TFGOServer -host 192.168.0.101 -port 9265 -v 1`
  
  
 ### Client
