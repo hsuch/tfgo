@@ -24,6 +24,7 @@ class Player {
     
     private var name: String
     private var icon: String
+    private var id: String
     private var team: String
     private var loc = CLLocation(latitude: 0.0, longitude: 0.0)
     private var orientation: Float
@@ -124,6 +125,14 @@ class Player {
         return weapons
     }
     
+    func setID(to id: String) {
+        self.id = id
+    }
+    
+    func getID() -> String {
+        return id
+    }
+    
     func removeWeapon(weapon: Weapon) {
         for index in weapons.indices {
             if weapons[index].name == weapon.name {
@@ -147,9 +156,10 @@ class Player {
         return name != "" && icon.count == 1
     }
     
-    init(name: String, icon: String) {
+    init(name: String, icon: String, id: String) {
         self.name = name
         self.icon = icon
+        self.id = id
         self.orientation = 0
         self.weapon = BeeSwarm() // later
         self.status = "" // later
@@ -186,6 +196,10 @@ public class Objective {
     
     func setOccupants(to occupants: [String]) {
         self.occupants = occupants
+    }
+    
+    func getOccupants() -> [String] {
+        return occupants
     }
     
     func getOwner() -> String {
@@ -508,10 +522,10 @@ public class Game {
         return false
     }
     
-    func findPlayerIndex(name: String) -> Int {
+    func findPlayerIndex(id: String) -> Int {
         var i = 0;
         for player in players {
-            if name == player.getName() {
+            if id == player.getID() {
                 return i
             }
             i = i + 1

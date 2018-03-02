@@ -15,7 +15,7 @@ class GameState {
     
     private var currentGame: Game?
     private var foundGames: [Game] = []
-    private var user: Player = Player(name: "", icon:"")
+    private var user: Player = Player(name: "", icon:"", id: "")
     private var connection = Connection()
     
     

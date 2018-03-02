@@ -29,10 +29,15 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         self.table.dataSource = self;
         self.table.delegate = self;
+        print("tick")
         runTimer()
+        print("tock")
         // Do any additional setup after loading the view.
-         DispatchQueue.global(qos: .background).async {
+        print("begin")
+        DispatchQueue.global(qos: .userInitiated).async {
+            print("end")
             while !self.startGame {
+                print("trying to handle")
                 if handleMsgFromServer() { }
             }
         }
@@ -85,6 +90,11 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier != "startGame" {
+            if gameState.getConnection().sendData(data: LeaveGameMsg()).isSuccess {
+                return true
+            }
+        }
         if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
            // DispatchQueue.global(qos: .background).async {
                 //while gameState.getCurrentGame().getStartTime() == "" {

@@ -63,6 +63,8 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    // helper for drawing the boundaries on the screen
+    // build a polygon that will be automatically passed into the mapView method
     func addBoundary() {
         let bounds = game.getBoundaries()
         var polyBounds: [CLLocationCoordinate2D] = []
@@ -71,9 +73,12 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
             polyBounds.append(polyBound)
         }
         let polygon = MKPolygon(coordinates: polyBounds, count: polyBounds.count)
+        
+        // we need to add the boundary polygon to the map as an overlay
         game_map.add(polygon)
     }
     
+    // Takes in the path overlay and renders it to the map
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
         if overlay is MKPolygon {
             let polygonView = MKPolygonRenderer(overlay: overlay)
@@ -108,6 +113,7 @@ class GameInfoViewController: UITableViewController, UICollectionViewDelegate, U
         minutesLbl.text = "\(game.getTimeLimit()) Minutes"
         pointsLbl.text = "\(game.getMaxPoints()) Points"
         
+        // set the map's delegate as the ViewController
         game_map.delegate = self
         
         // now we have to set up the GameInfo Map

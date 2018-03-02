@@ -315,7 +315,7 @@ func (g *Game) generateObjectives(numCP int) {
 	halfRange := math.Min(xRange, yRange)/2
 	for i := 0; i < xSpread; i++ {
 		for j := 0; j < ySpread; j++ {
-			generatePickup(g, minX + (float64)(i) * dist, minY + (float64)(j) * dist, halfRange, dist)
+			generatePickup(g, minX+(float64)(i)*dist, minY+(float64)(j)*dist, halfRange, dist)
 		}
 	}
 }
@@ -358,7 +358,10 @@ func (p *Player) createGame(conn net.Conn, data map[string]interface{}) *Game {
 // add a player to a game if possible
 func (p *Player) joinGame(gameID string, password string) *Game {
 	target := games[gameID]
-	if len(target.Players) == target.PlayerLimit {
+	if target == nil {
+		sendJoinGameError(p, "GameClosed")
+		return nil
+	} else if len(target.Players) == target.PlayerLimit {
 		sendJoinGameError(p, "GameFull")
 		return nil
 	} else if target.Status != CREATING {
@@ -379,17 +382,33 @@ func (p *Player) joinGame(gameID string, password string) *Game {
 
 // remove a player from a game
 func (p *Player) leaveGame(game *Game) {
-	// nil game return, remove player from game, if host end game and kick out everyone
 	if game == nil {
 		return
 	}
 
-	if game.HostID == p.ID {
-		delete(games, game.HostID)
-		sendLeaveGame(game)
-		game.Players = nil
-	} else {
+	if game.Status == CREATING {
+		if game.HostID == p.ID {
+			delete(games, game.HostID)
+			sendLeaveGame(game)
+			game.Players = nil
+			return
+		} else {
+			delete(game.Players, p.ID)
+			return
+		}
+	} else if game.Status == PLAYING {
 		delete(game.Players, p.ID)
+		if len(game.Players) == 0 {
+			game.stop()
+			return
+		} else if p.OccupyingPoint != nil {
+			if p.Team == game.RedTeam {
+				p.OccupyingPoint.RedCount--
+			} else if p.Team == game.BlueTeam {
+				p.OccupyingPoint.BlueCount--
+			}
+		}
+		p.reset()
 	}
 }
 
@@ -413,20 +432,23 @@ func (g *Game) randomizeTeams() {
 // starting goroutines that will run for the duration of the game
 func (g *Game) start() {
 	g.randomizeTeams()
-	startTime := time.Now().Add(time.Second * 5)
+	startTime := time.Now().Add(time.Second * 30)
 	sendGameStartInfo(g, startTime)
 	go g.awaitStart(startTime)
 }
 
 func (g *Game) awaitStart(startTime time.Time) {
 	time.Sleep(time.Until(startTime))
+	if games[g.HostID] == nil {
+		return
+	}
 	g.Status = PLAYING
 	g.Timer = time.AfterFunc(g.TimeLimit, func() {
 		g.stop()
 	})
 	go sendGameUpdates(g)
 	for _, cp := range g.ControlPoints {
-		go cp.updateTicker(g)
+		go cp.updateGame(g)
 	}
 }
 

@@ -151,8 +151,16 @@ func (g *Game) getObjectiveUpdate() []map[string]interface{} {
 // each sendX function corresponds to the server to client message with
 // "Action": X in https://github.com/hsuch/tfgo/wiki/Network-Messages
 
+func sendPlayerID(player *Player) {
+	msg := map[string]interface{} {
+		"Type" : "PlayerID",
+		"Data" : player.ID,
+	}
+	player.safeSend(msg)
+}
+
 func sendPlayerListUpdate(game *Game) {
-	playerList := game.getPlayerInfo([]string{"Name", "Icon"})
+	playerList := game.getPlayerInfo([]string{"ID", "Name", "Icon"})
 	msg := map[string]interface{} {
 		"Type" : "PlayerListUpdate",
 		"Data" : playerList,
@@ -174,7 +182,7 @@ func sendAvailableGames(player *Player) {
 			}
 			gameInfo["Mode"] = modeToString[game.Mode]
 			gameInfo["Location"] = game.findCenter().locationToDegrees()
-			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Icon"})
+			gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Icon"})
 			gameList = append(gameList, gameInfo)
 		}
 	}
@@ -188,6 +196,10 @@ func sendAvailableGames(player *Player) {
 
 func sendGameInfo(player *Player, gameID string) {
 	target := games[gameID]
+	if target == nil {
+		sendJoinGameError(player, "GameClosed")
+		return
+	}
 	gameInfo := make(map[string]interface{})
 	gameInfo["ID"] = target.HostID
 	gameInfo["Description"] = target.Description
@@ -195,7 +207,7 @@ func sendGameInfo(player *Player, gameID string) {
 	gameInfo["PointLimit"] = target.PointLimit
 	gameInfo["TimeLimit"] = target.TimeLimit.Minutes()
 	gameInfo["Boundaries"] = target.getBoundaryVertices()
-	gameInfo["PlayerList"] = target.getPlayerInfo([]string{"Name", "Icon"})
+	gameInfo["PlayerList"] = target.getPlayerInfo([]string{"ID", "Name", "Icon"})
 
 	msg := map[string]interface{} {
 		"Type" : "GameInfo",
@@ -226,7 +238,8 @@ func sendLeaveGame(game *Game) {
 
 func sendGameStartInfo(game *Game, startTime time.Time) {
 	gameInfo := make(map[string]interface{})
-	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Team"})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Team"})
+	gameInfo["Boundaries"] = game.getBoundaryVertices()
 	gameInfo["RedBase"] = game.RedTeam.getLocInfo()
 	gameInfo["BlueBase"] = game.BlueTeam.getLocInfo()
 	var cpInfo []map[string]interface{}
@@ -248,22 +261,25 @@ func sendGameStartInfo(game *Game, startTime time.Time) {
 	game.broadcast(msg)
 }
 
+func sendGameUpdate(game *Game) {
+	gameInfo := make(map[string]interface{})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"ID", "Name", "Orientation", "Location"})
+	gameInfo["Points"] = map[string]int {
+		"Red" : game.RedTeam.Points,
+		"Blue" : game.BlueTeam.Points,
+	}
+	gameInfo["Objectives"] = game.getObjectiveUpdate()
+
+	msg := map[string]interface{} {
+		"Type" : "GameUpdate",
+		"Data" : gameInfo,
+	}
+	game.broadcast(msg)
+}
+
 func sendGameUpdates(game *Game) {
 	for game.Status == PLAYING {
-		gameInfo := make(map[string]interface{})
-		gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Orientation", "Location"})
-		gameInfo["Points"] = map[string]int {
-			"Red" : game.RedTeam.Points,
-			"Blue" : game.BlueTeam.Points,
-		}
-		gameInfo["Objectives"] = game.getObjectiveUpdate()
-
-		msg := map[string]interface{} {
-			"Type" : "GameUpdate",
-			"Data" : gameInfo,
-		}
-		game.broadcast(msg)
-
+		sendGameUpdate(game)
 		time.Sleep(TICK())
 	}
 }

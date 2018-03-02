@@ -56,6 +56,7 @@ func serveClient(conn net.Conn) {
 		switch msg.Action {
 		case "RegisterPlayer":
 			p = createPlayer(conn, msg.Data["Name"].(string), msg.Data["Icon"].(string))
+			sendPlayerID(p)
 		case "ChangePlayerInfo":
 			p.Name = msg.Data["Name"].(string)
 			p.Icon = msg.Data["Icon"].(string)

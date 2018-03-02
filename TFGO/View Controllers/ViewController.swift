@@ -18,6 +18,13 @@ class ViewController: UIViewController {
         
     }
     
+    @IBAction func loadPage(_ sender: Any) {
+        if let url = NSURL(string: "https://www.github.com/hsuch/tfgo") {
+             UIApplication.shared.open(url as URL, options: [:], completionHandler: nil)
+        }
+    }
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }

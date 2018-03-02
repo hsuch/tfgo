@@ -32,7 +32,7 @@ func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 
 // fire the player's weapon at the given angle
 func (p *Player) fire(game *Game, wep Weapon, angle float64) {
-	if p.Status != NORMAL {
+	if game == nil || game.Status != PLAYING || p.Status != NORMAL {
 		return
 	}
 	// calculate direction vector of shot

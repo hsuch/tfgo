@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -66,9 +66,12 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bgV-rV-ZvH">
                                         <rect key="frame" x="0.0" y="169" width="158" height="48"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                        <state key="normal" title="Settings">
+                                        <state key="normal" title="Github">
                                             <color key="titleColor" red="1" green="0.34409839771633299" blue="0.4541931867964043" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="loadPage:" destination="148-xb-tAK" eventType="touchUpInside" id="NfF-mM-xTL"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -543,7 +546,7 @@
                                         <rect key="frame" x="0.0" y="941" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Lv-V4-XYw" id="m2F-u0-ReT">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2B0-5m-xSs">
@@ -1399,16 +1402,17 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Game Setup" id="D03-Ym-5Jr">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="cDM-KY-b5t" rowHeight="70" style="IBUITableViewCellStyleDefault" id="00W-fP-ggh">
-                                        <rect key="frame" x="0.0" y="72" width="375" height="70"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="cDM-KY-b5t" rowHeight="230" style="IBUITableViewCellStyleDefault" id="00W-fP-ggh">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="230"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="00W-fP-ggh" id="Rn4-s5-C1K">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="69.666666666666671"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="229.66666666666666"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Use the &quot;Host Game&quot; option to set up a game." lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="cDM-KY-b5t">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="69.666666666666671"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="wordWrap" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="cDM-KY-b5t">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="229.66666666666666"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">Click "Host Game" from the main menu, then imput a game name.  Feel free to adjust the game settings such as the maximum number of players or the time limit.  Add a game description or password if you so choose.  Finally, select four map boundary points by clicking a location on the map.  Click the "Create Game" button to finalize your game and enter the player lobby.  When you are ready to begin the game, select the "Start Game" to initiate a game for everyone.</string>
                                                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1420,16 +1424,17 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Joining A Game" id="kwq-rQ-mWH">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="OMF-pL-QOi" rowHeight="94" style="IBUITableViewCellStyleDefault" id="3zu-Q9-vEU">
-                                        <rect key="frame" x="0.0" y="170" width="375" height="94"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="OMF-pL-QOi" rowHeight="244" style="IBUITableViewCellStyleDefault" id="3zu-Q9-vEU">
+                                        <rect key="frame" x="0.0" y="330" width="375" height="244"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3zu-Q9-vEU" id="foi-QW-O0s">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="93.666666666666671"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="243.66666666666666"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Use the &quot;Join Game&quot; option to browse the list of available games. You can view game details and join games from here." lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="OMF-pL-QOi">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="93.666666666666671"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="tailTruncation" numberOfLines="12" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="OMF-pL-QOi">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="243.66666666666666"/>
                                                     <autoresizingMask key="autoresizingMask"/>
+                                                    <string key="text">Select the "Join Game" option from the main menu to enter the games lobby.  Choose a private or public game using the segmented button.  Then select a game that you find interesting to load that game's information page.  If you choose to join a game, select the "Join" button on the top right side of the screen.  If the game requires a password, input it in the popup that appears.  You will then be sent to the player lobby where you will wait until the host starts the game.</string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1441,17 +1446,17 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Playing The Game" id="cCd-Yi-UdK">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="uSP-GS-faE" rowHeight="128" style="IBUITableViewCellStyleDefault" id="emE-gR-4HP">
-                                        <rect key="frame" x="0.0" y="292" width="375" height="128"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="uSP-GS-faE" rowHeight="869" style="IBUITableViewCellStyleDefault" id="emE-gR-4HP">
+                                        <rect key="frame" x="0.0" y="602" width="375" height="869"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="emE-gR-4HP" id="hGZ-dM-cwG">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="127.66666666666667"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="868.66666666666663"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="uSP-GS-faE">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="127.66666666666667"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="tailTruncation" numberOfLines="44" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="uSP-GS-faE">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="868.66666666666663"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <string key="text">Once the host hits "Start Game", the game will start and teams will be assigned automatically. Tap the central button to shoot. Time and team scores are displayed at the top.</string>
+                                                    <mutableString key="text">Once the host hits "Start Game", teams will be assigned automatically and you will transition to the game screen.  You will then be prompted to move to your base, which will be denoted by a base icon and a grey circle on the map.  Once the timer countsdown to zero, the game will officially begin.  Press the large circular button to fire your weapon.  Make sure that you are pointing your weapon in the correct direction otherwise you will miss your target. The bar above this button represents your clip, and as you fire this value will decrement until it reaches zero.  Upon reaching zero, the bar will reload during which time you will be unable to fire.  Below the fire button is the armor bar, which indicates how much armor an individual has picked up.  Below this is the health bar, which keeps track of your health.  When your health drops below zero, you will be no longer able to fire and will be prompted to return to your base to respawn.  After waiting for a short while in your base you will be restored and will be able to rejoin gameplay.  The point of the game involves capturing one or many control points scattered throughout the map.  Standing on a control point will allow you to capture it.  Once captured, a control point will passively accumulate points.  Enemy players can contest a control point by standing within it, stopping all progress.  The game will end once a team reaches the maximum number of points or the time limit has elapsed.  Going outside of the game boundaries will prevent you from shooting, and after a short duration, you will be instantly killed and will need to return to your base to respawn.  </mutableString>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1459,19 +1464,18 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                            <tableViewSection id="Diz-Nc-uqc">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="323" id="ohc-oF-cZa">
-                                        <rect key="frame" x="0.0" y="420" width="375" height="323"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="76" id="ohc-oF-cZa">
+                                        <rect key="frame" x="0.0" y="1471" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ohc-oF-cZa" id="mBC-5l-s4d">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="322.66666666666669"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="75.666666666666671"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
+                            </tableViewSection>
+                            <tableViewSection id="Diz-Nc-uqc">
+                                <cells/>
                             </tableViewSection>
                         </sections>
                         <connections>
@@ -1630,8 +1634,7 @@
         <image name="triangle" width="1080" height="1920"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="dxN-aI-FWj"/>
-        <segue reference="4cG-7q-7tp"/>
+        <segue reference="xzX-Iq-bnB"/>
         <segue reference="pTB-ed-xew"/>
         <segue reference="OUK-q5-70x"/>
     </inferredMetricsTieBreakers>

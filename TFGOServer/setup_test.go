@@ -4,7 +4,7 @@ package main
 
 import (
 	"testing"
-//	"time"
+	"time"
 )
 
 func TestFindCenter(t *testing.T) {
@@ -87,7 +87,7 @@ func TestSetBoundaries(t *testing.T) {
 	}
 }
 
-/*func TestCreateGame(t *testing.T) {
+func TestCreateGame(t *testing.T) {
 	isTesting = true
 	borders := []Border {
 		{Location{0.0,0.0}, Direction{100.0,0.0}},
@@ -101,7 +101,7 @@ func TestSetBoundaries(t *testing.T) {
 		"Description" : "G1Description",
 		"PlayerLimit" : 8.0,
 		"PointLimit" : 42.0,
-		"TimeLimit" : "60m",
+		"TimeLimit" : 60.0,
 		"Mode" : "SingleCapture",
 		"Boundaries" : []interface{} {
 			map[string]interface{} {"X": 0.0, "Y": 0.0},
@@ -155,7 +155,7 @@ func TestSetBoundaries(t *testing.T) {
 		t.Errorf("TestCreateGame(14) failed, expected Player %s to be in Game Player List, got Player %s",
 			p.Name, g.Players[p.ID])
 	}
-}*/
+}
 
 func TestConnectTheDots(t *testing.T) {
 	isTesting = true

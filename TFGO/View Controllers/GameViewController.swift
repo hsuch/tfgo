@@ -21,6 +21,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     let manager = CLLocationManager() // used to track the user's location
     
     var initialized = false  // boolean set to true after the first tracking of user's position
+    var gameStart = false    // boolean to see if the game has started
     
     var playerLocs: [MKPointAnnotation] = []
     
@@ -57,8 +58,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
 
         // update the region of the map with the appropriate information
         game_map.setRegion(region, animated: false)
-        self.game_map.showsUserLocation = false
         
+        // we only want to track the user's location on the map before the game starts, since
+        // team pins won't have been printed until then
+        if gameStart == false {
+            self.game_map.showsUserLocation = true
+        }
+        else {
+            self.game_map.showsUserLocation = false
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
@@ -66,6 +74,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         gameState.getUser().setOrientation(to: Float(newHeading.magneticHeading))
     }
     
+    // same as in GameInfoViewController, we use this helper to construct a polugon, and then
+    // create an overlay renderer for the mapView
     func addBoundary() {
         let bounds = game.getBoundaries()
         var polyBounds: [CLLocationCoordinate2D] = []
@@ -77,13 +87,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         game_map.add(polygon)
     }
     
+    // this helper is used to draw a circle around bases and objectives to represent
+    // their bounds/areas
     func addRadiusCircle(location: CLLocation, radius: CLLocationDistance) {
         let circle = MKCircle(center: location.coordinate, radius: radius)
         game_map.add(circle)
     }
     
+    // Used to draw the boundaries or a circle overlay on the map,
+    // depending on what the input is
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer! {
         if overlay is MKPolygon {
+            // The input is the boundary polygon
             let polygonView = MKPolygonRenderer(overlay: overlay)
             polygonView.strokeColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1)
             polygonView.lineWidth = 2.0
@@ -91,6 +106,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             return polygonView
         }
         else if overlay is MKCircle {
+            // The input is a circle that represents an objective or base's area
             let circleRenderer = MKCircleRenderer(overlay: overlay)
             circleRenderer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
             circleRenderer.strokeColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
@@ -104,11 +120,12 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "rahhhh")
-       // annotationView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-        annotationView.canShowCallout = true
+        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "")
+        annotationView.canShowCallout = true    // need this so that an icon's info can be accessed when touched
         if let title = annotation.title, let subtitle = annotation.subtitle {
             if title == "OBJECTIVE" {
+                // the input pin is an objective pin. We determine what color image to use
+                // depending on the current owner of the objective
                 if subtitle == "Neutral" {
                     annotationView.image = UIImage(named: "cap_gray")
                 }
@@ -120,21 +137,27 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 }
             }
             else if title == "RED BASE" {
+                // the input pin is a red base pin
                 annotationView.image = UIImage(named: "base_red")
             }
             else if title == "BLUE BASE" {
+                // the input pin is a blue base pin
                 annotationView.image = UIImage(named: "base_blue")
             }
             else if subtitle == "Red" {
+                // the input pin is a read team player
                 annotationView.image = UIImage(named: "player_red")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
             else if subtitle == "Blue" {
+                // the input team is a blue team player
                 annotationView.image = UIImage(named: "player_blue")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
-            else {
+            else if subtitle == "Available" || subtitle == "Unavailable" {
+                // the pin a pickup pin
                 annotationView.image = UIImage(named: "pickup")
+                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
         }
         return annotationView
@@ -206,6 +229,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         DispatchQueue.global(qos: .userInitiated).async {
             while true {
                 if handleMsgFromServer() {
+                    print("jdsakjflsdjafkljksldafjls;dkafjlk;sjfl;sdjskafdhdslhfklsdhfkljsdhfjklsadhlfjkhsadkjfsdjkalfhklsdjahfkjlsahfkjlhsdalfhsaklfhskljfhkjslahfkjshfklhsdjhflsakjfhksjhflkjsadhfjklhasdlkjfhskjahfkjhsdajkfhskldjfhjlsdahf")
                     DispatchQueue.main.async {
                         self.talkShitGetHit()
                     }
@@ -214,10 +238,13 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    /* Status bar variables */
     @IBOutlet weak var armorBar: UIProgressView!
     @IBOutlet weak var healthBar: UIProgressView!
     @IBOutlet weak var clipBar: UIProgressView!
     
+    /* viewWillAppear() - override */
+    /* Set status bar values */
     override func viewWillAppear(_ animated: Bool) {
         armorBar.layer.cornerRadius = 3.0
         armorBar.layer.borderWidth = 3.0
@@ -230,22 +257,27 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         clipBar.layer.borderColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
     }
     
+    /* talkShitGetHit() */
+    /* Updates the status bar fills and alerts the user to when they are attacked */
     private func talkShitGetHit() {
-        if status != (gameState.getUserHealth(), gameState.getUserArmor()) {
+        if status.0 < gameState.getUserHealth() || status.1 < gameState.getUserArmor() {
             status = (gameState.getUserHealth(), gameState.getUserArmor())
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            armorBar.setProgress(Float(self.status.0)/100, animated: true)
-            healthBar.setProgress(Float(self.status.1)/100, animated: true)
-            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-            present(alertController, animated: true, completion: nil)
+//            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+//            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+//            present(alertController, animated: true, completion: nil)
         }
+        armorBar.setProgress(Float(self.status.1)/100, animated: true)
+        healthBar.setProgress(Float(self.status.0)/100, animated: true)
     }
     
+    /* Upper display labels */
     @IBOutlet weak var clock: UILabel!
     @IBOutlet weak var redScore: UILabel!
     @IBOutlet weak var blueScore: UILabel!
     
+    /* tick() - Timer function */
+    /* Updates the clock according to the start time value sent by the server */
     private func tick() {
         let curtime = Date()
         
@@ -253,6 +285,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
             clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
             statusLabel.text = "Head to the \(player.getTeam()) team's base!"
+            statusLabel.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         }
         else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
             clock.text = "00:00"
@@ -260,18 +293,22 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
             clock.text = String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+            if statusLabel.textColor == #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
+                statusLabel.text = ""
+            }
         }
     }
     
+    /* Timer variables */
     private var clipTimer = Timer()
-    
     private var reloading = false
     private var timeLeft: TimeInterval = 0
     
+    /* fireButton() - Action for when fire button is pressed */
+    /* Sends a fire message to the server if the weapon is not currently being reloaded */
     @IBAction func fireButton(_ sender: UIButton) {
         if !reloading {
             if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
-                //Put on Cooldown. Not necessary for Iteration 1
                 let weapon = gameState.getUser().getWeapon()
                 if weapon.clipFill > 1 {
                     weapon.clipFill -= 1
@@ -289,6 +326,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    /* clipUpdate() - Timer function */
+    /* Update the clip's status bar based on how full it is */
     @objc func clipUpdate() {
         timeLeft -= 1/5
         let weapon = gameState.getUser().getWeapon()
@@ -302,10 +341,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var updateTimer = Timer()
     
+    /* runTimer() */
+    /* Start the update timer */
     func runTimer() {
-        updateTimer = Timer.scheduledTimer(timeInterval: 0.25, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
     
+    /* update() - Timer Function */
+    /* Sends a location update message to the server and checks various quicly changing values */
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
@@ -338,6 +381,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     @IBOutlet weak var statusLabel: UILabel!
     
+    /* handleStatus() - Timer function */
+    /* Controls the status values being displayed */
     private func handleStatus() {
         switch player.getStatus() {
         case "OutOfBounds":
@@ -354,6 +399,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             break
         case "Respawned":
             statusLabel.text = ""
+            healthBar.setProgress(1, animated: true)
             break
         default:
             break
@@ -374,11 +420,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         self.present(actionController, animated: true, completion: nil)
     }
     
+    /* leaveGame() - Action on leave game button */
+    /* Checks to make sure a player wants to leave the game early and then sends the leave game message to the server */
     @IBAction func leaveGame(_ sender: UIButton) {
         let actionController = UIAlertController(title: nil, message:
             "Are you sure you want to leave?", preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Yep", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
-            self.performSegue(withIdentifier: "leaveGame", sender: nil)
+            if gameState.getConnection().sendData(data: LeaveGameMsg()).isSuccess {
+                self.performSegue(withIdentifier: "leaveGame", sender: nil)
+            }
         }))
         actionController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.cancel,handler: nil))
         self.present(actionController, animated: true, completion: nil)
