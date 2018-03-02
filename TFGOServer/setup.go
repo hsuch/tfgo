@@ -311,9 +311,11 @@ func (g *Game) generateObjectives(numCP int) {
 	ySpread := (int)(math.Floor(yRange / dist))
 	halfRange := math.Min(xRange, yRange)/2
 	for i := 0; i < xSpread; i++ {
-		for j := 0; j < ySpread; j++ {
-			generatePickup(g, minX + (float64)(i) * dist, minY + (float64)(j) * dist, halfRange, dist)
-		}
+		go func() {
+			for j := 0; j < ySpread; j++ {
+				generatePickup(g, minX+(float64)(i)*dist, minY+(float64)(j)*dist, halfRange, dist)
+			}
+		}()
 	}
 }
 
