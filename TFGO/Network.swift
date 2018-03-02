@@ -12,7 +12,7 @@ import SwiftyJSON
 import MapKit
 
 class Connection {
-    private var servadd: String = "10.150.67.159" // to be replaced with real server ip
+    private var servadd: String = "10.150.236.157" // to be replaced with real server ip
     private var servport: Int32 = 9265
     private var client: TCPClient
 
@@ -23,7 +23,7 @@ class Connection {
     func recvData() -> Data {
         var response = Data()
         while true {
-            guard let data = client.read(1024*10, timeout: 3)
+            guard let data = client.read(1024*10, timeout: 1)
                 else { break }
             response += data
         }
@@ -47,12 +47,15 @@ class Connection {
  * then parses all of them
  */
 func handleMsgFromServer() -> Bool {
+    print("just got in handle")
     let conn = gameState.getConnection()
     var received: Data? = nil
     while(received == nil)
     {
+        print("whiling")
         received = conn.recvData()
     }
+    print("got message from server")
     let recvStr: String = String(data: received!, encoding: .utf8)!
     var strArray: [String] = []
     recvStr.enumerateLines { line, _ in
@@ -61,6 +64,7 @@ func handleMsgFromServer() -> Bool {
     for line in strArray {
         var data = try! JSONSerialization.jsonObject(with: line.data(using: .utf8)!, options: []) as! [String: Any]
         let type = data.removeValue(forKey: "Type") as! String
+        print("starting parsing message")
         if (!parse(data: data, type: type)) {
             return false
         }
@@ -103,7 +107,7 @@ func parse(data: [String: Any], type: String) -> Bool {
 
 /* The parser for the PlayerListUpdate message */
 func parsePlayerListUpdate(data: [String: Any]) -> Bool {
-    
+    print("starting parsePlayerListUpdate")
     if let info = data["Data"] as? [[String: Any]] {
         
         // we want to build a list of the players from the given JSON message
@@ -118,6 +122,7 @@ func parsePlayerListUpdate(data: [String: Any]) -> Bool {
         
         // set the gameState's current game's player list to the built list
         gameState.getCurrentGame().setPlayers(toGame: players)
+        print("finished updating players")
         return true
     }
     return false
@@ -315,11 +320,11 @@ func parseGameUpdate(data: [String: Any]) -> Bool {
             
             // Update the liest of players in case anyone left the game
             for player in players {
-                if let name = player["Name"] as? String, let orientation = player["Orientation"] as? Float, let loc = player["Location"] as? [String: Any] {
+                if let name = player["Name"] as? String, let orientation = player["Orientation"] as? Double, let loc = player["Location"] as? [String: Any] {
                     
                     let index = gameState.getCurrentGame().findPlayerIndex(name: name)
                     if index > -1 {
-                        gameState.getCurrentGame().getPlayers()[index].setOrientation(to: orientation)
+                        gameState.getCurrentGame().getPlayers()[index].setOrientation(to: Float(orientation))
                         if let x = loc["X"] as? Double, let y = loc["Y"] as? Double {
                             gameState.getCurrentGame().getPlayers()[index].setLocation(to: x, to: y)
                         }
@@ -467,6 +472,7 @@ func JoinGameMsg(IDtoJoin: String, password: String) -> Data {
     return MsgToServer(action: "JoinGame", data: ["GameID": IDtoJoin, "Password": password]).toJson()
 }
 func LeaveGameMsg() -> Data {
+    gameState.getUser().setStatus(to: "")
     return MsgToServer(action: "LeaveGame", data: [:]).toJson()
 }
 func StartGameMsg() -> Data {

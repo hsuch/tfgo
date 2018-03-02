@@ -29,10 +29,15 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         self.table.dataSource = self;
         self.table.delegate = self;
+        print("tick")
         runTimer()
+        print("tock")
         // Do any additional setup after loading the view.
-         DispatchQueue.global(qos: .background).async {
+        print("begin")
+        DispatchQueue.global(qos: .userInitiated).async {
+            print("end")
             while !self.startGame {
+                print("trying to handle")
                 if handleMsgFromServer() { }
             }
         }
