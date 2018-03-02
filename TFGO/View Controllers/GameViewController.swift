@@ -231,15 +231,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     }
     
     private func talkShitGetHit() {
-        if status != (gameState.getUserHealth(), gameState.getUserArmor()) {
+        if status.0 < gameState.getUserHealth() || status.1 < gameState.getUserArmor() {
             status = (gameState.getUserHealth(), gameState.getUserArmor())
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            armorBar.setProgress(Float(self.status.0)/100, animated: true)
-            healthBar.setProgress(Float(self.status.1)/100, animated: true)
-            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-            present(alertController, animated: true, completion: nil)
+//            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+//            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+//            present(alertController, animated: true, completion: nil)
         }
+        armorBar.setProgress(Float(self.status.0)/100, animated: true)
+        healthBar.setProgress(Float(self.status.1)/100, animated: true)
     }
     
     @IBOutlet weak var clock: UILabel!
@@ -256,6 +256,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
         else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
             clock.text = "00:00"
+            statusLabel.text = ""
         }
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
@@ -354,6 +355,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             break
         case "Respawned":
             statusLabel.text = ""
+            healthBar.setProgress(1, animated: true)
             break
         default:
             break
