@@ -115,7 +115,7 @@ func (p *PickupSpot) getInfo() map[string]interface{} {
 	}
 
 	return map[string]interface{} {
-		"Location" : p.Location,
+		"Location" : p.Location.locationToDegrees(),
 		"Type" : pickupType,
 		"Amount" : pickupAmt,
 	}
@@ -188,6 +188,10 @@ func sendAvailableGames(player *Player) {
 
 func sendGameInfo(player *Player, gameID string) {
 	target := games[gameID]
+	if target == nil {
+		sendJoinGameError(player, "GameClosed")
+		return
+	}
 	gameInfo := make(map[string]interface{})
 	gameInfo["ID"] = target.HostID
 	gameInfo["Description"] = target.Description
@@ -227,6 +231,7 @@ func sendLeaveGame(game *Game) {
 func sendGameStartInfo(game *Game, startTime time.Time) {
 	gameInfo := make(map[string]interface{})
 	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Team"})
+	gameInfo["Boundaries"] = game.getBoundaryVertices()
 	gameInfo["RedBase"] = game.RedTeam.getLocInfo()
 	gameInfo["BlueBase"] = game.BlueTeam.getLocInfo()
 	var cpInfo []map[string]interface{}
@@ -248,22 +253,25 @@ func sendGameStartInfo(game *Game, startTime time.Time) {
 	game.broadcast(msg)
 }
 
+func sendGameUpdate(game *Game) {
+	gameInfo := make(map[string]interface{})
+	gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Orientation", "Location"})
+	gameInfo["Points"] = map[string]int {
+		"Red" : game.RedTeam.Points,
+		"Blue" : game.BlueTeam.Points,
+	}
+	gameInfo["Objectives"] = game.getObjectiveUpdate()
+
+	msg := map[string]interface{} {
+		"Type" : "GameUpdate",
+		"Data" : gameInfo,
+	}
+	game.broadcast(msg)
+}
+
 func sendGameUpdates(game *Game) {
 	for game.Status == PLAYING {
-		gameInfo := make(map[string]interface{})
-		gameInfo["PlayerList"] = game.getPlayerInfo([]string{"Name", "Orientation", "Location"})
-		gameInfo["Points"] = map[string]int {
-			"Red" : game.RedTeam.Points,
-			"Blue" : game.BlueTeam.Points,
-		}
-		gameInfo["Objectives"] = game.getObjectiveUpdate()
-
-		msg := map[string]interface{} {
-			"Type" : "GameUpdate",
-			"Data" : gameInfo,
-		}
-		game.broadcast(msg)
-
+		sendGameUpdate(game)
 		time.Sleep(TICK())
 	}
 }

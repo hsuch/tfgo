@@ -85,6 +85,11 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier != "startGame" {
+            if gameState.getConnection().sendData(data: LeaveGameMsg()).isSuccess {
+                return true
+            }
+        }
         if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
            // DispatchQueue.global(qos: .background).async {
                 //while gameState.getCurrentGame().getStartTime() == "" {

@@ -159,12 +159,14 @@ func (cp *ControlPoint) updateStatus(game *Game) {
 			if inRange(payloadLoc, game.RedTeam.Base, game.RedTeam.BaseRadius) ||
 				inRange(payloadLoc, game.BlueTeam.Base, game.BlueTeam.BaseRadius) {
 				game.Timer.Stop()
+				sendGameUpdate(game)
 				game.stop()
 			}
 		} else {
 			cp.ControllingTeam.Points++
 			if cp.ControllingTeam.Points == game.PointLimit {
 				game.Timer.Stop()
+				sendGameUpdate(game)
 				game.stop()
 			}
 		}

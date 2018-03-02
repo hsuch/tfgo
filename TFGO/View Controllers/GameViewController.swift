@@ -16,6 +16,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @IBOutlet weak var game_map: MKMapView!
     
     private var game = gameState.getCurrentGame()
+    private var player = gameState.getUser()
     
     let manager = CLLocationManager() // used to track the user's location
     
@@ -230,10 +231,13 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    /* Status bar variables */
     @IBOutlet weak var armorBar: UIProgressView!
     @IBOutlet weak var healthBar: UIProgressView!
     @IBOutlet weak var clipBar: UIProgressView!
     
+    /* viewWillAppear() - override */
+    /* Set status bar values */
     override func viewWillAppear(_ animated: Bool) {
         armorBar.layer.cornerRadius = 3.0
         armorBar.layer.borderWidth = 3.0
@@ -246,31 +250,38 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         clipBar.layer.borderColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
     }
     
+    /* talkShitGetHit() */
+    /* Updates the status bar fills and alerts the user to when they are attacked */
     private func talkShitGetHit() {
-        if status != (gameState.getUserHealth(), gameState.getUserArmor()) {
+        if status.0 < gameState.getUserHealth() || status.1 < gameState.getUserArmor() {
             status = (gameState.getUserHealth(), gameState.getUserArmor())
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-            armorBar.setProgress(Float(self.status.0)/100, animated: true)
-            healthBar.setProgress(Float(self.status.1)/100, animated: true)
-            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
-            present(alertController, animated: true, completion: nil)
+//            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
+//            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
+//            present(alertController, animated: true, completion: nil)
         }
+        armorBar.setProgress(Float(self.status.0)/100, animated: true)
+        healthBar.setProgress(Float(self.status.1)/100, animated: true)
     }
     
+    /* Upper display labels */
     @IBOutlet weak var clock: UILabel!
     @IBOutlet weak var redScore: UILabel!
     @IBOutlet weak var blueScore: UILabel!
     
+    /* tick() - Timer function */
+    /* Updates the clock according to the start time value sent by the server */
     private func tick() {
         let curtime = Date()
         
         if(curtime < starttime) { // game has not started yet
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime)
             clock.text = "-" + String(format: "%02d", diff.minute!) + ":" + String(format: "%02d", diff.second!)
+            statusLabel.text = "Head to the \(player.getTeam()) team's base!"
         }
         else if(curtime > starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0)) { // time up
             clock.text = "00:00"
+            statusLabel.text = ""
         }
         else { // game started
             let diff = calendar.dateComponents([.minute, .second], from: curtime, to: starttime.addingTimeInterval(Double(game.getTimeLimit()) * 60.0))
@@ -278,15 +289,16 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    /* Timer variables */
     private var clipTimer = Timer()
-    
     private var reloading = false
     private var timeLeft: TimeInterval = 0
     
+    /* fireButton() - Action for when fire button is pressed */
+    /* Sends a fire message to the server if the weapon is not currently being reloaded */
     @IBAction func fireButton(_ sender: UIButton) {
         if !reloading {
             if gameState.getConnection().sendData(data: FireMsg()).isSuccess {
-                //Put on Cooldown. Not necessary for Iteration 1
                 let weapon = gameState.getUser().getWeapon()
                 if weapon.clipFill > 1 {
                     weapon.clipFill -= 1
@@ -304,6 +316,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    /* clipUpdate() - Timer function */
+    /* Update the clip's status bar based on how full it is */
     @objc func clipUpdate() {
         timeLeft -= 1/5
         let weapon = gameState.getUser().getWeapon()
@@ -317,10 +331,14 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var updateTimer = Timer()
     
+    /* runTimer() */
+    /* Start the update timer */
     func runTimer() {
-        updateTimer = Timer.scheduledTimer(timeInterval: 1, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: 0.25, target: self,   selector: (#selector(GameViewController.update)), userInfo: nil, repeats: true)
     }
     
+    /* update() - Timer Function */
+    /* Sends a location update message to the server and checks various quicly changing values */
     @objc func update() {
         if gameState.getConnection().sendData(data: LocUpMsg()).isSuccess {
             print(gameState.getUser().getLocation())
@@ -333,6 +351,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         if game.getGameOver() {
             endGame()
         }
+        
+        handleStatus()
         
         // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
@@ -349,6 +369,35 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
     }
     
+    @IBOutlet weak var statusLabel: UILabel!
+    
+    /* handleStatus() - Timer function */
+    /* Controls the status values being displayed */
+    private func handleStatus() {
+        switch player.getStatus() {
+        case "OutOfBounds":
+            statusLabel.text = "Out of Bounds!"
+            statusLabel.textColor = randomColor()
+            break
+        case "BackInBounds":
+            statusLabel.text = ""
+            break
+        case "Respawn":
+            statusLabel.text = "Return to Base"
+            statusLabel.textColor = randomColor()
+            player.setHealth(to: 0)
+            break
+        case "Respawned":
+            statusLabel.text = ""
+            healthBar.setProgress(1, animated: true)
+            break
+        default:
+            break
+        }
+    }
+    
+    /* endGame() */
+    /* Processes the end of game when it receives the end of game message */
     private func endGame() {
         let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
         updateTimer.invalidate()
@@ -361,11 +410,15 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         self.present(actionController, animated: true, completion: nil)
     }
     
+    /* leaveGame() - Action on leave game button */
+    /* Checks to make sure a player wants to leave the game early and then sends the leave game message to the server */
     @IBAction func leaveGame(_ sender: UIButton) {
         let actionController = UIAlertController(title: nil, message:
             "Are you sure you want to leave?", preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Yep", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
-            self.performSegue(withIdentifier: "leaveGame", sender: nil)
+            if gameState.getConnection().sendData(data: LeaveGameMsg()).isSuccess {
+                self.performSegue(withIdentifier: "leaveGame", sender: nil)
+            }
         }))
         actionController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.cancel,handler: nil))
         self.present(actionController, animated: true, completion: nil)
