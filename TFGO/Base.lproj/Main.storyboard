@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xOP-Cs-MEl">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -546,7 +546,7 @@
                                         <rect key="frame" x="0.0" y="941" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3Lv-V4-XYw" id="m2F-u0-ReT">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2B0-5m-xSs">
@@ -822,9 +822,7 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="mhV-e7-hMe" kind="popoverPresentation" identifier="startGame" popoverAnchorView="KwR-EX-RFE" id="xzX-Iq-bnB">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <segue destination="mhV-e7-hMe" kind="show" identifier="startGame" id="xzX-Iq-bnB"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Waiting For Players..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jml-sc-ecP">
@@ -858,6 +856,8 @@
                         <outlet property="startButton" destination="KwR-EX-RFE" id="cSs-bf-Nf6"/>
                         <outlet property="table" destination="2Jg-VT-jWz" id="k8G-fk-3WK"/>
                         <outlet property="waitingLabel" destination="Jml-sc-ecP" id="pIe-kF-bbv"/>
+                        <segue destination="ZEs-Lf-FFb" kind="show" identifier="back1" id="XRz-Vr-Dbh"/>
+                        <segue destination="fl4-6m-JGR" kind="show" identifier="back2" id="NLa-t1-jmy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rp5-Lu-m87" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -956,8 +956,8 @@
                                 </constraints>
                                 <color key="progressTintColor" red="1" green="0.76775226080000003" blue="0.44680859680000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </progressView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Help, I'm alive" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kDy-zJ-Mrw">
-                                <rect key="frame" x="16" y="82" width="343" height="24"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kDy-zJ-Mrw">
+                                <rect key="frame" x="16" y="82" width="343" height="0.0"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1456,7 +1456,7 @@
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" lineBreakMode="tailTruncation" numberOfLines="44" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="uSP-GS-faE">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="868.66666666666663"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <mutableString key="text">Once the host hits "Start Game", teams will be assigned automatically and you will transition to the game screen.  You will then be prompted to move to your base, which will be denoted by a base icon and a grey circle on the map.  Once the timer countsdown to zero, the game will officially begin.  Press the large circular button to fire your weapon.  Make sure that you are pointing your weapon in the correct direction otherwise you will miss your target. The bar above this button represents your clip, and as you fire this value will decrement until it reaches zero.  Upon reaching zero, the bar will reload during which time you will be unable to fire.  Below the fire button is the armor bar, which indicates how much armor an individual has picked up.  Below this is the health bar, which keeps track of your health.  When your health drops below zero, you will be no longer able to fire and will be prompted to return to your base to respawn.  After waiting for a short while in your base you will be restored and will be able to rejoin gameplay.  The point of the game involves capturing one or many control points scattered throughout the map.  Standing on a control point will allow you to capture it.  Once captured, a control point will passively accumulate points.  Enemy players can contest a control point by standing within it, stopping all progress.  The game will end once a team reaches the maximum number of points or the time limit has elapsed.  Going outside of the game boundaries will prevent you from shooting, and after a short duration, you will be instantly killed and will need to return to your base to respawn.  </mutableString>
+                                                    <string key="text">Once the host hits "Start Game", teams will be assigned automatically and you will transition to the game screen.  You will then be prompted to move to your base, which will be denoted by a base icon and a grey circle on the map.  Once the timer countsdown to zero, the game will officially begin.  Press the large circular button to fire your weapon.  Make sure that you are pointing your weapon in the correct direction otherwise you will miss your target. The bar above this button represents your clip, and as you fire this value will decrement until it reaches zero.  Upon reaching zero, the bar will reload during which time you will be unable to fire.  Below the fire button is the armor bar, which indicates how much armor an individual has picked up.  Below this is the health bar, which keeps track of your health.  When your health drops below zero, you will be no longer able to fire and will be prompted to return to your base to respawn.  After waiting for a short while in your base you will be restored and will be able to rejoin gameplay.  The point of the game involves capturing one or many control points scattered throughout the map.  Standing on a control point will allow you to capture it.  Once captured, a control point will passively accumulate points.  Enemy players can contest a control point by standing within it, stopping all progress.  The game will end once a team reaches the maximum number of points or the time limit has elapsed.  Going outside of the game boundaries will prevent you from shooting, and after a short duration, you will be instantly killed and will need to return to your base to respawn.  </string>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -1634,8 +1634,10 @@
         <image name="triangle" width="1080" height="1920"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="NLa-t1-jmy"/>
         <segue reference="xzX-Iq-bnB"/>
         <segue reference="pTB-ed-xew"/>
+        <segue reference="jkD-TJ-GTL"/>
         <segue reference="OUK-q5-70x"/>
     </inferredMetricsTieBreakers>
 </document>
