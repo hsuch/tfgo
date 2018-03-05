@@ -100,13 +100,11 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
         if gameState.getUser().isHost(), gameState.getConnection().sendData(data: StartGameMsg()).isSuccess {
            // DispatchQueue.global(qos: .background).async {
                 //while gameState.getCurrentGame().getStartTime() == "" {
-            if handleMsgFromServer() {
-                if gameState.getCurrentGame().getStartTime() != [] {
-                    startGame = true
-                    return true
-                }
-                
-            }
+            //if handleMsgFromServer() {
+            while gameState.getCurrentGame().getStartTime() == [] {}
+            startGame = true
+            return true
+            //}
                 //}
             //}
             
@@ -114,7 +112,6 @@ class WaitingViewController: UIViewController, UITableViewDelegate, UITableViewD
             startGame = true
             return true
         }
-        return false
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

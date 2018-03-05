@@ -135,7 +135,7 @@ class GameLobbyViewController: UIViewController, UITableViewDelegate, UITableVie
             if gameState.getConnection().sendData(data: ShowGameInfoMsg(IDtoShow: game.getID()!)).isSuccess {
                 if gameState.setCurrentGame(to: game) {
                     //DispatchQueue.global(qos: .userInitiated).async {
-                        if handleMsgFromServer() {}
+                        //if handleMsgFromServer() {}
                     //}
                     performSegue(withIdentifier: "gameSelect", sender: nil)
                 }

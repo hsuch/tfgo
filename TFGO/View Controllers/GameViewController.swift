@@ -404,6 +404,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             healthBar.setProgress(1, animated: true)
             break
         default:
+            //statusLabel.text = "Objective is \(Double(game.getObjectives()[0].getProgress())/100.0)% captured"
+            //statusLabel.textColor = randomColor()
             break
         }
     }
