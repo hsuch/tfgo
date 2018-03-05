@@ -22,6 +22,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var initialized = false  // boolean set to true after the first tracking of user's position
     var gameStart = false    // boolean to see if the game has started
+    var gameRunning = true   // boolean to check if a game is still active
     
     var playerLocs: [MKPointAnnotation] = []
     
@@ -227,9 +228,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
-            while true {
+            while self.gameRunning {
                 if handleMsgFromServer() {
-                    print("jdsakjflsdjafkljksldafjls;dkafjlk;sjfl;sdjskafdhdslhfklsdhfkljsdhfjklsadhlfjkhsadkjfsdjkalfhklsdjahfkjlsahfkjlhsdalfhsaklfhskljfhkjslahfkjshfklhsdjhflsakjfhksjhflkjsadhfjklhasdlkjfhskjahfkjhsdajkfhskldjfhjlsdahf")
                     DispatchQueue.main.async {
                         self.talkShitGetHit()
                     }
@@ -411,10 +411,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     /* endGame() */
     /* Processes the end of game when it receives the end of game message */
     private func endGame() {
-        let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
+        var victory: String
+        if game.getBluePoints() > game.getRedPoints() {
+            victory = "Blue team victory!"
+        } else if game.getBluePoints() < game.getRedPoints() {
+            victory = "Red team victory!"
+        } else {
+            victory = "It's a draw!"
+        }
+        //let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
         updateTimer.invalidate()
         let actionController = UIAlertController(title: "Game Over", message:
-            "\(victory) team victory!", preferredStyle: UIAlertControllerStyle.actionSheet)
+            victory, preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Let me leave", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
             self.performSegue(withIdentifier: "leaveGame", sender: nil)
         }))
@@ -440,6 +448,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         if segue.identifier != "inventory" {
             updateTimer.invalidate()
+            gameRunning = false
         }
     }
     
