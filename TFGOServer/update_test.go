@@ -177,4 +177,7 @@ func TestUpdateStatus(t *testing.T) {
 	if blueTeam.Points != expBluePoints {
 		t.Errorf("TestUpdateStatus(4) failed, expected Blue Team Points %d, got Blue Team Points %d", expBluePoints, blueTeam.Points)
 	}
+	if g.Status != GAMEOVER {
+		t.Errorf("TestUpdateStatus(4) failed, expected Blue Team Victory, but game is not over")
+	}
 }

@@ -87,7 +87,7 @@ func makeRedTeam() *Team {
 	return &Team {
 		Name: "Red Team",
 		Base: Location{25, 50},
-		Points: 98,
+		Points: 72,
 	}
 }
 
@@ -95,7 +95,7 @@ func makeBlueTeam() *Team {
 	return &Team {
 		Name: "Blue Team",
 		Base: Location{75, 50},
-		Points: 72,
+		Points: 98,
 	}
 }
 
@@ -134,6 +134,8 @@ func makeSampleGame() *Game {
 		Password: "tfgo",
 		Status: PLAYING,
 		Mode: MULTICAP,
+		PlayerLimit: 4,
+		PointLimit: 100,
 		RedTeam: redTeam,
 		BlueTeam: blueTeam,
 		Players: map[string]*Player{
