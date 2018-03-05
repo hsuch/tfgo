@@ -246,6 +246,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     /* viewWillAppear() - override */
     /* Set status bar values */
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         armorBar.layer.cornerRadius = 3.0
         armorBar.layer.borderWidth = 3.0
         armorBar.layer.borderColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
@@ -255,6 +256,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         clipBar.layer.cornerRadius = 3.0
         clipBar.layer.borderWidth = 3.0
         clipBar.layer.borderColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     /* talkShitGetHit() */
@@ -435,6 +437,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         if segue.identifier != "inventory" {
             updateTimer.invalidate()
         }
