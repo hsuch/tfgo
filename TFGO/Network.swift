@@ -28,7 +28,7 @@ class Connection {
         var response = Data()
         while noNewline(data: String(data: response, encoding: .utf8) ?? "") {
             guard let data = client.read(1024*10)
-                else { usleep(10000); continue }
+                else { continue }
             response += data
         }
         return response

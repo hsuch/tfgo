@@ -131,21 +131,27 @@ class HostGameViewController: UITableViewController, UITextFieldDelegate, CLLoca
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         //        print(view.annotation)
-        let a = view.annotation as! CusAnnotation
-        //        print(a.discipline)
-        a.count += 1
-        //        print(annotations.index(of: a))
-        if a.count > 1 {
-            let p = MKMapPoint(x: a.coordinate.longitude, y: a.coordinate.latitude)
-            for (index, b) in boundaries.enumerated() {
-                if b.x == p.x && b.y == p.y {
-                    boundaries.remove(at: index)
+        if (view.annotation is MKUserLocation ) {
+            
+        } else {
+            let a = view.annotation as! CusAnnotation
+            a.count += 1
+            //        print(annotations.index(of: a))
+            if a.count > 1 {
+                let p = MKMapPoint(x: a.coordinate.longitude, y: a.coordinate.latitude)
+                for (index, b) in boundaries.enumerated() {
+                    if b.x == p.x && b.y == p.y {
+                        boundaries.remove(at: index)
+                    }
                 }
+                annotations.remove(at: annotations.index(of: a)!)
+                mapView.removeAnnotation(a)
+                print("called")
             }
-            annotations.remove(at: annotations.index(of: a)!)
-            mapView.removeAnnotation(a)
-            print("called")
         }
+        //let a = view.annotation as! CusAnnotation
+        //        print(a.discipline)
+        
         
     }
     var counter = 0

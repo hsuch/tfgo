@@ -157,6 +157,77 @@ func TestCreateGame(t *testing.T) {
 	}
 }
 
+func TestConnectTheDots(t *testing.T) {
+	isTesting = true
+	verts1 := []Location{
+		{300,300},
+		{500,300},
+		{500,400},
+		{300,400},
+	}
+	expectedBorders1 := []Border{
+		{Location{300, 300}, Direction{200, 0}},
+		{Location{500, 300}, Direction{0, 100}},
+		{Location{500, 400}, Direction{-200, 0}},
+		{Location{300, 400}, Direction{0, -100}},
+	}
+	testBorders1 := connectTheDots(verts1)
+	for i, v := range expectedBorders1 {
+		if testBorders1[i] != v {
+			t.Errorf("TestConnectTheDots(1.%d) failed, expected Border{{%f, %f} {%f, %f}}, got Border{{%f, %f} {%f, %f}}",
+				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
+				testBorders1[i].P.X, testBorders1[i].P.Y, testBorders1[i].D.X, testBorders1[i].D.Y)
+		}
+	}
+
+	verts2 := []Location{
+		{0,0},
+		{100,100},
+		{0,100},
+		{100,0},
+	}
+	expectedBorders2 := []Border{
+		{Location{0,0}, Direction{100,100}},
+		{Location{100,100}, Direction{-100,0}},
+		{Location{0,100}, Direction{100,-100}},
+		{Location{100,0}, Direction{-100,0}},
+	}
+	testBorders2 := connectTheDots(verts2)
+	for i, v := range expectedBorders2 {
+		if testBorders2[i] != v {
+			t.Errorf("TestConnectTheDots(2.%d) failed, expected Border{{%f, %f} {%f, %f}}, got Border{{%f, %f} {%f, %f}}",
+				i, v.P.X, v.P.Y, v.D.X, v.D.Y,
+				testBorders2[i].P.X, testBorders2[i].P.Y, testBorders2[i].D.X, testBorders2[i].D.Y)
+		}
+	}
+}
+
+func TestTestBorders(t *testing.T) {
+	// if no borders intersect
+	borders1 := []Border{
+		{Location{300, 300}, Direction{200, 0}},
+		{Location{500, 300}, Direction{0, 100}},
+		{Location{500, 400}, Direction{-200, 0}},
+		{Location{300, 400}, Direction{0, -100}},
+	}
+	i1_1, i1_2 := testBorders(borders1)
+	if i1_1 != -1 || i1_2 != -1 {
+		t.Errorf("TestTestBorders(1) failed, expected (-1, -1), got (%d, %d)", i1_1, i1_2)
+	}
+
+	// if borders do intersect
+	borders2 := []Border{
+		{Location{0,0}, Direction{100,100}},
+		{Location{100,100}, Direction{-100,0}},
+		{Location{0,100}, Direction{100,-100}},
+		{Location{100,0}, Direction{-100,0}},
+	}
+	i2_1, i2_2 := testBorders(borders2)
+	if i2_1 != 1 || i2_2 != 2 {
+		t.Errorf("TestTestBorders(2) failed, expected (1, 2), got (%d, %d)", i2_1, i2_2)
+	}
+}
+
 func TestGenerateObjectives(t *testing.T) {
 	isTesting = true
 	// a game arena that is a wide rectangle

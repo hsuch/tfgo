@@ -198,6 +198,10 @@ public class Objective {
         self.occupants = occupants
     }
     
+    func getOccupants() -> [String] {
+        return occupants
+    }
+    
     func getOwner() -> String {
         return owner
     }

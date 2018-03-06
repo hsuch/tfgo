@@ -362,6 +362,10 @@ func PICKUPRESPAWNTIME() time.Duration {
 	return 15 * time.Second
 }
 
+func GAMESTARTDELAY() time.Duration {
+	return 30 * time.Second
+}
+
 // returns the baseRadius given the game's x and y dimensions
 // default is 7m, but size is adjusted down if dimensions are too small
 func BASERADIUS(x, y float64) float64 {
@@ -383,9 +387,12 @@ func PICKUPRADIUS() float64 {
 	return 3.0
 }
 
+// calculates the pickup distribution, which is either
+// one every 10 m^2 or whatever distribution will result in a
+// maximum of 25 pickups per game
 func PICKUPDISTRIBUTION(xRange, yRange float64) float64 {
-	dist := math.Sqrt((xRange * yRange) / 25)
-	return math.Max(dist, 5.0)
+	dist := math.Sqrt((xRange * yRange) / 4)
+	return math.Max(dist, 10.0)
 }
 
 func MAXHEALTH() int {

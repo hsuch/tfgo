@@ -285,7 +285,12 @@ func (g *Game) generateObjectives(numCP int) {
 
 		// generate control points
 		rLock.Lock()
+		giveUp := numCP * 2
 		for i := 0; i < numCP; i++ {
+			if giveUp < 0 {
+				break
+			}
+			giveUp--
 			cpLoc := Location{minX + cpRadius + r.Float64() * xRangeM, minY + cpRadius + r.Float64() * yRangeM}
 			if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
 				id := "CP" + strconv.Itoa(i+1)
@@ -297,10 +302,13 @@ func (g *Game) generateObjectives(numCP int) {
 		}
 		rLock.Unlock()
 	} else if g.Mode == SINGLECAP {
+		// if there is only one control point, place it at the center of the arena
 		g.ControlPoints["CP1"] = &ControlPoint{ID: "CP1", Location: g.findCenter(), Radius: cpRadius}
 	} else {
+		// if there is a payload, place it on the midpoint of the line from the Red base to the Blue base
 		cpLoc := Location{(g.RedTeam.Base.X + g.BlueTeam.Base.X) / 2, (g.RedTeam.Base.Y + g.BlueTeam.Base.Y) / 2}
 		g.ControlPoints["Payload"] = &ControlPoint{ID: "Payload", Location: cpLoc, Radius: cpRadius}
+		// set PayloadSpeed and PayloadPath for the game
 		g.PayloadSpeed = math.Min(xRange / 120, MAXSPEED())
 		g.PayloadPath = Direction{X: g.BlueTeam.Base.X - g.RedTeam.Base.X, Y: g.BlueTeam.Base.Y - g.RedTeam.Base.Y}
 	}
@@ -391,6 +399,7 @@ func (p *Player) leaveGame(game *Game) {
 			return
 		} else {
 			delete(game.Players, p.ID)
+			sendPlayerListUpdate(game)
 			return
 		}
 	} else if game.Status == PLAYING {
@@ -429,7 +438,7 @@ func (g *Game) randomizeTeams() {
 // starting goroutines that will run for the duration of the game
 func (g *Game) start() {
 	g.randomizeTeams()
-	startTime := time.Now().Add(time.Second * 30)
+	startTime := time.Now().Add(GAMESTARTDELAY())
 	sendGameStartInfo(g, startTime)
 	go g.awaitStart(startTime)
 }
@@ -452,6 +461,9 @@ func (g *Game) awaitStart(startTime time.Time) {
 // end a game, signalling and performing resource cleanup
 func (g *Game) stop() {
 	g.Status = GAMEOVER
+	if g.Timer != nil {
+		g.Timer.Stop()
+	}
 	for _, player := range g.Players {
 		player.reset()
 	}

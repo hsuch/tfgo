@@ -22,6 +22,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     
     var initialized = false  // boolean set to true after the first tracking of user's position
     var gameStart = false    // boolean to see if the game has started
+    var gameRunning = true   // boolean to check if a game is still active
     
     var playerLocs: [MKPointAnnotation] = []
     
@@ -227,9 +228,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         
         runTimer()
         DispatchQueue.global(qos: .userInitiated).async {
-            while true {
+            while self.gameRunning {
                 if handleMsgFromServer() {
-                    print("jdsakjflsdjafkljksldafjls;dkafjlk;sjfl;sdjskafdhdslhfklsdhfkljsdhfjklsadhlfjkhsadkjfsdjkalfhklsdjahfkjlsahfkjlhsdalfhsaklfhskljfhkjslahfkjshfklhsdjhflsakjfhksjhflkjsadhfjklhasdlkjfhskjahfkjhsdajkfhskldjfhjlsdahf")
                     DispatchQueue.main.async {
                         self.talkShitGetHit()
                     }
@@ -246,6 +246,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     /* viewWillAppear() - override */
     /* Set status bar values */
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         armorBar.layer.cornerRadius = 3.0
         armorBar.layer.borderWidth = 3.0
         armorBar.layer.borderColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
@@ -255,6 +256,7 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         clipBar.layer.cornerRadius = 3.0
         clipBar.layer.borderWidth = 3.0
         clipBar.layer.borderColor = #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
     /* talkShitGetHit() */
@@ -402,6 +404,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
             healthBar.setProgress(1, animated: true)
             break
         default:
+            //statusLabel.text = "Objective is \(Double(game.getObjectives()[0].getProgress())/100.0)% captured"
+            //statusLabel.textColor = randomColor()
             break
         }
     }
@@ -409,10 +413,18 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     /* endGame() */
     /* Processes the end of game when it receives the end of game message */
     private func endGame() {
-        let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
+        var victory: String
+        if game.getBluePoints() > game.getRedPoints() {
+            victory = "Blue team victory!"
+        } else if game.getBluePoints() < game.getRedPoints() {
+            victory = "Red team victory!"
+        } else {
+            victory = "It's a draw!"
+        }
+        //let victory = (game.getBluePoints() > game.getRedPoints()) ? "Blue" : "Red"
         updateTimer.invalidate()
         let actionController = UIAlertController(title: "Game Over", message:
-            "\(victory) team victory!", preferredStyle: UIAlertControllerStyle.actionSheet)
+            victory, preferredStyle: UIAlertControllerStyle.actionSheet)
         actionController.addAction(UIAlertAction(title: "Let me leave", style: UIAlertActionStyle.default,handler: {(alert: UIAlertAction!) -> Void in
             self.performSegue(withIdentifier: "leaveGame", sender: nil)
         }))
@@ -435,8 +447,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         if segue.identifier != "inventory" {
             updateTimer.invalidate()
+            gameRunning = false
         }
     }
     

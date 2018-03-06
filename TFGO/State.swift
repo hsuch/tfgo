@@ -146,6 +146,11 @@ class GameState {
         return 0.0
     }
     
+    func reset() {
+        currentGame = nil
+        foundGames = []
+    }
+    
     init() {
         
     }
