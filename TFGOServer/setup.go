@@ -285,7 +285,12 @@ func (g *Game) generateObjectives(numCP int) {
 
 		// generate control points
 		rLock.Lock()
+		giveUp := numCP * 2
 		for i := 0; i < numCP; i++ {
+			if giveUp < 0 {
+				break
+			}
+			giveUp--
 			cpLoc := Location{minX + cpRadius + r.Float64() * xRangeM, minY + cpRadius + r.Float64() * yRangeM}
 			if inGameBounds(g, cpLoc) && noIntersections(g, cpLoc, cpRadius) {
 				id := "CP" + strconv.Itoa(i+1)
