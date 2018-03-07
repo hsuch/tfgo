@@ -147,8 +147,7 @@ class GameState {
     }
     
     func reset() {
-        currentGame = nil
-        foundGames = []
+        user.resetWeapons()
     }
     
     init() {

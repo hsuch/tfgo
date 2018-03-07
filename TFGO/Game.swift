@@ -125,6 +125,11 @@ class Player {
         return weapons
     }
     
+    func resetWeapons() {
+        self.weapon = BeeSwarm()
+        self.weapons = [BeeSwarm(), Sword(), Shotgun()]
+    }
+    
     func setID(to id: String) {
         self.id = id
     }
