@@ -49,6 +49,10 @@ class Player {
         host = true
     }
     
+    func removeHost() {
+        host = false
+    }
+    
     func setName(to name: String) {
         self.name = name
     }

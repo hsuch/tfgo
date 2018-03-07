@@ -148,6 +148,7 @@ class GameState {
     
     func reset() {
         user.resetWeapons()
+        user.removeHost()
     }
     
     init() {
