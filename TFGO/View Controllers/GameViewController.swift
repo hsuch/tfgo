@@ -333,8 +333,8 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     @objc func clipUpdate() {
         timeLeft -= 1/5
         let weapon = gameState.getUser().getWeapon()
-        let value = 0.2 * Float(weapon.clipSize)
-        weapon.clipFill += (value < 1) ? 1 : Int(0.2 * Float(weapon.clipSize))
+        let value = (0.2 / Float(weapon.clipReload)) * Float(weapon.clipSize)
+        weapon.clipFill += (value < 1) ? 1 : Int(value)
         clipBar.setProgress(Float(weapon.clipFill)/Float(weapon.clipSize), animated: true)
         if weapon.clipFill == weapon.clipSize {
             reloading = false
