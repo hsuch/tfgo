@@ -83,3 +83,11 @@ Using weapons with small clip sizes may appear to not reload properly.  This is 
 It is possible to make a game whose boundaries are so small that there is not enough room for the objectives such that a portion or even all of the bases are within the objectives boundaries.  This is still a valid game and the objectives and bases will work as normal.  The same goes for if the boundaries are so small that a portion of the objective is outside of the boundaries.
 
 Stepping on an objective does not immediately capture it.  You must be present for a short while and then you capture it and begin to accumulate points.  Once you have captured a point you no longer need to stand on it and it will passively accumulate points for your team.
+
+Occasionally, the boundaries on the Game Info screen's map will not be displayed. This seems to happer more often in private games as opposed to public games, but it happes fairly frequently with both.
+
+Additionally, while it is very rare, a player's icon on the Game Map may change color (from red to blue or blue to red). In the case that this happens to the user, at the beginning of each game a message will be displayed, telling you to go to a certain base; that base is the user's team color, so remembering it will help prevent confusion. In the case that it happens to another player, you can always press on any player icon aside from your own to see a player's name and team color; their team color will always be what team they are on.
+
+In the Lobby screen where it lists games you can join, each game shows the user's distance from the game. Unfortunately, we were not able to implement this calculation, so it will always read "0.0 units".
+
+When counting down to the start of a game, the user's player annotation will appear momentarily and then disappear. It will reappear the moment the game starts (you can verify your specific annotation by pressing an annotation; if it says "My Location", that's your icon).
