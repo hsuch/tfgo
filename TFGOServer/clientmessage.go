@@ -307,7 +307,10 @@ func sendPickupUpdate(pickup *PickupSpot, game *Game) {
 	msg := map[string]interface{} {
 		"Type" : "PickupUpdate",
 		"Data" : map[string]interface{} {
-			"Location" : pickup.Location,
+			"Location" : Location{
+				X: meterToDegree(pickup.Location.X),
+				Y: meterToDegree(pickup.Location.Y),
+			},
 			"Available" : pickup.Available,
 		},
 	}
