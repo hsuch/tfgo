@@ -49,6 +49,10 @@ class Player {
         host = true
     }
     
+    func removeHost() {
+        host = false
+    }
+    
     func setName(to name: String) {
         self.name = name
     }
@@ -123,6 +127,11 @@ class Player {
     
     func getWeaponsList() -> [Weapon] {
         return weapons
+    }
+    
+    func resetWeapons() {
+        self.weapon = BeeSwarm()
+        self.weapons = [BeeSwarm(), Sword(), Shotgun()]
     }
     
     func setID(to id: String) {
