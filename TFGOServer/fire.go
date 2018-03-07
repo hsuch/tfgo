@@ -21,7 +21,7 @@ func (v Direction) magnitude() float64 {
 // if it can, returns the distance from src to dst, otherwise, returns MaxFloat64
 func (w Weapon) canHit(src, dst Location, dir Direction) float64 {
 	target := Direction{dst.X - src.X, dst.Y - src.Y}
-	dist := target.magnitude()
+	dist := math.Max(target.magnitude(), 0.01) // account for exact same locations to prevent division by 0
 	angle := math.Acos(dot(target, dir) / (dist * dir.magnitude()))
 	if angle <= w.Spread / 2 && dist <= w.Range {
 		return dist
