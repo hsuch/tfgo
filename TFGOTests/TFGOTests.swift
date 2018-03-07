@@ -70,6 +70,7 @@ class TFGOTests: XCTestCase {
         let Objective = [Objective0]
         let points = ["Red": 100, "Blue": 105] as [String: Any]
         let testGameUpdate = ["Data": ["PlayerList": playerList, "Points":points, "RedBase": redBase, "BlueBase": redBase, "Objectives" : Objective, "StartTime": "2017-02-14 17:24:56"]]
+        let weapon = ["Data": "Blaster", "Type": "AcquireWeapon"]
         
         
         //        let testGameStartInfo = "\"Data\": {\"PlayerList\": [{\"Name\": \"Abc\", \"Team\": \"Red\"}, {\"Name\": \"bcd\", \"Team\": \"Blue\"}],\"RedBase\": {\"Location\": {\"X\": 1.23, \"Y\": 12.3}, \"Radius\": 1.23},\"BlueBase\": {\"Location\": {\"X\": 1.23, \"Y\": 12.3}, \"Radius\": 1.23},\"Objectives\":[{\"Location\": {\"X\": 1.23, \"Y\": 12.3}, \"Radius\": 1.23}],\"StartTime\": \"2017-02-14 17:24:26\""
@@ -145,6 +146,8 @@ class TFGOTests: XCTestCase {
         XCTAssertTrue(gameState.getUser().getID() == "qtpi55")
         if parsePlayerID(data: ["Data" : "mrtw33tums"]) {}
         XCTAssertTrue(gameState.getUser().getID() == "mrtw33tums")
+        
+        XCTAssertTrue(weaponByName(name: "Blaster").name == "Blaster")
         
         /***
          

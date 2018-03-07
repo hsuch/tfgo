@@ -42,15 +42,15 @@ func weaponByName(name: String) -> Weapon {
         return Blaster()
     case "Crossbow":
         return Crossbow()
-    case"Rifle":
+    case"SniperRifle":
         return Rifle()
-    case "Boomerange":
+    case "Boomerang":
         return Boomerang()
     case "Lightsaber":
         return Lightsaber()
     case "Spear":
         return Spear()
-    case "Banhammer":
+    case "BanHammer":
         return Banhammer()
     default:
         return BeeSwarm()

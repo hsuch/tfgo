@@ -110,7 +110,7 @@ class Player {
     }
     
     func addWeapon(to weapon: String) {
-        self.weapons.append(weaponByName(name: name))
+        self.weapons.append(weaponByName(name: weapon))
     }
     
     func getWeapon() -> Weapon {
