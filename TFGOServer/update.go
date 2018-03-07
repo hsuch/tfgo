@@ -77,6 +77,7 @@ func (p *Player) updateLocation(game *Game, loc Location, orientation float64) {
 		p.Status = OUTOFBOUNDS
 		p.StatusTimer = time.AfterFunc(OUTOFBOUNDSTIME(), func() {
 			p.Status = RESPAWNING
+			p.StatusTimer = nil
 			sendStatusUpdate(p, "Respawn")
 		})
 		sendStatusUpdate(p, "OutOfBounds")
