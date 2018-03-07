@@ -268,13 +268,13 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
     /* talkShitGetHit() */
     /* Updates the status bar fills and alerts the user to when they are attacked */
     private func talkShitGetHit() {
-        if status.0 < gameState.getUserHealth() || status.1 < gameState.getUserArmor() {
-            status = (gameState.getUserHealth(), gameState.getUserArmor())
+        if status.0 > gameState.getUserHealth() || status.1 > gameState.getUserArmor() {
             AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
 //            let alertController = UIAlertController(title: "Temp", message: "You were hit", preferredStyle: UIAlertControllerStyle.alert)
 //            alertController.addAction(UIAlertAction(title: "Ouch", style: UIAlertActionStyle.default,handler: nil))
 //            present(alertController, animated: true, completion: nil)
         }
+        status = (gameState.getUserHealth(), gameState.getUserArmor())
         armorBar.setProgress(Float(self.status.1)/100, animated: true)
         healthBar.setProgress(Float(self.status.0)/100, animated: true)
     }
