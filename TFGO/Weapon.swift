@@ -65,7 +65,7 @@ class Sword: Weapon {
         clipSize = 50
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 15
     }
 }
 
@@ -77,7 +77,7 @@ class Shotgun: Weapon {
         clipSize = 2
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 3
     }
 }
 
@@ -89,7 +89,7 @@ class Pistol: Weapon {
         clipSize = 6
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 3
     }
 }
 
@@ -101,7 +101,7 @@ class Blaster: Weapon {
         clipSize = 20
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 4
     }
 }
 
@@ -113,7 +113,7 @@ class Crossbow: Weapon {
         clipSize = 4
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 8
     }
 }
 
@@ -125,7 +125,7 @@ class Rifle: Weapon {
         clipSize = 3
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 12
     }
 }
 
@@ -137,7 +137,7 @@ class Boomerang: Weapon {
         clipSize = 1
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 20
     }
 }
 
@@ -149,7 +149,7 @@ class Lightsaber: Weapon {
         clipSize = 100
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 20
     }
 }
 
@@ -161,7 +161,7 @@ class Spear: Weapon {
         clipSize = 75
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 18
     }
 }
 
@@ -173,7 +173,7 @@ class Banhammer: Weapon {
         clipSize = 200
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 24
     }
 }
 
@@ -185,6 +185,6 @@ class BeeSwarm: Weapon {
         clipSize = 5
         clipFill = clipSize
         shotReload = 1
-        clipReload = 1
+        clipReload = 2
     }
 }
