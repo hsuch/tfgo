@@ -390,6 +390,17 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 game_map.addAnnotation(objective.getAnnotation())
             }
         }
+        
+        // update pickup icons in the case that they were picked up or became availabe again
+        let pickups = gameState.getCurrentGame().getPickups()
+        for pickup in pickups {
+            if pickup.getRedraw() {
+                game_map.removeAnnotation(pickup.getAnnotation())
+                pickup.updateAnnotation()
+                game_map.addAnnotation(pickup.getAnnotation())
+                pickup.setRedraw(to: false)
+            }
+        }
     }
     
     @IBOutlet weak var statusLabel: UILabel!

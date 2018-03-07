@@ -265,6 +265,7 @@ public class Pickup {
     private var amount : Int
     private var available : Bool = true
     private var annotation: MKPointAnnotation = MKPointAnnotation()
+    private var needsRedraw: Bool = false
     
     init(loc: MKMapPoint, type: String, amount: Int) {
         self.loc = loc
@@ -303,6 +304,14 @@ public class Pickup {
     
     func setAvailability(to availability: Bool) {
         self.available = availability
+    }
+    
+    func getRedraw() -> Bool {
+        return needsRedraw
+    }
+    
+    func setRedraw(to needsRedraw: Bool) {
+        self.needsRedraw = needsRedraw
     }
     
 }

@@ -423,6 +423,7 @@ func parsePickupUpdate(data: [String: Any]) -> Bool {
                 let index = gameState.getCurrentGame().findPickupIndex(x: x, y: y)
                 if index > -1 {
                     gameState.getCurrentGame().getPickups()[index].setAvailability(to: available)
+                    gameState.getCurrentGame().getPickups()[index].setRedraw(to: true)
                     return true
                 }
             }
