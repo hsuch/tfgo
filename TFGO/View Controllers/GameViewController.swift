@@ -145,19 +145,25 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
                 // the input pin is a blue base pin
                 annotationView.image = UIImage(named: "base_blue")
             }
-            else if subtitle == "Red" {
-                // the input pin is a read team player
+            else if subtitle == "Available" {
+                // the pin is an available pickup pin
+                annotationView.image = UIImage(named: "pickup")
+                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            }
+            else if subtitle == "Unavailable" {
+                // the pin is an unavailable pickup pin
+                annotationView.image = UIImage(named: "pickup_gray")
+                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            }
+            else if subtitle == "Red" || (gameState.getUser().getTeam() == "Red" && gameStart == false) {
+                // the input pin is a read team player, or the current player being marked
+                // prior to the game starting
                 annotationView.image = UIImage(named: "player_red")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
-            else if subtitle == "Blue" {
+            else if subtitle == "Blue" || (gameState.getUser().getTeam() == "Blue" && gameStart == false) {
                 // the input team is a blue team player
                 annotationView.image = UIImage(named: "player_blue")
-                annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-            }
-            else if subtitle == "Available" || subtitle == "Unavailable" {
-                // the pin a pickup pin
-                annotationView.image = UIImage(named: "pickup")
                 annotationView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
             }
         }
@@ -366,6 +372,10 @@ class GameViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         }
         
         handleStatus()
+        
+        if (gameStart == false) {
+            gameStart = true
+        }
         
         // update the locations of other players on the map and the status of the pickups
         gameState.getCurrentGame().updatePlayerAnnotations()
