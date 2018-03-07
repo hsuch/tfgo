@@ -15,7 +15,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        gameState.reset()
+        //gameState.reset()
     }
     
     @IBAction func loadPage(_ sender: Any) {

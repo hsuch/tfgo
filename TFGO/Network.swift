@@ -12,7 +12,7 @@ import SwiftyJSON
 import MapKit
 
 class Connection {
-    private var servadd: String = "10.150.231.48" // to be replaced with real server ip
+    private var servadd: String = "10.0.0.218" // to be replaced with real server ip
     private var servport: Int32 = 9265
     private var client: TCPClient
 
@@ -28,7 +28,7 @@ class Connection {
         var response = Data()
         while noNewline(data: String(data: response, encoding: .utf8) ?? "") {
             guard let data = client.read(1024*10)
-                else { usleep(10000); continue }
+                else { continue }
             response += data
         }
         return response
