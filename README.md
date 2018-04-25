@@ -3,7 +3,7 @@
 ## Team Members
 App Team: Sam Schlang, Connie Hsu, Zach Saunders, Jason Guo
 
-Server Team: Oliver Zou, Jenny Haar, Brad Lee, Anders Segerberg
+Server Team: Oliver Zou, Jenny Haar, Brad Lee
  
 ## How to Compile
 Begin by cloning this github repo to your computer.
